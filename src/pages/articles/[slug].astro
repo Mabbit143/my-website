@@ -1,0 +1,150 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import SeriesPill from '../../components/SeriesPill.astro';
+import { getSeries } from '../../lib/series';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', ({ data }) => !data.draft);
+  return articles.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'articles'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const allArticles = await getCollection('articles', ({ data }) => !data.draft);
+const related = allArticles
+  .filter((a) => a.slug !== entry.slug && a.data.series === entry.data.series)
+  .slice(0, 2);
+
+const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description} ogImage={entry.data.socialImage}>
+  <article class="wrap article" data-palette={getSeries(entry.data.series)?.palette}>
+    <header class="article-header">
+      <SeriesPill slug={entry.data.series} />
+      <h1>{entry.data.title}</h1>
+      <p class="deck typewriter">{entry.data.deck}</p>
+      <p class="byline meta-mono">
+        By {entry.data.author} · <time datetime={entry.data.pubDate.toISOString()}>{dateStr}</time>
+        {
+          entry.data.updatedDate && (
+            <>
+              {' '}
+              · updated{' '}
+              <time datetime={entry.data.updatedDate.toISOString()}>
+                {entry.data.updatedDate.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </time>
+            </>
+          )
+        }
+      </p>
+      {
+        entry.data.placeholder && (
+          <p class="placeholder-note">
+            <strong>Sample content.</strong> This article exists to demonstrate the template — swap
+            it for a real piece before launch. See <code>src/content/articles/README.md</code>.
+          </p>
+        )
+      }
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {
+      related.length > 0 && (
+        <aside class="related" aria-labelledby="related-heading">
+          <h2 id="related-heading">More from this series</h2>
+          <div class="grid">
+            {related.map((r) => (
+              <ArticleCard entry={r} />
+            ))}
+          </div>
+        </aside>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .article {
+    padding-block: var(--space-4) var(--space-6);
+  }
+
+  .article-header {
+    max-width: var(--content-max);
+    margin-bottom: var(--space-4);
+  }
+
+  .article-header h1 {
+    margin-top: var(--space-1);
+  }
+
+  .deck {
+    font-size: var(--step-1);
+    max-width: var(--content-max);
+  }
+
+  .byline {
+    font-size: var(--step--1);
+    opacity: 0.75;
+  }
+
+  .article-header .placeholder-note {
+    margin-top: var(--space-2);
+    max-width: var(--content-max);
+  }
+
+  .prose {
+    max-width: var(--content-max);
+  }
+
+  .prose :global(h2) {
+    margin-top: var(--space-4);
+  }
+
+  .prose :global(blockquote) {
+    border-left: 4px solid var(--accent-1);
+    margin: var(--space-3) 0;
+    padding-left: var(--space-2);
+    font-family: var(--font-annotation);
+    font-size: var(--step-1);
+    color: var(--accent-1);
+  }
+
+  .prose :global(a) {
+    text-decoration-color: var(--accent-2);
+  }
+
+  .related {
+    border-top: 3px solid var(--ink);
+    margin-top: var(--space-5);
+    padding-top: var(--space-3);
+    max-width: var(--page-max);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--space-2);
+  }
+</style>

@@ -1,0 +1,198 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import EmailSignup from '../components/EmailSignup.astro';
+import { SERIES } from '../lib/series';
+
+const allArticles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const featured = allArticles[0];
+const latest = allArticles.slice(1, 4);
+---
+
+<BaseLayout
+  title="Deconstructing Academia"
+  description="A critical academic-literacy publication. Learn the rules. Question who wrote them."
+>
+  <section class="hero wrap" data-palette="red-pen">
+    <span class="tape tape--right" aria-hidden="true"></span>
+    <div class="hero-main">
+      <h1>Make knowledge<br />harder to <span class="mark">hoard</span>.</h1>
+      <p class="lede">
+        Deconstructing Academia is a public argument about knowledge: who gets to create it,
+        whose language is treated as intelligent, whose experience counts as evidence, whose
+        work gets cited, and who gets shut out before the conversation begins.
+      </p>
+      <p class="tagline">Learn the rules. Question who wrote them.</p>
+    </div>
+    <div class="hero-side">
+      <div class="stamp" aria-hidden="true">
+        <span>Learn the Rules · Question Who Wrote Them</span>
+      </div>
+      <p class="note">The point is not to make academia friendlier.</p>
+    </div>
+  </section>
+
+  {
+    featured && (
+      <section class="wrap featured" aria-labelledby="featured-heading">
+        <h2 id="featured-heading" class="eyebrow">
+          Start here
+        </h2>
+        <ArticleCard entry={featured} />
+      </section>
+    )
+  }
+
+  {
+    latest.length > 0 && (
+      <section class="wrap latest" aria-labelledby="latest-heading">
+        <h2 id="latest-heading">Latest</h2>
+        <div class="grid">
+          {latest.map((entry) => (
+            <ArticleCard entry={entry} />
+          ))}
+        </div>
+        <a href="/articles/" class="btn btn--ghost">
+          All articles →
+        </a>
+      </section>
+    )
+  }
+
+  <section class="wrap series" aria-labelledby="series-heading">
+    <h2 id="series-heading">The series</h2>
+    <div class="series-grid">
+      {
+        SERIES.map((s) => (
+          <a href={`/articles/?series=${s.slug}`} class="series-card" data-palette={s.palette}>
+            <h3>{s.name}</h3>
+            <p>{s.description}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap about-teaser">
+    <h2>Who's asking</h2>
+    <p class="placeholder-note">
+      <strong>Placeholder.</strong> This should be a one-sentence teaser in your own words, pulled
+      from your About bio once that's written — not something I draft for you.
+    </p>
+    <a href="/about/" class="btn btn--ghost">More about this project →</a>
+  </section>
+
+  <div class="wrap">
+    <EmailSignup />
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: var(--space-5) var(--space-4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+
+  .hero-main {
+    flex: 2 1 30rem;
+    min-width: 0;
+  }
+
+  .hero h1 {
+    margin-block: var(--space-2);
+    font-size: var(--step-5);
+  }
+
+  .lede {
+    font-size: var(--step-1);
+    max-width: var(--content-max);
+  }
+
+  .tagline {
+    font-family: var(--font-label);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--accent-1);
+  }
+
+  .hero-side {
+    flex: 1 1 14rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    padding-top: var(--space-2);
+  }
+
+  .hero-side .stamp {
+    align-self: center;
+  }
+
+  .hero-side .note {
+    align-self: flex-end;
+  }
+
+  .eyebrow {
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    opacity: 0.7;
+  }
+
+  .featured,
+  .latest,
+  .series,
+  .about-teaser {
+    padding-block: var(--space-4);
+    border-top: 3px solid var(--da-black);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--space-2);
+    margin-block: var(--space-3);
+  }
+
+  .series-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+
+  .series-card {
+    display: block;
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    padding: var(--space-2);
+    text-decoration: none;
+    background: var(--color-bg);
+    border-left-width: 6px;
+    border-left-color: var(--accent-1);
+  }
+
+  .series-card h3 {
+    font-size: var(--step-0);
+    margin-bottom: 0.3em;
+  }
+
+  .series-card p {
+    font-size: var(--step--1);
+    max-width: none;
+    margin: 0;
+  }
+
+  .about-teaser {
+    max-width: var(--content-max);
+  }
+</style>

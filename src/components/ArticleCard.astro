@@ -1,0 +1,92 @@
+---
+import { getSeries } from '../lib/series';
+
+interface Props {
+  entry: {
+    slug: string;
+    data: {
+      title: string;
+      deck: string;
+      series: string;
+      pubDate: Date;
+      placeholder?: boolean;
+    };
+  };
+}
+const { entry } = Astro.props;
+const series = getSeries(entry.data.series);
+const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<article class="card torn-edge" data-palette={series?.palette}>
+  <span class="tape" aria-hidden="true"></span>
+  {series && <span class="pill">{series.name}</span>}
+  <h3><a href={`/articles/${entry.slug}/`}>{entry.data.title}</a></h3>
+  <p class="typewriter">{entry.data.deck}</p>
+  <p class="meta meta-mono">
+    <time datetime={entry.data.pubDate.toISOString()}>{dateStr}</time>
+    {entry.data.placeholder && <span class="tag-placeholder">sample content</span>}
+  </p>
+</article>
+
+<style>
+  .card {
+    position: relative;
+    border: 2px solid var(--ink);
+    border-left: 6px solid var(--accent-1);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    padding-bottom: calc(var(--space-3) + 0.6rem);
+    background: var(--color-bg);
+    box-shadow: 3px 4px 0 color-mix(in srgb, var(--ink) 12%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  /* alternate a slight tilt on every other card so the grid reads as a
+     desk full of clippings, not a spreadsheet */
+  .card:nth-child(even) {
+    transform: rotate(0.6deg);
+  }
+  .card:nth-child(odd) {
+    transform: rotate(-0.5deg);
+  }
+
+  .card h3 {
+    margin: var(--space-1) 0 0;
+    font-size: var(--step-1);
+  }
+
+  .card h3 a {
+    text-decoration: none;
+  }
+
+  .card h3 a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--da-chartreuse);
+  }
+
+  .card p {
+    max-width: none;
+  }
+
+  .meta {
+    font-size: var(--step--1);
+    opacity: 0.75;
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  .tag-placeholder {
+    font-family: var(--font-headline);
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--da-ultraviolet);
+  }
+</style>

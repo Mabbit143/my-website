@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found" description="This page doesn't exist." noindex>
+  <section class="wrap not-found">
+    <p class="annotation">Whoever wrote this link was wrong.</p>
+    <h1>404</h1>
+    <p>That page doesn't exist — or it moved and the redirect isn't set up yet.</p>
+    <a href="/" class="btn">Back to Home</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding-block: var(--space-6);
+    text-align: center;
+  }
+
+  .not-found h1 {
+    font-size: var(--step-4);
+  }
+
+  .not-found p {
+    max-width: none;
+  }
+
+  .not-found .btn {
+    margin-top: var(--space-2);
+  }
+</style>

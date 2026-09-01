@@ -1,0 +1,141 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { SERIES } from '../../lib/series';
+
+const allArticles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout
+  title="Articles"
+  description="Browse everything Deconstructing Academia has published, filterable by series."
+>
+  <section class="wrap header-block">
+    <h1>Articles</h1>
+    <p>
+      Every piece belongs to one of eight series. Filter below, or just start reading — filters
+      update the list without leaving the page.
+      <span class="placeholder-note" style="display:block; margin-top: 0.75rem;">
+        <strong>Note:</strong> full-text search is deferred past v1 (confirmed decision, 31 Aug
+        2026) — series filtering is the only discovery tool at launch.
+      </span>
+    </p>
+  </section>
+
+  <section class="wrap filters" aria-label="Filter by series">
+    <button type="button" class="filter-btn is-active" data-series="all">All</button>
+    {
+      SERIES.map((s) => (
+        <button type="button" class="filter-btn" data-palette={s.palette} data-series={s.slug}>
+          {s.name}
+        </button>
+      ))
+    }
+  </section>
+
+  <section class="wrap">
+    {
+      allArticles.length === 0 ? (
+        <p class="placeholder-note">
+          <strong>No articles yet.</strong> Add Markdown files to{' '}
+          <code>src/content/articles/</code> — see the README in that folder.
+        </p>
+      ) : (
+        <div class="grid" id="article-grid">
+          {allArticles.map((entry) => (
+            <div class="grid-item" data-series={entry.data.series}>
+              <ArticleCard entry={entry} />
+            </div>
+          ))}
+        </div>
+      )
+    }
+    <p id="no-results" class="placeholder-note" hidden>
+      No articles in this series yet.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .header-block {
+    padding-block: var(--space-4);
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding-bottom: var(--space-3);
+  }
+
+  .filter-btn {
+    font-family: var(--font-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: var(--step--1);
+    letter-spacing: 0.02em;
+    border: 2px solid var(--ink);
+    border-left-width: 4px;
+    border-left-color: var(--accent-1);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    padding: 0.4em 0.8em;
+    cursor: pointer;
+  }
+
+  .filter-btn.is-active {
+    background: var(--ink);
+    color: var(--paper);
+    border-left-color: var(--accent-1);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--space-2);
+    padding-bottom: var(--space-5);
+  }
+</style>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const items = document.querySelectorAll<HTMLElement>('#article-grid .grid-item');
+  const noResults = document.getElementById('no-results');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+
+      const series = btn.dataset.series;
+      let visibleCount = 0;
+
+      items.forEach((item) => {
+        const match = series === 'all' || item.dataset.series === series;
+        item.hidden = !match;
+        if (match) visibleCount++;
+      });
+
+      if (noResults) noResults.hidden = visibleCount !== 0;
+
+      const url = new URL(window.location.href);
+      if (series === 'all') {
+        url.searchParams.delete('series');
+      } else {
+        url.searchParams.set('series', series ?? '');
+      }
+      window.history.replaceState({}, '', url);
+    });
+  });
+
+  // Apply ?series= from the URL on load (so links from the homepage series
+  // explorer land pre-filtered).
+  const initial = new URLSearchParams(window.location.search).get('series');
+  if (initial) {
+    const match = Array.from(buttons).find((b) => b.dataset.series === initial);
+    match?.click();
+  }
+</script>

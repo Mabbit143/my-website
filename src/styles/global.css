@@ -1,0 +1,461 @@
+/* ============================================================
+   DECONSTRUCTING ACADEMIA — design tokens
+   Editorial-collage art direction, confirmed 1 Sep 2026 (ChatGPT
+   design conversation + reference mockups Lori supplied). The old
+   7-color "locked" system is retired per the DA Notion dashboard:
+   "Color strategy is currently unresolved. Do not use the retired
+   5-of-8 daily rotation as a production instruction."
+
+   Ink (Blackberry #0D0B12) and Paper (Dirty Porcelain #F3EFE3) are
+   constant across the whole site — every candidate palette in the
+   Notion "palette candidate" table shares Blackberry, and Porcelain
+   is close enough to the other two "paper" tones (Old Paper,
+   Document Cream) that keeping ONE paper color everywhere is what
+   makes the site read as one world instead of five reskins. Only
+   the 3 accent colors change, per series, via [data-palette].
+
+   Palette → series mapping (Claude's proposal, approved 1 Sep 2026):
+     red-pen        → Whose Peers?, Academic Autopsy            (site default/anchor)
+     archive        → Receipts or It Didn't Happen, The Syllabus Left This Out
+     field-notes    → Field Notes From the Other Side
+     public-record  → Use the Damn Tool, Where the Work Is
+     electric       → Dog-Eared Dissent
+   Hex values sourced from the DA Notion "candidate palette" table
+   (fetched 1 Sep 2026) — see src/lib/series.ts.
+
+   Typography: Anton (headline) + Caveat (handwritten annotation)
+   are Lori's picks from that conversation. Roboto (body) is
+   Claude's extrapolation — none of her 5 fonts were meant for long
+   paragraphs. Roboto Condensed / Special Elite / Roboto Mono round
+   out the rest of her named stack (labels / typed notes / metadata).
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&family=Roboto+Mono:wght@400;500&family=Special+Elite&family=Caveat:wght@600&display=swap');
+
+:root {
+  /* --- constants: same everywhere, the connective tissue --- */
+  --ink: #0d0b12;
+  --paper: #f3efe3;
+
+  /* --- accent set: defaults to Red Pen Society, the site anchor --- */
+  --accent-1: #c72c41; /* Academic Red — headline emphasis, underlines, borders (must hold contrast on paper) */
+  --accent-2: #d98a9a; /* Dusty Rose — secondary fill */
+  --accent-3: #d8c49a; /* Manila — tertiary fill / tape */
+  --accent-4: var(--accent-2); /* only Electric Playground uses a real 4th color */
+
+  /* derived, contrast-safe tokens — some raw accents (e.g. Public Record's
+     Brick, Field Notes' Moss) don't hold 4.5:1 against ink or paper at
+     small text sizes on their own. These are computed once here and
+     recompute automatically inside any [data-palette] scope. Verified
+     against WCAG AA with a script — see SETUP_GUIDE.md. */
+  --accent-fill: color-mix(in srgb, var(--accent-3) 55%, var(--paper)); /* pill/note backgrounds, ink text on top */
+  --accent-1-strong: color-mix(in srgb, var(--accent-1) 80%, var(--ink)); /* small text/borders in the accent hue */
+
+  /* --- legacy aliases (old locked-system names still referenced by a
+     few older utility classes below; point them at the new system so
+     nothing silently goes transparent) --- */
+  --da-black: var(--ink);
+  --da-porcelain: var(--paper);
+  --da-pink: var(--accent-1);
+  --da-chartreuse: var(--accent-3);
+  --da-teal: var(--accent-2);
+  --da-ultraviolet: #6a00ff; /* kept only for the placeholder-note callouts */
+  --da-periwinkle: #c7d6ff;
+
+  /* --- semantic roles --- */
+  --color-bg: var(--paper);
+  --color-fg: var(--ink);
+  --color-border: color-mix(in srgb, var(--ink) 20%, transparent);
+
+  /* --- typography --- */
+  --font-headline: 'Anton', 'Arial Narrow', sans-serif;
+  --font-label: 'Roboto Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Roboto', -apple-system, 'Segoe UI', sans-serif;
+  --font-typewriter: 'Special Elite', 'Courier New', monospace;
+  --font-mono: 'Roboto Mono', 'Courier New', monospace;
+  --font-annotation: 'Caveat', cursive;
+
+  --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.4vw, 1.4rem);
+  --step-2: clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
+  --step-3: clamp(1.9rem, 1.5rem + 1.8vw, 2.75rem);
+  --step-4: clamp(2.4rem, 1.8rem + 2.8vw, 3.75rem);
+  --step-5: clamp(3rem, 2.2rem + 4vw, 5.5rem);
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --space-6: 6rem;
+
+  --content-max: 42rem; /* comfortable article line length */
+  --page-max: 72rem;
+  --radius: 2px; /* institutional/document, not soft-app */
+}
+
+/* --- per-series palettes — set data-palette="..." on any ancestor
+   element and every --accent-* below it follows. See src/lib/series.ts
+   for which series uses which. --- */
+[data-palette='red-pen'] {
+  --accent-1: #c72c41; /* Academic Red */
+  --accent-2: #d98a9a; /* Dusty Rose */
+  --accent-3: #d8c49a; /* Manila */
+  --accent-4: var(--accent-2);
+}
+[data-palette='archive'] {
+  --accent-1: #17263c; /* Deep Navy */
+  --accent-2: #5e86a6; /* Archive Blue */
+  --accent-3: #c7d6ff; /* Powder Periwinkle */
+  --accent-4: var(--accent-2);
+}
+[data-palette='field-notes'] {
+  --accent-1: #65764b; /* Moss */
+  --accent-2: #bc6649; /* Terracotta */
+  --accent-3: #d8a63c; /* Ochre */
+  --accent-4: var(--accent-2);
+}
+[data-palette='public-record'] {
+  --accent-1: #203a57; /* Courtroom Navy */
+  --accent-2: #658caf; /* Government Blue */
+  --accent-3: #a6423a; /* Brick */
+  --accent-4: var(--accent-2);
+}
+[data-palette='electric'] {
+  --accent-1: #3155ff; /* Cobalt */
+  --accent-2: #f04452; /* Punch Red */
+  --accent-3: #ffbd32; /* Marigold */
+  --accent-4: #dcceff; /* Pale Lilac */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  /* photocopy/paper grain — generated inline via SVG feTurbulence, no
+     image asset needed. Kept subtle so it never fights legibility. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-headline);
+  font-weight: 400; /* Anton only ships one weight; it reads bold by design */
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 0.95;
+  margin: 0 0 var(--space-2);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--step-4);
+}
+h2 {
+  font-size: var(--step-3);
+}
+h3 {
+  font-family: var(--font-label);
+  font-weight: 700;
+  text-transform: none;
+  line-height: 1.15;
+  font-size: var(--step-2);
+}
+h4 {
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--step-1);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+p {
+  margin: 0 0 var(--space-2);
+  max-width: var(--content-max);
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--accent-1);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  text-decoration-color: var(--ink);
+}
+
+/* visible focus state everywhere, no exceptions */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  padding: var(--space-1) var(--space-2);
+  font-family: var(--font-label);
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  left: var(--space-2);
+  top: var(--space-2);
+}
+
+.wrap {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--space-3);
+}
+
+/* red-pen circle/underline emphasis — replaces the old flat highlighter
+   "mark" with the hand-marked-paper move from the reference mockups:
+   an ellipse drawn around the phrase in the current accent color. */
+.mark {
+  position: relative;
+  display: inline-block;
+  color: var(--accent-1);
+}
+
+.mark::after {
+  content: '';
+  position: absolute;
+  inset: -0.15em -0.35em -0.25em;
+  border: 3px solid var(--accent-1);
+  border-radius: 50% 50% 48% 52% / 55% 48% 52% 45%;
+  transform: rotate(-1.5deg);
+  pointer-events: none;
+}
+
+.annotation {
+  font-family: var(--font-annotation);
+  color: var(--accent-1);
+  font-size: var(--step-1);
+}
+
+/* "stamp" treatment — dashed border + slight rotation, like a rubber
+   stamp or a hand-clipped catalog tag. Used for series pills. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.3em 0.7em;
+  border: 2px dashed var(--ink);
+  border-radius: var(--radius);
+  background: var(--accent-fill);
+  color: var(--ink);
+  transform: rotate(-1.5deg);
+}
+
+.btn {
+  display: inline-block;
+  font-family: var(--font-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: var(--step--1);
+  background: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  padding: 0.75em 1.4em;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+}
+
+/* --- collage utilities --- */
+
+/* a strip of "tape" pinning a corner — apply to a position:relative
+   ancestor. */
+.tape {
+  position: absolute;
+  top: -0.6rem;
+  left: 1.5rem;
+  width: 3.5rem;
+  height: 1.3rem;
+  background: color-mix(in srgb, var(--accent-3) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  box-shadow: 0 2px 3px rgb(0 0 0 / 15%);
+  transform: rotate(-4deg);
+  pointer-events: none;
+}
+
+.tape--right {
+  left: auto;
+  right: 1.5rem;
+  transform: rotate(5deg);
+}
+
+/* jagged torn-paper edge along the bottom of an element */
+.torn-edge {
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 96%,
+    96% 100%,
+    90% 95%,
+    84% 100%,
+    78% 96%,
+    72% 100%,
+    66% 95%,
+    60% 100%,
+    54% 96%,
+    48% 100%,
+    42% 95%,
+    36% 100%,
+    30% 96%,
+    24% 100%,
+    18% 95%,
+    12% 100%,
+    6% 96%,
+    0% 100%
+  );
+}
+
+/* a hand-clipped index/sticky note — small, taped, slightly rotated */
+.note {
+  position: relative;
+  background: var(--accent-fill);
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  box-shadow: 2px 3px 0 rgb(0 0 0 / 12%);
+  padding: var(--space-2);
+  font-family: var(--font-annotation);
+  font-size: var(--step-1);
+  line-height: 1.25;
+  color: var(--ink);
+  transform: rotate(2deg);
+  max-width: 14rem;
+}
+
+/* a round rubber-stamp badge with circular caption text set as two
+   arcs (top/bottom) rather than true curved type — a practical CSS
+   approximation of the stamp graphics in the reference mockups */
+.stamp {
+  --stamp-size: 7rem;
+  position: relative;
+  width: var(--stamp-size);
+  height: var(--stamp-size);
+  border-radius: 50%;
+  border: 2px solid var(--accent-1-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transform: rotate(-8deg);
+  flex-shrink: 0;
+}
+
+.stamp::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px dashed var(--accent-1-strong);
+  border-radius: 50%;
+}
+
+.stamp span {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-1-strong);
+  line-height: 1.3;
+}
+
+.typewriter {
+  font-family: var(--font-typewriter);
+  font-size: var(--step--1);
+}
+
+.meta-mono {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.placeholder-note {
+  border: 2px dashed var(--da-ultraviolet);
+  background: color-mix(in srgb, var(--da-periwinkle) 40%, var(--paper));
+  padding: var(--space-2);
+  font-size: var(--step--1);
+  border-radius: var(--radius);
+}
+
+.placeholder-note strong {
+  color: var(--da-ultraviolet);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

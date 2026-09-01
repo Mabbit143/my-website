@@ -1,0 +1,19 @@
+{
+  "name": "deconstructing-academia",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^3.1.8",
+    "@astrojs/rss": "^4.0.11",
+    "@astrojs/sitemap": "3.2.1",
+    "astro": "^4.16.0"
+  }
+}

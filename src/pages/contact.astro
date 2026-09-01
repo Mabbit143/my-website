@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Contact" description="Get in touch with Deconstructing Academia.">
+  <section class="wrap contact">
+    <h1>Contact</h1>
+    <p>
+      Reach out about corrections, tips, pitches, speaking, or just to say the argument landed (or
+      didn't).
+    </p>
+
+    <div class="placeholder-note">
+      <strong>Form provider not chosen yet.</strong> This is the form's real layout and copy, but
+      it isn't wired to send anywhere — see the decision list in <code>SETUP_GUIDE.md</code>. Two
+      solid free options that need zero backend code: <a href="https://formspree.io" rel="noopener">Formspree</a>
+      and a Cloudflare Pages Function (since you're already on Cloudflare). Tell me which one and
+      I'll connect it — 10 minutes.
+    </div>
+
+    <form aria-describedby="form-status">
+      <div class="field">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" autocomplete="name" required disabled />
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" required disabled />
+      </div>
+      <div class="field">
+        <label for="reason">Reason for contact</label>
+        <select id="reason" name="reason" disabled>
+          <option>[your real options go here]</option>
+        </select>
+        <p class="field-note">
+          Placeholder options only — tell me the actual reasons you want listed and I'll swap
+          these in.
+        </p>
+      </div>
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="6" required disabled></textarea>
+      </div>
+      <button type="submit" class="btn" disabled>Send</button>
+      <p id="form-status" class="visually-hidden">Form is not yet connected to a submission service.</p>
+    </form>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact {
+    padding-block: var(--space-4) var(--space-6);
+    max-width: var(--content-max);
+  }
+
+  .contact .placeholder-note {
+    margin-block: var(--space-3);
+  }
+
+  form {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+
+  .field {
+    display: grid;
+    gap: 0.3em;
+  }
+
+  label {
+    font-family: var(--font-headline);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: var(--step--1);
+    letter-spacing: 0.03em;
+  }
+
+  .field-note {
+    font-size: var(--step--1);
+    color: var(--da-ultraviolet);
+    max-width: none;
+  }
+
+  input,
+  select,
+  textarea {
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    padding: 0.6em 0.8em;
+    border: 2px solid var(--da-black);
+    border-radius: var(--radius);
+    background: white;
+  }
+
+  input:disabled,
+  select:disabled,
+  textarea:disabled,
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  button {
+    justify-self: start;
+  }
+</style>

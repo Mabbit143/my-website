@@ -1,0 +1,68 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <p class="line">Learn the rules. Question who wrote them.</p>
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/articles/">Articles</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+    </nav>
+    <p class="fine-print">
+      &copy; {year} Deconstructing Academia.
+      <span class="placeholder-inline">[copyright / license statement pending — see SETUP_GUIDE.md]</span>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 3px solid var(--da-black);
+    background: var(--da-black);
+    color: var(--da-porcelain);
+    margin-top: var(--space-6);
+  }
+
+  .site-footer__inner {
+    padding-block: var(--space-4);
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .line {
+    font-family: var(--font-headline);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--da-chartreuse);
+    max-width: none;
+  }
+
+  .site-footer nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-footer a {
+    color: var(--da-porcelain);
+    text-decoration-color: var(--da-pink);
+  }
+
+  .fine-print {
+    font-size: var(--step--1);
+    opacity: 0.8;
+    max-width: none;
+  }
+
+  .placeholder-inline {
+    color: var(--da-teal);
+  }
+</style>

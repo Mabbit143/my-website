@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="Deconstructing Academia is founder-led by Mabbit. Here's the mission and the method."
+>
+  <section class="wrap about">
+    <h1>About</h1>
+
+    <p class="lede">
+      Deconstructing Academia is a public argument about knowledge: who gets to create it, whose
+      language is treated as intelligent, whose experience counts as evidence, whose work gets
+      cited, and who gets shut out before the conversation begins.
+    </p>
+    <p><strong>The point is not to make academia friendlier. The point is to make knowledge harder to hoard.</strong></p>
+
+    <h2>The method</h2>
+    <p>Every piece here runs the same basic questions, sometimes called <em>The Second Look</em>:</p>
+    <ol>
+      <li>What am I being shown as normal, natural, neutral, or inevitable?</li>
+      <li>Who created the category, definition, statistic, or official story?</li>
+      <li>What history had to disappear for this explanation to make sense?</li>
+      <li>Whose experience, knowledge, labor, or suffering is missing?</li>
+      <li>Who gains power, legitimacy, money, safety, or comfort when this story is accepted?</li>
+      <li>What does reality look like when the missing information is restored?</li>
+    </ol>
+
+    <h2>Who's asking</h2>
+    <div class="placeholder-note">
+      <strong>Placeholder — replace before launch.</strong> This section needs Mabbit's real bio
+      (lived experience, academic training, and why this project exists) in her own words. Claude
+      isn't inventing biography, credentials, or claims here — per the project brief, that has to
+      come from Lori directly. Draft it whenever you're ready and I'll drop it straight in.
+    </div>
+
+    <h2>Editorial values</h2>
+    <ul>
+      <li>Plainspoken. Skeptical. Funny when the absurdity earns it. Rigorous. Politically awake.</li>
+      <li>A citation supports the point — it doesn't become the personality.</li>
+      <li>No manufactured "both sides" paragraph when the evidence supports a conclusion.</li>
+      <li>Necessary nuance stays. Cowardly hedging goes.</li>
+    </ul>
+
+    <h2>Evidence commitments</h2>
+    <div class="placeholder-note">
+      <strong>Placeholder.</strong> Add your sourcing/corrections policy here (how claims are
+      checked, how corrections are handled) once you've settled on the exact language.
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about {
+    padding-block: var(--space-4) var(--space-6);
+    max-width: var(--content-max);
+  }
+
+  .lede {
+    font-size: var(--step-1);
+  }
+
+  .about ol,
+  .about ul {
+    padding-left: 1.3em;
+  }
+
+  .about li {
+    margin-bottom: 0.5em;
+  }
+
+  .about .placeholder-note {
+    margin-block: var(--space-2);
+  }
+</style>

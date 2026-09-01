@@ -1,0 +1,17 @@
+---
+import { getSeries } from '../lib/series';
+
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+const series = getSeries(slug);
+---
+
+{
+  series && (
+    <a href={`/articles/?series=${series.slug}`} class="pill" data-palette={series.palette}>
+      {series.name}
+    </a>
+  )
+}
