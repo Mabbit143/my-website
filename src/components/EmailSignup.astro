@@ -1,23 +1,40 @@
 ---
-// Newsletter provider is not yet chosen/approved (see SETUP_GUIDE.md,
-// decision list item "newsletter provider"). This renders the module in
-// place so the page layout is real, but the form does not submit anywhere
-// yet — it's disabled and says so.
+// Newsletter provider: Kit (kit.com), confirmed 1 Sep 2026.
+// Form ID / uid pulled from Lori's own Kit account embed code —
+// this submits directly to her list, styled to match the site
+// instead of Kit's default form design.
 ---
 
 <div class="signup">
   <h2>Get the next one</h2>
   <p>No spam, no algorithm between us. Unsubscribe whenever.</p>
-  <form aria-describedby="signup-note">
-    <label for="signup-email" class="visually-hidden">Email address</label>
-    <input id="signup-email" type="email" name="email" placeholder="you@example.com" disabled />
-    <button type="submit" class="btn" disabled>Join the list</button>
+  <form
+    action="https://app.kit.com/forms/9871140/subscriptions"
+    class="seva-form formkit-form signup-form"
+    method="post"
+    data-sv-form="9871140"
+    data-uid="adeeae6a0c"
+    data-format="inline"
+    data-version="5"
+  >
+    <ul class="formkit-alert formkit-alert-error" data-element="errors" data-group="alert"></ul>
+    <div data-element="fields" data-stacked="false" class="signup-fields">
+      <label for="signup-email" class="visually-hidden">Email address</label>
+      <input
+        id="signup-email"
+        class="formkit-input"
+        type="email"
+        name="email_address"
+        placeholder="you@example.com"
+        aria-label="Email Address"
+        required
+      />
+      <button type="submit" class="btn" data-element="submit">Join the list</button>
+    </div>
   </form>
-  <p id="signup-note" class="placeholder-note">
-    <strong>Not connected yet.</strong> Pick a newsletter provider (Buttondown and Kit both have workable
-    free tiers) and I'll wire this form up to it — 10 minute job once you decide.
-  </p>
 </div>
+
+<script src="https://f.convertkit.com/ckjs/ck.5.js" is:inline async></script>
 
 <style>
   .signup {
@@ -28,7 +45,7 @@
     max-width: var(--content-max);
   }
 
-  form {
+  .signup-fields {
     display: flex;
     gap: var(--space-1);
     flex-wrap: wrap;
@@ -44,9 +61,16 @@
     background: white;
   }
 
-  input:disabled,
-  button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  .formkit-alert {
+    font-family: var(--font-typewriter);
+    font-size: var(--step--1);
+    color: var(--accent-1-strong);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .formkit-alert:empty {
+    display: none;
   }
 </style>

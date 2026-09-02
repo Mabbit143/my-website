@@ -71,17 +71,26 @@ input before real launch)
 - Exact logo/wordmark files (currently a plain text wordmark)
 - Contact form provider + destination inbox + the actual "reason for
   contact" options (currently a placeholder)
-- Newsletter provider + consent copy
 - Analytics decision (currently none)
 - Final homepage copy and About bio
 - 3–5 real launch articles (currently 3 samples marked `placeholder: true`)
 - Privacy policy / copyright text
 - Social links for the footer
-- Cloudflare Pages connection + DNS cutover from IONOS
+- DNS cutover from IONOS (site is already live at Cloudflare Pages, see below)
+
+## Newsletter signup
+
+Connected to Kit (kit.com) as of 1 Sep 2026 — `src/components/EmailSignup.astro`
+submits directly to Lori's Kit form (ID `9871140`). Subscribers land in her
+Kit account and get Kit's default double opt-in confirmation email. If the
+form ID ever needs to change (new Kit form, different account), get the
+HTML embed code from Kit → Landing Pages & Forms → that form → Embed → HTML,
+and swap the `action`, `data-sv-form`, and `data-uid` values in that file —
+the visual styling is custom and doesn't need to change.
 
 ## Deploying
 
-Not connected yet. Once you're ready: sign up for Cloudflare Pages, connect
-this GitHub repo, and it builds + deploys automatically on every push to
-`main`. DNS gets repointed from IONOS to Cloudflare only when you're ready to
-go live — nothing here does that automatically.
+Connected. This repo is live on Cloudflare Pages, connected to the `main`
+branch — every push rebuilds and redeploys automatically, no extra steps.
+DNS gets repointed from IONOS to Cloudflare only when ready to go live on
+the real domain — nothing here does that automatically.
