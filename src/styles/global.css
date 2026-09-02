@@ -129,6 +129,28 @@
   --accent-4: #dcceff; /* Pale Lilac */
 }
 
+/* Chalkboard — the one palette that flips the ground itself (dark board,
+   not paper), for "Receipts or It Didn't Happen" and for the reusable
+   ChalkCallout component. Everything that paints itself with --color-bg /
+   --color-fg inside this scope goes dark; anything outside it (header,
+   footer, the rest of the site) is untouched. */
+[data-palette='chalkboard'] {
+  --color-bg: #1b1d22;
+  --color-fg: #e9dfc7;
+  --accent-1: #7d9fd4; /* Chalk Blue — headline emphasis, borders */
+  --accent-2: #e3c14f; /* Chalk Yellow — secondary */
+  --accent-3: #cfc6ab; /* Chalk Dust — tertiary fill */
+  --accent-4: var(--accent-2);
+  --accent-1-strong: color-mix(in srgb, var(--accent-1) 80%, var(--color-fg));
+}
+
+/* faint chalk-dust speckle, same feTurbulence trick as the paper grain but
+   light-on-dark — apply alongside [data-palette='chalkboard'] on a
+   background-painted element. */
+.chalk-texture {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 *,
 *::before,
 *::after {
@@ -442,6 +464,8 @@ svg {
 .placeholder-note {
   border: 2px dashed var(--da-ultraviolet);
   background: color-mix(in srgb, var(--da-periwinkle) 40%, var(--paper));
+  color: var(--ink); /* fixed, regardless of ambient [data-palette] — this box's
+    background never changes with the palette, so its text shouldn't either */
   padding: var(--space-2);
   font-size: var(--step--1);
   border-radius: var(--radius);

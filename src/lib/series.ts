@@ -2,19 +2,33 @@
 // are approved brand copy from the DA Foundation Files (Rebuild 01). Do not
 // reword these; they are not placeholders.
 //
-// `palette` assigns each series one of the 5 candidate collage palettes from
+// `palette` assigns each series one of the candidate collage palettes from
 // the DA Notion "palette candidate" table (fetched 1 Sep 2026), matched by
 // theme to that series — Claude's proposal, approved by Lori 1 Sep 2026:
 //   red-pen        → grading/certification, myth-busting ("Red Pen Society")
-//   archive        → source work, citations, historical context ("Archive After Dark")
+//   archive        → source work, historical context ("Archive After Dark")
 //   field-notes    → anthropology, lived/qualitative knowledge ("Field Notes")
 //   public-record  → institutional/bureaucratic, resource-pointing ("Public Record")
 //   electric       → activism, movement culture, loud ("Electric Playground")
+//   chalkboard     → citation tracing, fact-checking ("Chalkboard") — added
+//                    2 Sep 2026 as an ADDITION to the brand (Lori's chalkboard
+//                    reference images), not a replacement of the system above.
+//                    Approved for "Receipts or It Didn't Happen" specifically —
+//                    the one series literally about tracing sources. The
+//                    reusable inline version of the same look lives in
+//                    src/components/ChalkCallout.astro and can be dropped into
+//                    any article regardless of its series.
 // This mapping is an implementation detail Claude chose for consistent UI
 // theming (series pill, card border, headline emphasis color) — swap it any
 // time, it's not locked brand copy. Hex values live in src/styles/global.css.
 
-export type Palette = 'red-pen' | 'archive' | 'field-notes' | 'public-record' | 'electric';
+export type Palette =
+  | 'red-pen'
+  | 'archive'
+  | 'field-notes'
+  | 'public-record'
+  | 'electric'
+  | 'chalkboard';
 
 export interface Series {
   slug: string;
@@ -41,7 +55,7 @@ export const SERIES: Series[] = [
     slug: 'receipts-or-it-didnt-happen',
     name: "Receipts or It Didn't Happen",
     description: 'Source verification, citation tracing, statistics, funding, and methodology.',
-    palette: 'archive',
+    palette: 'chalkboard',
   },
   {
     slug: 'field-notes-from-the-other-side',

@@ -88,6 +88,16 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
 <style>
   .article {
     padding-block: var(--space-4) var(--space-6);
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  /* chalkboard series only: the article reads as one big slab sitting on
+     the page, matching how ArticleCard/series-card already treat a "clipping"
+     — not a full-bleed reskin of the header/footer/rest of the site. */
+  .article[data-palette='chalkboard'] {
+    border-radius: var(--radius);
+    padding-top: var(--space-3);
   }
 
   .article-header {

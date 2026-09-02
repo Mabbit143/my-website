@@ -1,0 +1,153 @@
+---
+// Reusable inline "Second Look" callout — the chalkboard treatment as a
+// component, not a series identity. Drop this into any article (any
+// series) for a fact-check / sourcing / "here's what's actually going on"
+// aside. Self-contained: sets its own data-palette, so it looks the same
+// regardless of the article's own series color.
+//
+// Usage (in an .mdx article — this component needs MDX to be embeddable
+// inside article body content, since plain .md can't import components):
+//
+//   import ChalkCallout from '../../components/ChalkCallout.astro';
+//
+//   <ChalkCallout title="The footnote doesn't say that." steps={3} source="full citation trail below">
+//     The original 1987 study measured something narrower than what's
+//     being claimed here — and every citation downstream just copied the
+//     last one instead of checking the source.
+//   </ChalkCallout>
+//
+// `eyebrow` defaults to "Second Look"; override it for a different recurring
+// label (e.g. "Worth Checking") if that reads better in context.
+
+interface Props {
+  title: string;
+  eyebrow?: string;
+  steps?: number;
+  source?: string;
+}
+
+const { title, eyebrow = 'Second Look', steps = 0, source } = Astro.props;
+---
+
+<div class="chalk-callout chalk-texture" data-palette="chalkboard">
+  <div class="chalk-eyebrow">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="10" cy="10" r="6"></circle>
+      <line x1="15" y1="15" x2="21" y2="21"></line>
+    </svg>
+    {eyebrow}
+  </div>
+  <p class="chalk-title">{title}</p>
+  <div class="chalk-body">
+    <slot />
+  </div>
+  {
+    (steps > 0 || source) && (
+      <div class="chalk-trail">
+        {Array.from({ length: steps }).map((_, i) => (
+          <>
+            {i > 0 && <span class="chalk-dash" aria-hidden="true" />}
+            <span class="chalk-dot">{i + 1}</span>
+          </>
+        ))}
+        {source && <span class="chalk-source">→ {source}</span>}
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .chalk-callout {
+    position: relative;
+    /* lightened relative to --color-bg, not a flat value — so this box still
+       reads as its own distinct panel whether it lands on the paper page
+       (most articles) or inside a chalkboard-series article, where the
+       surrounding page is already the same dark tone. */
+    background: color-mix(in srgb, var(--color-bg) 100%, white 9%);
+    color: var(--color-fg);
+    border: 1px solid color-mix(in srgb, var(--accent-1) 35%, transparent);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    margin: var(--space-3) 0;
+    box-shadow: 0 6px 0 -3px rgba(0, 0, 0, 0.35);
+  }
+
+  .chalk-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-family: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: var(--step--1);
+    color: var(--accent-1);
+    margin-bottom: 0.75em;
+  }
+
+  .chalk-eyebrow svg {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+  }
+
+  .chalk-title {
+    font-family: var(--font-headline);
+    font-size: var(--step-1);
+    text-transform: none;
+    letter-spacing: 0.01em;
+    margin: 0 0 0.6em;
+  }
+
+  .chalk-body :global(p) {
+    font-size: var(--step--1);
+    line-height: 1.6;
+    color: var(--color-fg);
+    opacity: 0.9;
+    margin: 0 0 0.75em;
+    max-width: none;
+  }
+
+  .chalk-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .chalk-body :global(a) {
+    color: var(--accent-2);
+  }
+
+  .chalk-trail {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4em;
+    margin-top: 1em;
+  }
+
+  .chalk-dot {
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--accent-1);
+    flex-shrink: 0;
+  }
+
+  .chalk-dash {
+    width: 1.5rem;
+    height: 0;
+    border-top: 1.5px dashed color-mix(in srgb, var(--accent-1) 50%, transparent);
+  }
+
+  .chalk-source {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-fg);
+    opacity: 0.55;
+    margin-left: 0.4em;
+  }
+</style>
