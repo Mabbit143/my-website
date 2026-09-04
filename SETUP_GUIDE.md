@@ -53,10 +53,13 @@ Copy one of the sample files in `src/content/articles/` (delete the
 Everything visual is controlled from **`src/styles/global.css`**, at the top,
 in the `:root` block:
 
-- **Colors** — `--accent-1`, `--accent-2`, `--accent-3` etc. There are 5
+- **Colors** — `--accent-1`, `--accent-2`, `--accent-3` etc. There are 6
   named palettes (`red-pen`, `archive`, `field-notes`, `public-record`,
-  `electric`) — see the big comment at the top of that file for what's
-  assigned where and why.
+  `electric`, `chalkboard`) — see the big comment at the top of that file
+  for what's assigned where and why. `chalkboard` is the odd one out: it
+  also flips the background dark, used for "Receipts or It Didn't Happen"
+  and for the reusable `ChalkCallout` component (`src/components/ChalkCallout.astro`,
+  usable from `.mdx` articles) — see the comment above that palette block.
 - **Fonts** — `--font-headline`, `--font-body`, etc.
 - **Reusable visual pieces** — `.tape`, `.torn-edge`, `.stamp`, `.note`,
   `.pill`, `.mark` (the red-pen circle around a word). Add a new one here and
