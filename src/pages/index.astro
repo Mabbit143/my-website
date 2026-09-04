@@ -86,6 +86,28 @@ const latest = allArticles.slice(1, 4);
   </section>
 
   <div class="wrap">
+    <div class="shop-banner">
+      <div class="shop-banner__inner">
+        <div class="shop-banner__text">
+          <p class="shop-banner__label">Now on Etsy</p>
+          <h2>The Syllabus Audit Kit + Grade Tracker</h2>
+          <p>
+            The free Quick Audit, built all the way out: the full rule-by-rule audit worksheet
+            plus a grade tracker that tells you where you actually stand before the syllabus does.
+          </p>
+          <p class="shop-banner__price">$12 · instant download</p>
+        </div>
+        <a
+          href="https://www.etsy.com/listing/4568126568/syllabus-audit-kit-grade-tracker"
+          class="btn btn--primary"
+        >
+          Get the kit →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
     <EmailSignup />
   </div>
 </BaseLayout>
@@ -195,5 +217,70 @@ const latest = allArticles.slice(1, 4);
 
   .about-teaser {
     max-width: var(--content-max);
+  }
+
+  .shop-banner {
+    background: var(--da-black);
+    color: var(--da-chartreuse);
+    border-top: 3px solid var(--da-black);
+    border-radius: var(--radius);
+    padding-block: var(--space-4);
+    padding-inline: var(--space-4);
+  }
+
+  .shop-banner__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .shop-banner__text {
+    flex: 2 1 20rem;
+  }
+
+  .shop-banner__label {
+    font-family: var(--font-label);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--da-pink);
+    font-weight: 700;
+    margin-bottom: var(--space-1);
+  }
+
+  .shop-banner h2 {
+    color: var(--da-chartreuse);
+    margin-block: var(--space-1);
+  }
+
+  .shop-banner p {
+    color: var(--da-chartreuse);
+    opacity: 0.85;
+    max-width: var(--content-max);
+  }
+
+  .shop-banner__price {
+    font-family: var(--font-label);
+    font-weight: 700;
+    font-size: var(--step-0);
+    opacity: 1 !important;
+    color: var(--da-pink) !important;
+    margin-top: var(--space-2);
+  }
+
+  .shop-banner .btn--primary {
+    flex-shrink: 0;
+    background: var(--da-chartreuse);
+    color: var(--da-black);
+    border-color: var(--da-chartreuse);
+    font-weight: 700;
+  }
+
+  .shop-banner .btn--primary:hover {
+    background: var(--da-pink);
+    border-color: var(--da-pink);
+    color: var(--da-black);
   }
 </style>
