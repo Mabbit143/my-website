@@ -24,6 +24,15 @@ const articles = defineCollection({
     author: z.string().default('Mabbit'),
     description: z.string().describe('Meta description for SEO/social sharing.'),
     socialImage: z.string().optional(),
+    coverImage: z
+      .string()
+      .optional()
+      .describe('Site path for the featured article graphic, usually /article-images/filename.webp.'),
+    coverAlt: z
+      .string()
+      .optional()
+      .describe('Concise description of the featured graphic for screen readers.'),
+    coverCaption: z.string().optional(),
     draft: z.boolean().default(false),
     placeholder: z
       .boolean()
