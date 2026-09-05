@@ -10,39 +10,36 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       didn't).
     </p>
 
-    <div class="placeholder-note">
-      <strong>Form provider not chosen yet.</strong> This is the form's real layout and copy, but
-      it isn't wired to send anywhere — see the decision list in <code>SETUP_GUIDE.md</code>. Two
-      solid free options that need zero backend code: <a href="https://formspree.io" rel="noopener">Formspree</a>
-      and a Cloudflare Pages Function (since you're already on Cloudflare). Tell me which one and
-      I'll connect it — 10 minutes.
-    </div>
-
-    <form aria-describedby="form-status">
+    <form action="https://formspree.io/f/xbgjalyg" method="POST">
       <div class="field">
         <label for="name">Name</label>
-        <input id="name" name="name" type="text" autocomplete="name" required disabled />
+        <input id="name" name="name" type="text" autocomplete="name" required />
       </div>
       <div class="field">
         <label for="email">Email</label>
-        <input id="email" name="email" type="email" autocomplete="email" required disabled />
+        <input id="email" name="email" type="email" autocomplete="email" required />
       </div>
       <div class="field">
         <label for="reason">Reason for contact</label>
-        <select id="reason" name="reason" disabled>
-          <option>[your real options go here]</option>
+        <select id="reason" name="reason" required>
+          <option value="" disabled selected>Choose one</option>
+          <option value="Correction">Correction</option>
+          <option value="Tip">Tip</option>
+          <option value="Pitch/Collaboration">Pitch / Collaboration</option>
+          <option value="General feedback">General feedback</option>
+          <option value="Other">Other</option>
         </select>
-        <p class="field-note">
-          Placeholder options only — tell me the actual reasons you want listed and I'll swap
-          these in.
-        </p>
       </div>
       <div class="field">
         <label for="message">Message</label>
-        <textarea id="message" name="message" rows="6" required disabled></textarea>
+        <textarea id="message" name="message" rows="6" required></textarea>
       </div>
-      <button type="submit" class="btn" disabled>Send</button>
-      <p id="form-status" class="visually-hidden">Form is not yet connected to a submission service.</p>
+
+      <!-- Honeypot: hidden from real visitors, catches basic spam bots -->
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+      <input type="hidden" name="_subject" value="New message — Deconstructing Academia contact form" />
+
+      <button type="submit" class="btn">Send</button>
     </form>
   </section>
 </BaseLayout>
@@ -51,10 +48,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .contact {
     padding-block: var(--space-4) var(--space-6);
     max-width: var(--content-max);
-  }
-
-  .contact .placeholder-note {
-    margin-block: var(--space-3);
   }
 
   form {
@@ -76,12 +69,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     letter-spacing: 0.03em;
   }
 
-  .field-note {
-    font-size: var(--step--1);
-    color: var(--da-ultraviolet);
-    max-width: none;
-  }
-
   input,
   select,
   textarea {
@@ -91,14 +78,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border: 2px solid var(--da-black);
     border-radius: var(--radius);
     background: white;
-  }
-
-  input:disabled,
-  select:disabled,
-  textarea:disabled,
-  button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
   }
 
   button {
