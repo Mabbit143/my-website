@@ -1,0 +1,145 @@
+media:
+  - name: article_images
+    label: Article Images
+    input: public/article-images
+    output: /article-images
+    extensions: [png, jpg, jpeg, webp, avif, gif, svg]
+    categories: [image]
+    rename: safe
+
+content:
+  - name: articles
+    label: Blog Articles
+    type: collection
+    path: src/content/articles
+    format: yaml-frontmatter
+    filename:
+      template: "{primary}.md"
+      field: create
+    exclude: ["_README.md"]
+    view:
+      fields: [title, pubDate, series, draft]
+      primary: title
+      sort: [pubDate, title]
+      search: [title, deck, topics]
+      default:
+        sort: pubDate
+        order: desc
+    fields:
+      - name: title
+        label: Headline
+        type: string
+        required: true
+
+      - name: deck
+        label: Short Introduction
+        type: text
+        required: true
+        description: One or two sentences explaining the argument and why it matters.
+
+      - name: series
+        label: Article Series
+        type: select
+        required: true
+        options:
+          placeholder: Choose a series
+          values:
+            - name: whose-peers
+              label: Whose Peers?
+            - name: academic-autopsy
+              label: Academic Autopsy
+            - name: receipts-or-it-didnt-happen
+              label: Receipts or It Didn't Happen
+            - name: field-notes-from-the-other-side
+              label: Field Notes From the Other Side
+            - name: the-syllabus-left-this-out
+              label: The Syllabus Left This Out
+            - name: use-the-damn-tool
+              label: Use the Damn Tool
+            - name: dog-eared-dissent
+              label: Dog-Eared Dissent
+            - name: where-the-work-is
+              label: Where the Work Is
+
+      - name: topics
+        label: Topics
+        type: string
+        list: true
+        description: Add short search topics one at a time.
+
+      - name: pubDate
+        label: Publication Date
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+
+      - name: updatedDate
+        label: Updated Date
+        type: date
+        default: ""
+        options:
+          format: yyyy-MM-dd
+
+      - name: author
+        label: Author
+        type: string
+        default: Mabbit
+
+      - name: description
+        label: Search and Sharing Description
+        type: text
+        required: true
+        description: About 150 characters explaining the article for search results and shared links.
+
+      - name: coverImage
+        label: Featured Article Graphic
+        type: image
+        options:
+          media: article_images
+          path: public/article-images
+          extensions: [png, jpg, jpeg, webp, avif, gif, svg]
+          rename: safe
+
+      - name: coverAlt
+        label: Featured Graphic Description
+        type: text
+        description: Describe what the graphic shows for readers who cannot see it.
+
+      - name: coverCaption
+        label: Featured Graphic Caption
+        type: text
+        description: Optional caption or source credit shown below the featured graphic.
+
+      - name: socialImage
+        label: Social Sharing Graphic
+        type: image
+        description: Optional separate landscape graphic for Facebook and other shared links.
+        options:
+          media: article_images
+          path: public/article-images
+          extensions: [png, jpg, jpeg, webp, avif]
+          rename: safe
+
+      - name: draft
+        label: Keep as Draft
+        type: boolean
+        default: true
+        description: Leave this on while writing. Turn it off when the article is ready to appear publicly.
+
+      - name: placeholder
+        type: boolean
+        default: false
+        hidden: true
+
+      - name: body
+        label: Article
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+          media: article_images
+          path: public/article-images
+          extensions: [png, jpg, jpeg, webp, avif, gif, svg]
+          rename: safe
+          switcher: true
