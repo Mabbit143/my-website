@@ -10,6 +10,7 @@ interface Props {
       series: string;
       pubDate: Date;
       placeholder?: boolean;
+      coverImage?: string;
     };
   };
 }
@@ -24,6 +25,13 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
 
 <article class="card torn-edge" data-palette={series?.palette}>
   <span class="tape" aria-hidden="true"></span>
+  {
+    entry.data.coverImage && (
+      <a class="card-graphic" href={`/articles/${entry.slug}/`} aria-hidden="true" tabindex="-1">
+        <img src={entry.data.coverImage} alt="" loading="lazy" decoding="async" />
+      </a>
+    )
+  }
   {series && <span class="pill">{series.name}</span>}
   <h3><a href={`/articles/${entry.slug}/`}>{entry.data.title}</a></h3>
   <p class="typewriter">{entry.data.deck}</p>
@@ -36,6 +44,7 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
 <style>
   .card {
     position: relative;
+    overflow: hidden;
     border: 2px solid var(--ink);
     border-left: 6px solid var(--accent-1);
     border-radius: var(--radius);
@@ -56,6 +65,20 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
   }
   .card:nth-child(odd) {
     transform: rotate(-0.5deg);
+  }
+
+  .card-graphic {
+    display: block;
+    margin: calc(var(--space-3) * -1) calc(var(--space-3) * -1) var(--space-2);
+    border-bottom: 2px solid var(--ink);
+    background: color-mix(in srgb, var(--accent-3) 18%, var(--paper));
+    text-decoration: none;
+  }
+
+  .card-graphic img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
   }
 
   .card h3 {
