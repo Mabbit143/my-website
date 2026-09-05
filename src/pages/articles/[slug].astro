@@ -60,11 +60,28 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
         entry.data.placeholder && (
           <p class="placeholder-note">
             <strong>Sample content.</strong> This article exists to demonstrate the template — swap
-            it for a real piece before launch. See <code>src/content/articles/README.md</code>.
+            it for a real piece before launch. See <code>src/content/articles/_README.md</code>.
           </p>
         )
       }
     </header>
+
+    {
+      entry.data.coverImage && (
+        <figure class="article-cover">
+          <span class="tape" aria-hidden="true" />
+          <img
+            src={entry.data.coverImage}
+            alt={entry.data.coverAlt ?? `${entry.data.title} article graphic`}
+            width="1200"
+            height="675"
+            loading="eager"
+            decoding="async"
+          />
+          {entry.data.coverCaption && <figcaption>{entry.data.coverCaption}</figcaption>}
+        </figure>
+      )
+    }
 
     <div class="prose">
       <Content />
@@ -124,6 +141,33 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
     max-width: var(--content-max);
   }
 
+  .article-cover {
+    position: relative;
+    width: min(100%, 58rem);
+    margin: 0 0 var(--space-4);
+    padding: 0.55rem;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    box-shadow: 5px 6px 0 color-mix(in srgb, var(--ink) 16%, transparent);
+    transform: rotate(-0.35deg);
+  }
+
+  .article-cover img {
+    width: 100%;
+    height: auto;
+    max-height: 38rem;
+    object-fit: contain;
+    background: color-mix(in srgb, var(--accent-3) 18%, var(--paper));
+  }
+
+  .article-cover figcaption {
+    padding: 0.7rem 0.4rem 0.2rem;
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
   .prose {
     max-width: var(--content-max);
   }
@@ -145,6 +189,53 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
     text-decoration-color: var(--accent-2);
   }
 
+  /* Any ordinary Markdown image becomes a designed article graphic.
+     A single italic paragraph immediately after it becomes its caption. */
+  .prose :global(p:has(> img:only-child)),
+  .prose :global(p:has(> a:only-child > img:only-child)) {
+    position: relative;
+    width: min(100%, 52rem);
+    margin: var(--space-4) 0 var(--space-2);
+    padding: 0.5rem;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    box-shadow: 4px 5px 0 color-mix(in srgb, var(--ink) 14%, transparent);
+    transform: rotate(0.25deg);
+  }
+
+  .prose :global(p:has(> img:only-child)::before),
+  .prose :global(p:has(> a:only-child > img:only-child)::before) {
+    content: '';
+    position: absolute;
+    top: -0.75rem;
+    left: 1.5rem;
+    width: 4rem;
+    height: 1.35rem;
+    z-index: 1;
+    background: color-mix(in srgb, var(--accent-3) 72%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+    box-shadow: 0 2px 3px rgb(0 0 0 / 14%);
+    transform: rotate(-4deg);
+  }
+
+  .prose :global(p:has(> img:only-child) img),
+  .prose :global(p:has(> a:only-child > img:only-child) img) {
+    width: 100%;
+    height: auto;
+    max-height: 38rem;
+    object-fit: contain;
+    background: color-mix(in srgb, var(--accent-3) 14%, var(--paper));
+  }
+
+  .prose :global(p:has(> img:only-child) + p:has(> em:only-child)),
+  .prose :global(p:has(> a:only-child > img:only-child) + p:has(> em:only-child)) {
+    margin-top: 0;
+    color: color-mix(in srgb, var(--color-fg) 72%, transparent);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
   .related {
     border-top: 3px solid var(--ink);
     margin-top: var(--space-5);
@@ -156,5 +247,14 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
     gap: var(--space-2);
+  }
+
+  @media (max-width: 40rem) {
+    .article-cover,
+    .prose :global(p:has(> img:only-child)),
+    .prose :global(p:has(> a:only-child > img:only-child)) {
+      transform: none;
+      box-shadow: 3px 4px 0 color-mix(in srgb, var(--ink) 14%, transparent);
+    }
   }
 </style>
