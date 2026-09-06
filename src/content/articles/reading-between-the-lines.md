@@ -1,15 +1,21 @@
 ---
-title: "Reading Between the Lines"
-deck: "A clear answer lets you plan, choose your risks, and stop losing points because you guessed wrong."
-series: "the-syllabus-left-this-out"
-topics: ["syllabus", "first-generation students", "grades", "how-to"]
+title: Reading Between the Lines
+deck: A clear answer lets you plan, choose your risks, and stop losing points
+  because you guessed wrong.
+series: the-syllabus-left-this-out
+topics:
+  - syllabus
+  - first-generation students
+  - grades
+  - how-to
 pubDate: 2026-09-02
-description: "A first-gen student's practical guide to decoding vague syllabus language — attendance, participation, grading weights — before it costs you a grade."
-author: "Mabbit"
+author: Mabbit Rountree
+description: A first-gen student's practical guide to decoding vague syllabus
+  language — attendance, participation, grading weights — before it costs you a
+  grade.
 draft: false
 placeholder: false
 ---
-
 What's in a syllabus that you need to know? As a freshman, I just thought it was some guidelines, maybe due dates and a calendar, definitely contact info for the professor.
 
 Basic shit, ya know? As I approach my senior year now, I have figured out that a syllabus holds many little secrets I never know to look for. It's a little contract, often misleading and the fine print gives you a headache to think about. Who wants to calculate percentages and map readings into a calendar for hours?
