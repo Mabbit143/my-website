@@ -4,7 +4,7 @@ deck: The unsupportable chasm between the "imaginary student" and the real stude
 series: field-notes-from-the-other-side
 pubDate: 2026-09-05
 updatedDate: 2026-09-05
-author: Mabbit
+author: Mabbit Rountree
 description: Universities claim their policies are neutral, but they’re actually
   built for an imaginary student with no job, no kids, and zero real-world
   problems. Discover how rigid academic rules confuse compliance with learning,
