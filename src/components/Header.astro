@@ -10,7 +10,8 @@ const path = Astro.url.pathname;
 <header class="site-header">
   <div class="wrap site-header__inner">
     <a href="/" class="wordmark" aria-label="Deconstructing Academia — home">
-      Deconstructing<br /><span>Academia</span>
+      <img src="/images/da-header-icon.png" alt="" class="wordmark__icon" width="198" height="220" />
+      <span class="wordmark__text">Deconstructing<br /><span class="wordmark__accent">Academia</span></span>
     </a>
 
     <nav aria-label="Primary">
@@ -45,16 +46,28 @@ const path = Astro.url.pathname;
   }
 
   .wordmark {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    text-decoration: none;
+  }
+
+  .wordmark__icon {
+    height: 3.2rem;
+    width: auto;
+    display: block;
+  }
+
+  .wordmark__text {
     font-family: var(--font-headline);
     font-weight: 700;
     font-size: var(--step-1);
     line-height: 1;
-    text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.01em;
   }
 
-  .wordmark span {
+  .wordmark__accent {
     color: var(--da-pink);
   }
 
