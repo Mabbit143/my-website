@@ -73,20 +73,24 @@ const allArticles = (await getCollection('articles', ({ data }) => !data.draft))
     text-transform: uppercase;
     font-size: var(--step--1);
     letter-spacing: 0.02em;
-    border: 2px solid var(--ink);
+    /* ink border + --color-bg background were both invisible on the dark
+       page. Lifted panel + paper-tinted border, accent stays on the left. */
+    border: 2px solid color-mix(in srgb, var(--paper) 22%, transparent);
     border-left-width: 4px;
     border-left-color: var(--accent-1);
     border-radius: var(--radius);
-    background: var(--color-bg);
+    background: color-mix(in srgb, var(--color-bg) 100%, white 6%);
     color: var(--color-fg);
     padding: 0.4em 0.8em;
     cursor: pointer;
   }
 
   .filter-btn.is-active {
-    background: var(--ink);
-    color: var(--paper);
-    border-left-color: var(--accent-1);
+    /* was --ink on the ink page — the active state was invisible. Flip to
+       a solid accent chip with dark ink text. */
+    background: var(--accent-1);
+    color: var(--ink);
+    border-color: var(--accent-1);
   }
 
   .grid {

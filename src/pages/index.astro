@@ -166,8 +166,9 @@ const latest = allArticles.slice(1, 4);
     font-size: var(--step--1);
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--ink);
-    opacity: 0.7;
+    /* was var(--ink) — invisible on the dark page */
+    color: var(--color-fg);
+    opacity: 0.6;
   }
 
   .featured,
@@ -175,7 +176,10 @@ const latest = allArticles.slice(1, 4);
   .series,
   .about-teaser {
     padding-block: var(--space-4);
-    border-top: 3px solid var(--da-black);
+    /* was 3px solid var(--da-black) — vanished into the dark page. A soft
+       paper-tinted rule still reads as a section seam without stacking
+       four loud neon lines down the page. */
+    border-top: 1px solid var(--color-border);
   }
 
   .grid {
@@ -194,11 +198,14 @@ const latest = allArticles.slice(1, 4);
 
   .series-card {
     display: block;
-    border: 2px solid var(--ink);
+    /* same fix as ArticleCard: an ink border on the ink page was invisible.
+       Soft paper-tinted border + a slightly lifted panel so the card reads
+       as its own surface. */
+    border: 2px solid color-mix(in srgb, var(--paper) 18%, transparent);
     border-radius: var(--radius);
     padding: var(--space-2);
     text-decoration: none;
-    background: var(--color-bg);
+    background: color-mix(in srgb, var(--color-bg) 100%, white 6%);
     color: var(--color-fg);
     border-left-width: 6px;
     border-left-color: var(--accent-1);
@@ -220,9 +227,13 @@ const latest = allArticles.slice(1, 4);
   }
 
   .shop-banner {
-    background: var(--da-black);
+    /* was a flat --da-black box on a light page. On the dark page that
+       box disappeared entirely — now a lifted panel with a neon frame
+       and inner glow so the CTA reads as lit from within. */
+    background: color-mix(in srgb, var(--accent-1) 10%, var(--color-bg));
     color: var(--da-chartreuse);
-    border-top: 3px solid var(--da-black);
+    border: 2px solid var(--accent-1);
+    box-shadow: 0 0 26px -8px color-mix(in srgb, var(--accent-1) 55%, transparent);
     border-radius: var(--radius);
     padding-block: var(--space-4);
     padding-inline: var(--space-4);

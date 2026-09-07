@@ -323,6 +323,12 @@ svg {
    reads correctly on the dark page. */
 .pill {
   display: inline-flex;
+  /* a flex-column parent (.card) stretches its children to full width by
+     default — on the old light page the pale pill background was near-
+     invisible so nobody noticed; on the dark page it became a full-width
+     caution-tape bar. Pin it to its content width. */
+  align-self: flex-start;
+  max-width: 100%;
   align-items: center;
   gap: 0.4em;
   font-family: var(--font-mono);

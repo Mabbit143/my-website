@@ -75,9 +75,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-family: var(--font-body);
     font-size: var(--step-0);
     padding: 0.6em 0.8em;
-    border: 2px solid var(--da-black);
+    /* was 2px solid var(--da-black) — invisible on the dark page. The field
+       stays white for familiarity, so its text must be pinned dark or it
+       would inherit the now-light --color-fg and vanish. */
+    border: 2px solid var(--accent-1);
     border-radius: var(--radius);
     background: white;
+    color: var(--ink);
   }
 
   button {
