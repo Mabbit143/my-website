@@ -45,14 +45,18 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
   .card {
     position: relative;
     overflow: hidden;
-    border: 2px solid var(--ink);
+    /* was: border: 2px solid var(--ink) — same color as the page
+       background now, so it had gone invisible. A soft paper-tinted
+       border plus a slightly lightened panel background is what makes
+       the card read as its own clipping sitting on the black page. */
+    border: 2px solid color-mix(in srgb, var(--paper) 18%, transparent);
     border-left: 6px solid var(--accent-1);
     border-radius: var(--radius);
     padding: var(--space-3);
     padding-bottom: calc(var(--space-3) + 0.6rem);
-    background: var(--color-bg);
+    background: color-mix(in srgb, var(--color-bg) 100%, white 6%);
     color: var(--color-fg);
-    box-shadow: 3px 4px 0 color-mix(in srgb, var(--ink) 12%, transparent);
+    box-shadow: 4px 5px 0 rgb(0 0 0 / 45%);
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
@@ -70,7 +74,7 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
   .card-graphic {
     display: block;
     margin: calc(var(--space-3) * -1) calc(var(--space-3) * -1) var(--space-2);
-    border-bottom: 2px solid var(--ink);
+    border-bottom: 2px solid color-mix(in srgb, var(--paper) 18%, transparent);
     background: color-mix(in srgb, var(--accent-3) 18%, var(--paper));
     text-decoration: none;
   }

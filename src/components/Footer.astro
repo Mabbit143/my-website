@@ -19,7 +19,12 @@ const year = new Date().getFullYear();
 
 <style>
   .site-footer {
-    border-top: 3px solid var(--da-black);
+    /* was: border-top: 3px solid var(--da-black) — that worked as a
+       visible seam when the page above was light paper. Now the page
+       above is also ink-colored, so the footer needs its own accent
+       line to still read as a distinct section instead of just
+       fading into the page. */
+    border-top: 3px solid var(--accent-1);
     background: var(--da-black);
     color: var(--da-porcelain);
     margin-top: var(--space-6);

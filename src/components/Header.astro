@@ -32,7 +32,10 @@ const path = Astro.url.pathname;
 
 <style>
   .site-header {
-    border-bottom: 3px solid var(--da-black);
+    /* was: border-bottom: 3px solid var(--da-black) — invisible now that
+       the page background is also ink-colored. A neon rule reads as an
+       intentional line instead of a missing one. */
+    border-bottom: 3px solid var(--accent-1);
     background: var(--color-bg);
   }
 
@@ -65,6 +68,7 @@ const path = Astro.url.pathname;
     line-height: 1;
     text-transform: uppercase;
     letter-spacing: 0.01em;
+    color: var(--color-fg);
   }
 
   .wordmark__accent {
@@ -87,6 +91,7 @@ const path = Astro.url.pathname;
     font-size: var(--step--1);
     letter-spacing: 0.03em;
     text-decoration: none;
+    color: var(--color-fg);
     padding-bottom: 2px;
     border-bottom: 3px solid transparent;
   }

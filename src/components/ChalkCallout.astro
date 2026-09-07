@@ -59,17 +59,22 @@ const { title, eyebrow = 'Second Look', steps = 0, source } = Astro.props;
 <style>
   .chalk-callout {
     position: relative;
-    /* lightened relative to --color-bg, not a flat value — so this box still
-       reads as its own distinct panel whether it lands on the paper page
-       (most articles) or inside a chalkboard-series article, where the
-       surrounding page is already the same dark tone. */
+    /* lightened relative to --color-bg, not a flat value — this formula
+       already worked for a dark ground before the rebrand (chalkboard was
+       always the one dark palette), so it needed no change: it still
+       reads as its own distinct panel sitting on the page, whether that
+       page is now the sitewide dark default or another chalkboard-series
+       article. */
     background: color-mix(in srgb, var(--color-bg) 100%, white 9%);
     color: var(--color-fg);
     border: 1px solid color-mix(in srgb, var(--accent-1) 35%, transparent);
     border-radius: var(--radius);
     padding: var(--space-3);
     margin: var(--space-3) 0;
-    box-shadow: 0 6px 0 -3px rgba(0, 0, 0, 0.35);
+    /* was a flat black shadow, which a dark page swallows. A soft glow
+       in the accent color reads as "this panel is lit from inside"
+       instead, matching the neon system. */
+    box-shadow: 0 0 22px -6px color-mix(in srgb, var(--accent-1) 45%, transparent);
   }
 
   .chalk-eyebrow {

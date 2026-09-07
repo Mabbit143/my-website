@@ -1,73 +1,79 @@
 /* ============================================================
    DECONSTRUCTING ACADEMIA — design tokens
-   Editorial-collage art direction, confirmed 1 Sep 2026 (ChatGPT
-   design conversation + reference mockups Lori supplied). The old
-   7-color "locked" system is retired per the DA Notion dashboard:
-   "Color strategy is currently unresolved. Do not use the retired
-   5-of-8 daily rotation as a production instruction."
+   REBRAND — confirmed 6 Sep 2026. Replaces the "editorial-collage"
+   light system (porcelain paper, muted red-pen/archive/field-notes
+   palettes) with the neon graffiti-punk system from the finished
+   badge logo and Instagram carousel set. Locked decisions:
+     - Whole site goes dark (was: light paper background).
+     - Each series KEEPS its own accent palette, just re-cut in
+       neon — the red-pen/archive/field-notes/public-record/electric
+       mapping from 1 Sep 2026 is unchanged, only the hex values
+       under each name changed. See src/lib/series.ts — nothing
+       there needed to change.
+     - The new circular splatter badge is a social-only asset
+       (see /mnt/user-data/outputs/social-assets/). Header/footer
+       keep the existing plain character cutout — not touched here.
 
    Ink (Blackberry #0D0B12) and Paper (Dirty Porcelain #F3EFE3) are
-   constant across the whole site — every candidate palette in the
-   Notion "palette candidate" table shares Blackberry, and Porcelain
-   is close enough to the other two "paper" tones (Old Paper,
-   Document Cream) that keeping ONE paper color everywhere is what
-   makes the site read as one world instead of five reskins. Only
-   the 3 accent colors change, per series, via [data-palette].
+   UNCHANGED as literal colors — only their JOB flipped. Ink used to
+   be the ground floor is now the background; Paper used to be the
+   page is now the ink you write with. Think spray paint on a wall
+   instead of pen on paper.
 
-   Palette → series mapping (Claude's proposal, approved 1 Sep 2026):
-     red-pen        → Whose Peers?, Academic Autopsy            (site default/anchor)
-     archive        → Receipts or It Didn't Happen, The Syllabus Left This Out
-     field-notes    → Field Notes From the Other Side
-     public-record  → Use the Damn Tool, Where the Work Is
-     electric       → Dog-Eared Dissent
-   Hex values sourced from the DA Notion "candidate palette" table
-   (fetched 1 Sep 2026) — see src/lib/series.ts.
+   Every accent below was run through a WCAG contrast check against
+   the new #0d0b12 background (script output, not eyeballed) —
+   everything here clears 4.5:1 for normal text. public-record's
+   original "cobalt" neon (#3b6bff) only cleared 4.41, so it's a
+   half-step brighter here (#5c8aff, 6.09:1) instead.
 
-   Typography: Anton (headline) + Caveat (handwritten annotation)
-   are Lori's picks from that conversation. Roboto (body) is
-   Claude's extrapolation — none of her 5 fonts were meant for long
-   paragraphs. Roboto Condensed / Special Elite / Roboto Mono round
-   out the rest of her named stack (labels / typed notes / metadata).
+   Typography is unchanged: Anton (headline) already reads as
+   spray-stencil/poster type, so it carries the new look without
+   swapping fonts. Caveat, Special Elite, Roboto, Roboto Condensed,
+   Roboto Mono all stay.
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&family=Roboto+Mono:wght@400;500&family=Special+Elite&family=Caveat:wght@600&display=swap');
 
 :root {
-  /* --- constants: same everywhere, the connective tissue --- */
+  /* --- constants: same hex as always, different job (see header note) --- */
   --ink: #0d0b12;
   --paper: #f3efe3;
 
-  /* --- accent set: defaults to Red Pen Society, the site anchor --- */
-  --accent-1: #c72c41; /* Academic Red — headline emphasis, underlines, borders (must hold contrast on paper) */
-  --accent-2: #d98a9a; /* Dusty Rose — secondary fill */
-  --accent-3: #d8c49a; /* Manila — tertiary fill / tape */
-  --accent-4: var(--accent-2); /* only Electric Playground uses a real 4th color */
+  /* --- accent set: defaults to Red Pen Society, the site anchor,
+     now "Riot Pink" instead of "Academic Red" --- */
+  --accent-1: #ff3fd8; /* Riot Magenta — headline emphasis, underlines, borders */
+  --accent-2: #ff8fe0; /* Bubblegum Pink — secondary fill */
+  --accent-3: #ffe36e; /* Caution Gold — tertiary fill / tape */
+  --accent-4: var(--accent-2);
 
-  /* derived, contrast-safe tokens — some raw accents (e.g. Public Record's
-     Brick, Field Notes' Moss) don't hold 4.5:1 against ink or paper at
-     small text sizes on their own. These are computed once here and
-     recompute automatically inside any [data-palette] scope. Verified
-     against WCAG AA with a script — see SETUP_GUIDE.md. */
-  --accent-fill: color-mix(in srgb, var(--accent-3) 55%, var(--paper)); /* pill/note backgrounds, ink text on top */
-  --accent-1-strong: color-mix(in srgb, var(--accent-1) 80%, var(--ink)); /* small text/borders in the accent hue */
+  /* derived, contrast-safe tokens — recompute automatically inside any
+     [data-palette] scope. --accent-fill still mixes toward --paper (a
+     literal light hex), which is exactly right on a dark page: it
+     produces a bright chip/note background with dark ink text sitting
+     on top, so notes and pills still pop off the black page.
+     --accent-1-strong used to darken toward --ink for small text on a
+     LIGHT page; now the page is dark, so it lightens toward --paper
+     instead — same job (guarantee small accent-colored text/borders
+     stay legible), opposite direction, because the ground flipped. */
+  --accent-fill: color-mix(in srgb, var(--accent-3) 55%, var(--paper));
+  --accent-1-strong: color-mix(in srgb, var(--accent-1) 85%, var(--paper));
 
-  /* --- legacy aliases (old locked-system names still referenced by a
-     few older utility classes below; point them at the new system so
-     nothing silently goes transparent) --- */
+  /* --- legacy aliases (still referenced by a few older utility classes
+     below; point them at the new system so nothing silently breaks) --- */
   --da-black: var(--ink);
   --da-porcelain: var(--paper);
   --da-pink: var(--accent-1);
   --da-chartreuse: var(--accent-3);
   --da-teal: var(--accent-2);
-  --da-ultraviolet: #6a00ff; /* kept only for the placeholder-note callouts */
+  --da-ultraviolet: #8b2fff; /* brightened for the neon system; kept only for placeholder-note callouts */
   --da-periwinkle: #c7d6ff;
 
-  /* --- semantic roles --- */
-  --color-bg: var(--paper);
-  --color-fg: var(--ink);
-  --color-border: color-mix(in srgb, var(--ink) 20%, transparent);
+  /* --- semantic roles — FLIPPED from the light system --- */
+  --color-bg: var(--ink);
+  --color-fg: var(--paper);
+  --color-border: color-mix(in srgb, var(--paper) 20%, transparent);
 
-  /* --- typography --- */
+  /* --- typography (unchanged) --- */
   --font-headline: 'Anton', 'Arial Narrow', sans-serif;
   --font-label: 'Roboto Condensed', 'Arial Narrow', sans-serif;
   --font-body: 'Roboto', -apple-system, 'Segoe UI', sans-serif;
@@ -90,62 +96,64 @@
   --space-5: 4rem;
   --space-6: 6rem;
 
-  --content-max: 42rem; /* comfortable article line length */
+  --content-max: 42rem;
   --page-max: 72rem;
-  --radius: 2px; /* institutional/document, not soft-app */
+  --radius: 2px;
 }
 
 /* --- per-series palettes — set data-palette="..." on any ancestor
-   element and every --accent-* below it follows. See src/lib/series.ts
-   for which series uses which. --- */
+   element and every --accent-* below it follows. Same series→palette
+   assignments as before (src/lib/series.ts is unchanged); only the
+   hex values changed, from muted/editorial to neon. --- */
 [data-palette='red-pen'] {
-  --accent-1: #c72c41; /* Academic Red */
-  --accent-2: #d98a9a; /* Dusty Rose */
-  --accent-3: #d8c49a; /* Manila */
+  --accent-1: #ff3fd8; /* Riot Magenta */
+  --accent-2: #ff8fe0; /* Bubblegum Pink */
+  --accent-3: #ffe36e; /* Caution Gold */
   --accent-4: var(--accent-2);
 }
 [data-palette='archive'] {
-  --accent-1: #17263c; /* Deep Navy */
-  --accent-2: #5e86a6; /* Archive Blue */
-  --accent-3: #c7d6ff; /* Powder Periwinkle */
+  --accent-1: #22e2f5; /* Electric Cyan */
+  --accent-2: #5ec8ff; /* Sky Volt */
+  --accent-3: #b8c6ff; /* Neon Periwinkle */
   --accent-4: var(--accent-2);
 }
 [data-palette='field-notes'] {
-  --accent-1: #65764b; /* Moss */
-  --accent-2: #bc6649; /* Terracotta */
-  --accent-3: #d8a63c; /* Ochre */
+  --accent-1: #b6ff3d; /* Acid Lime */
+  --accent-2: #ff8a3d; /* Blaze Orange */
+  --accent-3: #ffd23d; /* Amber Marigold */
   --accent-4: var(--accent-2);
 }
 [data-palette='public-record'] {
-  --accent-1: #203a57; /* Courtroom Navy */
-  --accent-2: #658caf; /* Government Blue */
-  --accent-3: #a6423a; /* Brick */
+  --accent-1: #5c8aff; /* Cobalt Volt (brightened for contrast, see header note) */
+  --accent-2: #8fb0ff; /* Pale Cobalt */
+  --accent-3: #ff3b5c; /* Alert Red */
   --accent-4: var(--accent-2);
 }
 [data-palette='electric'] {
-  --accent-1: #3155ff; /* Cobalt */
-  --accent-2: #f04452; /* Punch Red */
-  --accent-3: #ffbd32; /* Marigold */
-  --accent-4: #dcceff; /* Pale Lilac */
+  --accent-1: #a855f7; /* Riot Violet */
+  --accent-2: #ff2e63; /* Punch Red */
+  --accent-3: #ffd23d; /* Marigold */
+  --accent-4: #d9b8ff; /* Neon Lilac */
 }
 
-/* Chalkboard — the one palette that flips the ground itself (dark board,
-   not paper), for "Receipts or It Didn't Happen" and for the reusable
-   ChalkCallout component. Everything that paints itself with --color-bg /
-   --color-fg inside this scope goes dark; anything outside it (header,
-   footer, the rest of the site) is untouched. */
+/* Chalkboard — used to be "the one palette that goes dark" when
+   everything else was light paper. Now the whole site is dark, so
+   its job changed slightly: it's "the one palette that goes a
+   DIFFERENT dark" — a violet-black panel that still reads as its
+   own distinct surface sitting on the near-black page, for "Receipts
+   or It Didn't Happen" and the reusable ChalkCallout component. */
 [data-palette='chalkboard'] {
-  --color-bg: #1b1d22;
+  --color-bg: #1a0f2e;
   --color-fg: #e9dfc7;
-  --accent-1: #7d9fd4; /* Chalk Blue — headline emphasis, borders */
-  --accent-2: #e3c14f; /* Chalk Yellow — secondary */
-  --accent-3: #cfc6ab; /* Chalk Dust — tertiary fill */
+  --accent-1: #9db8e0; /* Chalk Blue — brightened from the original for AA on the new bg */
+  --accent-2: #e3c14f; /* Chalk Yellow */
+  --accent-3: #cfc6ab; /* Chalk Dust */
   --accent-4: var(--accent-2);
   --accent-1-strong: color-mix(in srgb, var(--accent-1) 80%, var(--color-fg));
 }
 
-/* faint chalk-dust speckle, same feTurbulence trick as the paper grain but
-   light-on-dark — apply alongside [data-palette='chalkboard'] on a
+/* faint chalk-dust speckle, same feTurbulence trick as the page grain
+   but light-on-dark — apply alongside [data-palette='chalkboard'] on a
    background-painted element. */
 .chalk-texture {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -158,7 +166,7 @@
 }
 
 html {
-  color-scheme: light;
+  color-scheme: dark;
   scroll-behavior: smooth;
 }
 
@@ -178,9 +186,11 @@ html {
 body {
   margin: 0;
   background-color: var(--color-bg);
-  /* photocopy/paper grain — generated inline via SVG feTurbulence, no
-     image asset needed. Kept subtle so it never fights legibility. */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* spray/grain texture — was dark speckle on light paper, now flipped
+     to a light speckle on the dark page (same feTurbulence trick as
+     .chalk-texture above, just applied sitewide and kept very subtle
+     so it never fights legibility). */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   color: var(--color-fg);
   font-family: var(--font-body);
   font-size: var(--step-0);
@@ -193,7 +203,7 @@ h2,
 h3,
 h4 {
   font-family: var(--font-headline);
-  font-weight: 400; /* Anton only ships one weight; it reads bold by design */
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.01em;
   line-height: 0.95;
@@ -235,7 +245,7 @@ a {
 }
 
 a:hover {
-  text-decoration-color: var(--ink);
+  text-decoration-color: var(--paper);
 }
 
 /* visible focus state everywhere, no exceptions */
@@ -245,7 +255,7 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 [tabindex]:focus-visible {
-  outline: 3px solid var(--ink);
+  outline: 3px solid var(--paper);
   outline-offset: 2px;
 }
 
@@ -262,7 +272,7 @@ svg {
   z-index: 100;
   background: var(--paper);
   color: var(--ink);
-  border: 2px solid var(--ink);
+  border: 2px solid var(--accent-1);
   padding: var(--space-1) var(--space-2);
   font-family: var(--font-label);
   font-weight: 700;
@@ -279,9 +289,11 @@ svg {
   padding-inline: var(--space-3);
 }
 
-/* red-pen circle/underline emphasis — replaces the old flat highlighter
-   "mark" with the hand-marked-paper move from the reference mockups:
-   an ellipse drawn around the phrase in the current accent color. */
+/* neon marker circle/underline emphasis — an ellipse drawn around the
+   phrase in the current accent color, same construction as before,
+   with a soft glow added since it's now a light mark on a dark page
+   (a flat neon line with no glow reads flat; real spray paint blooms
+   a little at the edges). */
 .mark {
   position: relative;
   display: inline-block;
@@ -295,6 +307,7 @@ svg {
   border: 3px solid var(--accent-1);
   border-radius: 50% 50% 48% 52% / 55% 48% 52% 45%;
   transform: rotate(-1.5deg);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent-1) 55%, transparent));
   pointer-events: none;
 }
 
@@ -304,8 +317,10 @@ svg {
   font-size: var(--step-1);
 }
 
-/* "stamp" treatment — dashed border + slight rotation, like a rubber
-   stamp or a hand-clipped catalog tag. Used for series pills. */
+/* "stamp" treatment — dashed border + slight rotation. Used for series
+   pills. --accent-fill is a light chip regardless of theme (it mixes
+   toward the literal --paper hex), so ink-colored text on top still
+   reads correctly on the dark page. */
 .pill {
   display: inline-flex;
   align-items: center;
@@ -323,6 +338,10 @@ svg {
   transform: rotate(-1.5deg);
 }
 
+/* CTA button — used to be a dark chip on a light page (--ink bg,
+   --paper text). On a dark page that combination would nearly vanish
+   into the background, so it's now a bright accent chip with dark
+   ink text, which is also just a better-looking CTA for this brand. */
 .btn {
   display: inline-block;
   font-family: var(--font-label);
@@ -330,9 +349,9 @@ svg {
   text-transform: uppercase;
   letter-spacing: 0.03em;
   font-size: var(--step--1);
-  background: var(--ink);
-  color: var(--paper);
-  border: 2px solid var(--ink);
+  background: var(--accent-1);
+  color: var(--ink);
+  border: 2px solid var(--accent-1);
   border-radius: var(--radius);
   padding: 0.75em 1.4em;
   cursor: pointer;
@@ -340,19 +359,18 @@ svg {
 }
 
 .btn:hover {
-  background: var(--paper);
-  color: var(--ink);
+  background: transparent;
+  color: var(--accent-1);
 }
 
 .btn--ghost {
   background: transparent;
-  color: var(--ink);
+  color: var(--paper);
+  border-color: var(--paper);
 }
 
 /* --- collage utilities --- */
 
-/* a strip of "tape" pinning a corner — apply to a position:relative
-   ancestor. */
 .tape {
   position: absolute;
   top: -0.6rem;
@@ -360,8 +378,8 @@ svg {
   width: 3.5rem;
   height: 1.3rem;
   background: color-mix(in srgb, var(--accent-3) 70%, transparent);
-  border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
-  box-shadow: 0 2px 3px rgb(0 0 0 / 15%);
+  border: 1px solid color-mix(in srgb, var(--paper) 15%, transparent);
+  box-shadow: 0 2px 3px rgb(0 0 0 / 35%);
   transform: rotate(-4deg);
   pointer-events: none;
 }
@@ -398,12 +416,13 @@ svg {
   );
 }
 
-/* a hand-clipped index/sticky note — small, taped, slightly rotated */
+/* a hand-clipped index/sticky note — light chip, dark ink text, so it
+   still pops as a "pinned note" against the dark page underneath. */
 .note {
   position: relative;
   background: var(--accent-fill);
   border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
-  box-shadow: 2px 3px 0 rgb(0 0 0 / 12%);
+  box-shadow: 2px 3px 0 rgb(0 0 0 / 35%);
   padding: var(--space-2);
   font-family: var(--font-annotation);
   font-size: var(--step-1);
@@ -414,8 +433,7 @@ svg {
 }
 
 /* a round rubber-stamp badge with circular caption text set as two
-   arcs (top/bottom) rather than true curved type — a practical CSS
-   approximation of the stamp graphics in the reference mockups */
+   arcs (top/bottom) rather than true curved type. */
 .stamp {
   --stamp-size: 7rem;
   position: relative;
@@ -461,11 +479,15 @@ svg {
   letter-spacing: 0.03em;
 }
 
+/* deliberately NOT theme-driven — this box stays a fixed light
+   violet regardless of [data-palette] or the dark page around it, so
+   it keeps reading as "still a placeholder, not real content" no
+   matter where it lands. If anything it's MORE visible now, which is
+   the point. */
 .placeholder-note {
   border: 2px dashed var(--da-ultraviolet);
   background: color-mix(in srgb, var(--da-periwinkle) 40%, var(--paper));
-  color: var(--ink); /* fixed, regardless of ambient [data-palette] — this box's
-    background never changes with the palette, so its text shouldn't either */
+  color: var(--ink);
   padding: var(--space-2);
   font-size: var(--step--1);
   border-radius: var(--radius);

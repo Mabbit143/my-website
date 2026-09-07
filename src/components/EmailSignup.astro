@@ -38,27 +38,35 @@
 
 <style>
   .signup {
-    border-top: 3px solid var(--da-black);
+    /* was: border-top: 3px solid var(--da-black) — invisible against
+       the now-dark page background, same fix as Header/Footer. */
+    border-top: 3px solid var(--accent-1);
     padding-block: var(--space-4);
     display: grid;
     gap: var(--space-2);
     max-width: var(--content-max);
   }
 
-  .signup-fields {
-    display: flex;
-    gap: var(--space-1);
-    flex-wrap: wrap;
-  }
-
   input[type='email'] {
     flex: 1 1 16rem;
     padding: 0.6em 0.8em;
-    border: 2px solid var(--da-black);
+    border: 2px solid var(--accent-1);
     border-radius: var(--radius);
     font-size: var(--step-0);
     font-family: var(--font-body);
     background: white;
+    /* the input background is deliberately kept white for legibility
+       and familiarity as a form field. Text color used to inherit
+       --color-fg (dark ink on a light page, so it just worked); now
+       --color-fg is light, so it needs to be pinned dark here or it
+       would vanish against this white box. */
+    color: var(--ink);
+  }
+
+  .signup-fields {
+    display: flex;
+    gap: var(--space-1);
+    flex-wrap: wrap;
   }
 
   .formkit-alert {
