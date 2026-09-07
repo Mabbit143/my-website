@@ -9,7 +9,6 @@ description: Universities claim their policies are neutral, but they’re actual
   built for an imaginary student with no job, no kids, and zero real-world
   problems. Discover how rigid academic rules confuse compliance with learning,
   and why the system punishes everyone who doesn't fit the mold.
-coverImage: /article-images/da-avatar.png
 draft: false
 placeholder: false
 ---
