@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import EmailSignup from '../components/EmailSignup.astro';
+import Splatter from '../components/Splatter.astro';
 import { SERIES } from '../lib/series';
 
 const allArticles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
@@ -18,6 +19,8 @@ const latest = allArticles.slice(1, 4);
 >
   <section class="hero wrap" data-palette="red-pen">
     <span class="tape tape--right" aria-hidden="true"></span>
+    <span class="hero-splat hero-splat--1" aria-hidden="true"><Splatter variant="burst" /></span>
+    <span class="hero-splat hero-splat--2" aria-hidden="true"><Splatter variant="drip" seed={12} /></span>
     <div class="hero-main">
       <h1>Make knowledge<br />harder to <span class="mark">hoard</span>.</h1>
       <p class="lede">
@@ -49,7 +52,12 @@ const latest = allArticles.slice(1, 4);
   {
     latest.length > 0 && (
       <section class="wrap latest" aria-labelledby="latest-heading">
-        <h2 id="latest-heading">Latest</h2>
+        <h2 id="latest-heading" class="splat-head">
+          <span class="splat-head__art" aria-hidden="true">
+            <Splatter variant="burst" seed={31} />
+          </span>
+          Latest
+        </h2>
         <div class="grid">
           {latest.map((entry) => (
             <ArticleCard entry={entry} />
@@ -63,7 +71,12 @@ const latest = allArticles.slice(1, 4);
   }
 
   <section class="wrap series" aria-labelledby="series-heading">
-    <h2 id="series-heading">The series</h2>
+    <h2 id="series-heading" class="splat-head">
+      <span class="splat-head__art" aria-hidden="true">
+        <Splatter variant="blob" seed={48} />
+      </span>
+      The series
+    </h2>
     <div class="series-grid">
       {
         SERIES.map((s) => (
@@ -115,11 +128,42 @@ const latest = allArticles.slice(1, 4);
 <style>
   .hero {
     position: relative;
+    isolation: isolate;
     padding-block: var(--space-5) var(--space-4);
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-4);
     align-items: flex-start;
+  }
+
+  .hero-splat {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .hero-splat--1 {
+    top: -2rem;
+    left: -4rem;
+    width: 26rem;
+    height: 26rem;
+    color: var(--accent-1);
+    opacity: 0.24;
+  }
+  .hero-splat--2 {
+    top: 5rem;
+    right: 1rem;
+    width: 14rem;
+    height: 14rem;
+    color: var(--accent-3);
+    opacity: 0.2;
+  }
+
+  .hero > :not(.hero-splat):not(.tape) {
+    position: relative;
+    z-index: 1;
+  }
+  .hero > .tape {
+    z-index: 2;
   }
 
   .hero-main {
@@ -175,12 +219,33 @@ const latest = allArticles.slice(1, 4);
   .latest,
   .series,
   .about-teaser {
+    position: relative;
     padding-block: var(--space-4);
     /* was 3px solid var(--da-black) — vanished into the dark page. A soft
        paper-tinted rule still reads as a section seam without stacking
        four loud neon lines down the page. */
     border-top: 1px solid var(--color-border);
   }
+
+  /* a spray fleck sitting on the section seam */
+  .latest::before,
+  .series::before {
+    content: '';
+    position: absolute;
+    top: -0.6rem;
+    left: var(--space-3);
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background: var(--accent-1);
+    box-shadow:
+      1.6rem 0.2rem 0 -0.35rem var(--accent-1),
+      3rem -0.1rem 0 -0.5rem var(--accent-1),
+      -0.9rem 0.3rem 0 -0.55rem var(--accent-1);
+    opacity: 0.8;
+  }
+
+  /* .splat-head / .splat-head__art live in global.css */
 
   .grid {
     display: grid;

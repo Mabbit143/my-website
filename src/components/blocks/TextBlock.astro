@@ -1,0 +1,24 @@
+---
+// `text` block — a run of Markdown prose. Multiple text blocks in one
+// article are normal; put an image/quote/callout block between them
+// wherever the break should fall.
+import { md } from '../../lib/markdown';
+
+interface Props {
+  markdown?: string;
+}
+
+const { markdown } = Astro.props;
+const html = md(markdown);
+---
+
+{html && <div class="prose block-prose" set:html={html} />}
+
+<style>
+  .block-prose {
+    max-width: var(--content-max);
+  }
+  .block-prose + :global(.block-prose) {
+    margin-top: var(--space-3);
+  }
+</style>

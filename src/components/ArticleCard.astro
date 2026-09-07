@@ -1,5 +1,6 @@
 ---
 import { getSeries } from '../lib/series';
+import Splatter from './Splatter.astro';
 
 interface Props {
   entry: {
@@ -25,6 +26,7 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
 
 <article class="card torn-edge" data-palette={series?.palette}>
   <span class="tape" aria-hidden="true"></span>
+  <span class="card-splat" aria-hidden="true"><Splatter variant="corner" /></span>
   {
     entry.data.coverImage && (
       <a class="card-graphic" href={`/articles/${entry.slug}/`} aria-hidden="true" tabindex="-1">
@@ -44,6 +46,7 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
 <style>
   .card {
     position: relative;
+    isolation: isolate;
     overflow: hidden;
     /* was: border: 2px solid var(--ink) — same color as the page
        background now, so it had gone invisible. A soft paper-tinted
@@ -60,6 +63,24 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
+  }
+
+  .card-splat {
+    position: absolute;
+    right: -2.2rem;
+    top: -2.2rem;
+    width: 8rem;
+    height: 8rem;
+    color: var(--accent-1);
+    opacity: 0.2;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* keep real content above the splatter */
+  .card > :not(.card-splat):not(.tape) {
+    position: relative;
+    z-index: 1;
   }
 
   /* alternate a slight tilt on every other card so the grid reads as a

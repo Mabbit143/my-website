@@ -1,10 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Splatter from '../components/Splatter.astro';
 ---
 
 <BaseLayout title="Contact" description="Get in touch with Deconstructing Academia.">
   <section class="wrap contact">
-    <h1>Contact</h1>
+    <h1 class="splat-head">
+      <span class="splat-head__art" aria-hidden="true"><Splatter variant="burst" /></span>
+      Contact
+    </h1>
     <p>
       Reach out about corrections, tips, pitches, speaking, or just to say the argument landed (or
       didn't).

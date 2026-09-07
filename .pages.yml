@@ -132,14 +132,116 @@ content:
         default: false
         hidden: true
 
-      - name: body
+      # The article body is an ordered stack of blocks. Add a block, pick its
+      # type, and fill only the fields that type uses (the others stay blank).
+      # Drag blocks to reorder. An image block lands exactly where it sits in
+      # the stack. Rendering lives in src/components/blocks/.
+      - name: blocks
         label: Article
-        type: rich-text
+        type: object
+        list: true
         required: true
-        options:
-          format: markdown
-          media: article_images
-          path: public/article-images
-          extensions: [png, jpg, jpeg, webp, avif, gif, svg]
-          rename: safe
-          switcher: true
+        description: >-
+          Build the article block by block. Each block has a Type — pick it
+          first, then fill only that type's fields.
+        fields:
+          - name: type
+            label: Block type
+            type: select
+            required: true
+            default: text
+            options:
+              values:
+                - { name: text, label: "Text (Markdown)" }
+                - { name: image, label: "Image" }
+                - { name: callout, label: "Callout box" }
+                - { name: quote, label: "Pull quote" }
+                - { name: divider, label: "Divider" }
+
+          # --- Text block, and the body of a Callout block ---
+          - name: markdown
+            label: "Body text — for Text and Callout blocks (Markdown)"
+            type: rich-text
+            options:
+              format: markdown
+              media: article_images
+              path: public/article-images
+              extensions: [png, jpg, jpeg, webp, avif, gif, svg]
+              rename: safe
+              switcher: true
+
+          # --- Image block ---
+          - name: image
+            label: "Image file — Image block"
+            type: image
+            options:
+              media: article_images
+              path: public/article-images
+              extensions: [png, jpg, jpeg, webp, avif, gif, svg]
+              rename: safe
+          - name: alt
+            label: "Image description — Image block (for screen readers)"
+            type: text
+          - name: caption
+            label: "Caption — Image block (optional)"
+            type: string
+          - name: size
+            label: "Image width — Image block"
+            type: select
+            default: wide
+            options:
+              values:
+                - { name: inline, label: "In the text column" }
+                - { name: wide, label: "A little wider than the text" }
+                - { name: full, label: "Full width" }
+          - name: tilt
+            label: "Image tilt — Image block"
+            type: select
+            default: left
+            options:
+              values:
+                - { name: left, label: "Tilt left" }
+                - { name: none, label: "Straight" }
+                - { name: right, label: "Tilt right" }
+
+          # --- Callout block ---
+          - name: variant
+            label: "Callout style — Callout block"
+            type: select
+            default: second-look
+            options:
+              values:
+                - { name: second-look, label: "Second Look (chalkboard, for sourcing / fact-checks)" }
+                - { name: warning, label: "Warning / caveat (hazard tape)" }
+                - { name: plain, label: "Plain note" }
+          - name: title
+            label: "Callout heading — Callout block"
+            type: string
+          - name: eyebrow
+            label: "Callout label — Callout block (optional, e.g. \"Worth Checking\")"
+            type: string
+          - name: steps
+            label: "Citation-trail steps — Second Look callout (optional number)"
+            type: number
+          - name: source
+            label: "Citation-trail endpoint — Second Look callout (optional)"
+            type: string
+
+          # --- Pull quote block ---
+          - name: quote
+            label: "Quote text — Pull quote block"
+            type: text
+          - name: attribution
+            label: "Quote attribution — Pull quote block (optional)"
+            type: string
+
+          # --- Divider block ---
+          - name: dividerStyle
+            label: "Divider style — Divider block"
+            type: select
+            default: splatter
+            options:
+              values:
+                - { name: splatter, label: "Spray-paint flecks" }
+                - { name: rule, label: "Neon rule" }
+                - { name: space, label: "Blank space" }

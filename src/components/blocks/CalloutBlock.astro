@@ -1,0 +1,121 @@
+---
+// `callout` block — a boxed aside.
+//   second-look : the chalkboard "Second Look" treatment (fact-check /
+//                 sourcing), with an optional numbered citation trail.
+//                 Delegates to the shared ChalkCallout component.
+//   warning     : hazard-tape treatment for "here's the catch" / caveats.
+//   plain       : a quiet accent-framed note.
+import ChalkCallout from '../ChalkCallout.astro';
+import { md } from '../../lib/markdown';
+
+interface Props {
+  variant?: 'second-look' | 'warning' | 'plain';
+  title?: string;
+  eyebrow?: string;
+  markdown?: string;
+  steps?: number;
+  source?: string;
+}
+
+const { variant = 'second-look', title = '', eyebrow, markdown, steps, source } = Astro.props;
+const bodyHtml = md(markdown);
+---
+
+{
+  variant === 'second-look' ? (
+    <ChalkCallout title={title} eyebrow={eyebrow ?? 'Second Look'} steps={steps ?? 0} source={source}>
+      <Fragment set:html={bodyHtml} />
+    </ChalkCallout>
+  ) : (
+    <div class:list={['callout', `callout--${variant}`]}>
+      {(eyebrow || variant === 'warning') && (
+        <p class="callout__eyebrow">
+          {variant === 'warning' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="M12 3 2 20h20L12 3Z" />
+              <line x1="12" y1="10" x2="12" y2="14" />
+              <line x1="12" y1="17" x2="12" y2="17" />
+            </svg>
+          )}
+          {eyebrow ?? 'Heads up'}
+        </p>
+      )}
+      {title && <p class="callout__title">{title}</p>}
+      {bodyHtml && <div class="callout__body" set:html={bodyHtml} />}
+    </div>
+  )
+}
+
+<style>
+  .callout {
+    position: relative;
+    margin: var(--space-3) 0;
+    padding: var(--space-3);
+    max-width: var(--content-max);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--color-bg) 100%, white 6%);
+    color: var(--color-fg);
+  }
+
+  .callout--warning {
+    border: 2px solid var(--accent-3);
+    border-left-width: 8px;
+    box-shadow: 0 0 22px -8px color-mix(in srgb, var(--accent-3) 55%, transparent);
+    /* diagonal hazard hatching along the top edge */
+    background-image: repeating-linear-gradient(
+        45deg,
+        color-mix(in srgb, var(--accent-3) 22%, transparent) 0 10px,
+        transparent 10px 20px
+      ),
+      linear-gradient(color-mix(in srgb, var(--color-bg) 100%, white 6%), color-mix(in srgb, var(--color-bg) 100%, white 6%));
+    background-repeat: no-repeat;
+    background-size: 100% 8px, 100% 100%;
+  }
+
+  .callout--plain {
+    border: 1px solid color-mix(in srgb, var(--accent-1) 35%, transparent);
+    border-left: 4px solid var(--accent-1);
+  }
+
+  .callout__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 0 0 0.7em;
+    font-family: var(--font-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: var(--step--1);
+    color: var(--accent-3);
+  }
+  .callout--plain .callout__eyebrow {
+    color: var(--accent-1);
+  }
+  .callout__eyebrow svg {
+    width: 1.1em;
+    height: 1.1em;
+    flex-shrink: 0;
+  }
+
+  .callout__title {
+    font-family: var(--font-headline);
+    font-size: var(--step-1);
+    letter-spacing: 0.01em;
+    margin: 0 0 0.5em;
+  }
+
+  .callout__body :global(p) {
+    font-size: var(--step--1);
+    line-height: 1.6;
+    opacity: 0.92;
+    margin: 0 0 0.7em;
+    max-width: none;
+  }
+  .callout__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .callout__body :global(a) {
+    color: var(--accent-1);
+  }
+</style>

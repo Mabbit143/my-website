@@ -1,0 +1,95 @@
+---
+// `image` block — a graphic dropped exactly where it sits in the block
+// stack. Rendered as a taped-and-tilted print so it reads as collage, not
+// a stock CMS image.
+//   size:  inline (sits in the text column) · wide (a bit past it) · full (full width)
+//   tilt:  left · none · right  — the slight rotation of the print
+import { mdInline } from '../../lib/markdown';
+
+interface Props {
+  image?: string;
+  alt?: string;
+  caption?: string;
+  size?: 'inline' | 'wide' | 'full';
+  tilt?: 'left' | 'none' | 'right';
+}
+
+const { image, alt = '', caption, size = 'wide', tilt = 'left' } = Astro.props;
+const captionHtml = mdInline(caption);
+---
+
+{
+  image && (
+    <figure class:list={['fig', `fig--${size}`, `fig--tilt-${tilt}`]}>
+      <span class="fig__tape" aria-hidden="true" />
+      <img src={image} alt={alt} loading="lazy" decoding="async" />
+      {captionHtml && <figcaption set:html={captionHtml} />}
+    </figure>
+  )
+}
+
+<style>
+  .fig {
+    position: relative;
+    margin: var(--space-4) 0 var(--space-3);
+    padding: 0.55rem;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    box-shadow: 6px 7px 0 rgb(0 0 0 / 42%);
+  }
+
+  .fig--inline {
+    width: min(100%, 34rem);
+  }
+  .fig--wide {
+    width: min(100%, 46rem);
+  }
+  .fig--full {
+    width: 100%;
+  }
+
+  .fig--tilt-left {
+    transform: rotate(-0.6deg);
+  }
+  .fig--tilt-right {
+    transform: rotate(0.6deg);
+  }
+  .fig--tilt-none {
+    transform: none;
+  }
+
+  .fig__tape {
+    position: absolute;
+    top: -0.75rem;
+    left: 1.6rem;
+    width: 4.5rem;
+    height: 1.4rem;
+    background: color-mix(in srgb, var(--accent-3) 72%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
+    transform: rotate(-4deg);
+  }
+
+  .fig img {
+    width: 100%;
+    height: auto;
+    max-height: 40rem;
+    object-fit: contain;
+    background: color-mix(in srgb, var(--accent-3) 14%, var(--paper));
+  }
+
+  .fig figcaption {
+    padding: 0.7rem 0.3rem 0.1rem;
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
+  @media (max-width: 40rem) {
+    .fig {
+      transform: none;
+      box-shadow: 3px 4px 0 rgb(0 0 0 / 40%);
+    }
+  }
+</style>

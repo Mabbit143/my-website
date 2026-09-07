@@ -1,0 +1,74 @@
+---
+// `quote` block — a pull quote set large, with a splatter behind the
+// opening mark. For a sourced block quote inside prose, use Markdown `>`
+// in a text block instead; this is the display-size interruption.
+import Splatter from '../Splatter.astro';
+import { mdInline } from '../../lib/markdown';
+
+interface Props {
+  quote?: string;
+  attribution?: string;
+}
+
+const { quote, attribution } = Astro.props;
+const attrHtml = mdInline(attribution);
+---
+
+{
+  quote && (
+    <figure class="pq">
+      <span class="pq__blot" aria-hidden="true">
+        <Splatter variant="blob" />
+      </span>
+      <blockquote class="pq__text">{quote}</blockquote>
+      {attrHtml && <figcaption class="pq__attr" set:html={`— ${attrHtml}`} />}
+    </figure>
+  )
+}
+
+<style>
+  .pq {
+    position: relative;
+    margin: var(--space-5) 0;
+    max-width: var(--content-max);
+    padding-left: var(--space-3);
+  }
+
+  .pq__blot {
+    position: absolute;
+    top: -1.6rem;
+    left: -1.4rem;
+    width: 6rem;
+    height: 6rem;
+    color: var(--accent-1);
+    opacity: 0.22;
+    z-index: 0;
+  }
+
+  .pq__text {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    font-family: var(--font-headline);
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 0.005em;
+    font-size: var(--step-3);
+    color: var(--color-fg);
+    text-wrap: balance;
+  }
+
+  .pq__attr {
+    position: relative;
+    z-index: 1;
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent-1);
+  }
+</style>

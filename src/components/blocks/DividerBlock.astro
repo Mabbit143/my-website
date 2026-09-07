@@ -1,0 +1,52 @@
+---
+// `divider` block — a break between sections of an article.
+//   splatter : a spray-paint fleck line (default)
+//   rule     : a thin neon rule
+//   space    : just vertical air
+import Splatter from '../Splatter.astro';
+
+interface Props {
+  dividerStyle?: 'splatter' | 'rule' | 'space';
+}
+
+const { dividerStyle = 'splatter' } = Astro.props;
+---
+
+<div class:list={['divider', `divider--${dividerStyle}`]} role="separator">
+  {
+    dividerStyle === 'splatter' && (
+      <span class="divider__splat">
+        <Splatter variant="fleck" />
+      </span>
+    )
+  }
+</div>
+
+<style>
+  .divider {
+    max-width: var(--content-max);
+  }
+
+  .divider--space {
+    height: var(--space-4);
+  }
+
+  .divider--rule {
+    height: 0;
+    margin: var(--space-4) 0;
+    border-top: 2px solid color-mix(in srgb, var(--accent-1) 55%, transparent);
+  }
+
+  .divider--splatter {
+    display: flex;
+    justify-content: center;
+    margin: var(--space-4) 0;
+    color: var(--accent-1);
+  }
+
+  .divider__splat {
+    width: 9rem;
+    height: 2.4rem;
+    opacity: 0.75;
+  }
+</style>

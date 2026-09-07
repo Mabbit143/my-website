@@ -1,4 +1,6 @@
 ---
+import Splatter from './Splatter.astro';
+
 const nav = [
   { href: '/articles/', label: 'Articles' },
   { href: '/about/', label: 'About' },
@@ -7,7 +9,8 @@ const nav = [
 const path = Astro.url.pathname;
 ---
 
-<header class="site-header">
+<header class="site-header concrete">
+  <span class="site-header__splat" aria-hidden="true"><Splatter variant="fleck" /></span>
   <div class="wrap site-header__inner">
     <a href="/" class="wordmark" aria-label="Deconstructing Academia — home">
       <img src="/images/da-header-icon.png" alt="" class="wordmark__icon" width="198" height="220" />
@@ -32,6 +35,9 @@ const path = Astro.url.pathname;
 
 <style>
   .site-header {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     /* was: border-bottom: 3px solid var(--da-black) — invisible now that
        the page background is also ink-colored. A neon rule reads as an
        intentional line instead of a missing one. */
@@ -39,7 +45,21 @@ const path = Astro.url.pathname;
     background: var(--color-bg);
   }
 
+  .site-header__splat {
+    position: absolute;
+    right: -1.5rem;
+    top: -2.5rem;
+    width: 12rem;
+    height: 12rem;
+    color: var(--accent-1);
+    opacity: 0.16;
+    z-index: 0;
+    pointer-events: none;
+  }
+
   .site-header__inner {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-wrap: wrap;
     align-items: center;

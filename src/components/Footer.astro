@@ -1,8 +1,10 @@
 ---
+import Splatter from './Splatter.astro';
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
+<footer class="site-footer concrete">
+  <span class="site-footer__splat" aria-hidden="true"><Splatter variant="burst" /></span>
   <div class="wrap site-footer__inner">
     <p class="line">Learn the rules. Question who wrote them.</p>
     <nav aria-label="Footer">
@@ -19,6 +21,9 @@ const year = new Date().getFullYear();
 
 <style>
   .site-footer {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     /* was: border-top: 3px solid var(--da-black) — that worked as a
        visible seam when the page above was light paper. Now the page
        above is also ink-colored, so the footer needs its own accent
@@ -30,7 +35,21 @@ const year = new Date().getFullYear();
     margin-top: var(--space-6);
   }
 
+  .site-footer__splat {
+    position: absolute;
+    left: -3rem;
+    bottom: -4rem;
+    width: 18rem;
+    height: 18rem;
+    color: var(--accent-1);
+    opacity: 0.12;
+    z-index: 0;
+    pointer-events: none;
+  }
+
   .site-footer__inner {
+    position: relative;
+    z-index: 1;
     padding-block: var(--space-4);
     display: grid;
     gap: var(--space-2);

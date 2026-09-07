@@ -11,6 +11,37 @@ const SERIES_SLUGS = [
   'where-the-work-is',
 ] as const;
 
+// One content block in an article body. Articles are composed as an ordered
+// list of these in the CMS (see .pages.yml `blocks`) instead of one long
+// Markdown field — so an image lands exactly where it's dropped in the stack.
+// Every field past `type` is optional at the schema level; which ones matter
+// depends on `type`. Rendering + the meaning of each field lives in
+// src/components/blocks/BlockRenderer.astro.
+const block = z
+  .object({
+    type: z.enum(['text', 'image', 'callout', 'quote', 'divider']).default('text'),
+    // text
+    markdown: z.string().optional(),
+    // image
+    image: z.string().optional(),
+    alt: z.string().optional(),
+    caption: z.string().optional(),
+    size: z.enum(['inline', 'wide', 'full']).default('wide').optional(),
+    tilt: z.enum(['left', 'none', 'right']).default('left').optional(),
+    // callout
+    variant: z.enum(['second-look', 'warning', 'plain']).default('second-look').optional(),
+    title: z.string().optional(),
+    eyebrow: z.string().optional(),
+    steps: z.coerce.number().optional(),
+    source: z.string().optional(),
+    // quote
+    quote: z.string().optional(),
+    attribution: z.string().optional(),
+    // divider
+    dividerStyle: z.enum(['splatter', 'rule', 'space']).default('splatter').optional(),
+  })
+  .passthrough();
+
 const articles = defineCollection({
   type: 'content',
   schema: z.object({
@@ -38,6 +69,9 @@ const articles = defineCollection({
       .boolean()
       .default(false)
       .describe('True for demo/sample content that must be replaced before launch.'),
+    // The article body, as an ordered list of blocks. Optional so a legacy
+    // file with only a Markdown body still validates during the transition.
+    blocks: z.array(block).default([]),
   }),
 });
 

@@ -511,3 +511,200 @@ svg {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* ============================================================
+   ARTICLE PROSE
+   Styles for rendered article body copy — the Markdown `text`
+   blocks (src/components/blocks/TextBlock.astro), the body of
+   `callout` blocks, and the legacy full-body fallback in
+   src/pages/articles/[slug].astro. Global (not component-scoped)
+   so one ruleset covers every place article Markdown is rendered.
+   ============================================================ */
+
+.prose {
+  max-width: var(--content-max);
+}
+
+.prose h2 {
+  margin-top: var(--space-4);
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--accent-1);
+  margin: var(--space-3) 0;
+  padding-left: var(--space-2);
+  font-family: var(--font-annotation);
+  font-size: var(--step-1);
+  color: var(--accent-1);
+}
+
+.prose a {
+  text-decoration-color: var(--accent-2);
+}
+
+/* An ordinary Markdown image (in a `text` block or the fallback body)
+   still becomes a designed, taped print. A single italic paragraph
+   right after it becomes the caption. For deliberate placement/size,
+   use an `image` block instead. */
+.prose p:has(> img:only-child),
+.prose p:has(> a:only-child > img:only-child) {
+  position: relative;
+  width: min(100%, 46rem);
+  margin: var(--space-4) 0 var(--space-2);
+  padding: 0.5rem;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 5px 6px 0 rgb(0 0 0 / 42%);
+  transform: rotate(0.25deg);
+}
+
+.prose p:has(> img:only-child)::before,
+.prose p:has(> a:only-child > img:only-child)::before {
+  content: '';
+  position: absolute;
+  top: -0.75rem;
+  left: 1.5rem;
+  width: 4rem;
+  height: 1.35rem;
+  z-index: 1;
+  background: color-mix(in srgb, var(--accent-3) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  box-shadow: 0 2px 3px rgb(0 0 0 / 30%);
+  transform: rotate(-4deg);
+}
+
+.prose p:has(> img:only-child) img,
+.prose p:has(> a:only-child > img:only-child) img {
+  width: 100%;
+  height: auto;
+  max-height: 38rem;
+  object-fit: contain;
+  background: color-mix(in srgb, var(--accent-3) 14%, var(--paper));
+}
+
+.prose p:has(> img:only-child) + p:has(> em:only-child),
+.prose p:has(> a:only-child > img:only-child) + p:has(> em:only-child) {
+  margin-top: 0;
+  color: color-mix(in srgb, var(--color-fg) 72%, transparent);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+@media (max-width: 40rem) {
+  .prose p:has(> img:only-child),
+  .prose p:has(> a:only-child > img:only-child) {
+    transform: none;
+    box-shadow: 3px 4px 0 rgb(0 0 0 / 40%);
+  }
+}
+
+/* ============================================================
+   GRUNGE / SPRAY-PAINT UTILITIES
+   The "Concrete & Bubblegum" surface kit — highlighter swipes,
+   rubber-stamp labels, a concrete texture, and splatter layering.
+   The splatter shapes themselves are in src/components/Splatter.astro.
+   ============================================================ */
+
+/* Highlighter swipe behind inline text — the marker move from the
+   carousel ("credentials, prestige, academic approval"). Wrap a phrase:
+   <span class="hl">hallucinated citations</span>. Defaults to Caution
+   Gold; add .hl--pink for the magenta marker. */
+.hl {
+  position: relative;
+  display: inline;
+  color: var(--ink);
+  padding: 0 0.08em;
+  /* the swipe is a slightly skewed band that doesn't quite reach the
+     top/bottom, like a real marker stroke */
+  background-image: linear-gradient(
+    to bottom,
+    transparent 12%,
+    var(--accent-3) 12%,
+    var(--accent-3) 86%,
+    transparent 86%
+  );
+  background-repeat: no-repeat;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.hl--pink {
+  background-image: linear-gradient(
+    to bottom,
+    transparent 12%,
+    var(--accent-1) 12%,
+    var(--accent-1) 86%,
+    transparent 86%
+  );
+}
+
+/* Rubber-stamp label — rotated, outlined, ink-worn. From the "FADED
+   BRICK" / "A DECOLONIZED LITERATURE REVIEW" stamps. */
+.stamp-label {
+  display: inline-block;
+  font-family: var(--font-headline);
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-1);
+  border: 2px solid var(--accent-1);
+  padding: 0.15em 0.5em;
+  transform: rotate(-3deg);
+  opacity: 0.85;
+  mix-blend-mode: screen;
+}
+
+/* Concrete texture — a rougher grey feTurbulence wash for panels that
+   should read as a poured wall (shop banner, footer, callouts). Pair
+   with an explicit background-color; this only adds the speckle. */
+.concrete {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E");
+}
+
+/* Splatter layering: a positioned wrapper for a <Splatter/> that should
+   sit behind content. The parent needs position: relative and usually
+   isolation: isolate. */
+.splatter-layer {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.splatter-layer ~ * {
+  position: relative;
+  z-index: 1;
+}
+
+/* A splatter-backed heading. Give the heading class .splat-head and drop a
+   <span class="splat-head__art"><Splatter/></span> in as its first child:
+     <h2 class="splat-head">
+       <span class="splat-head__art" aria-hidden="true"><Splatter variant="burst" /></span>
+       Latest
+     </h2> */
+.splat-head {
+  position: relative;
+  isolation: isolate;
+}
+
+.splat-head__art {
+  position: absolute;
+  left: -2rem;
+  top: 50%;
+  width: 9.5rem;
+  height: 9.5rem;
+  translate: 0 -50%;
+  z-index: -1;
+  color: var(--accent-1);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@media (max-width: 40rem) {
+  .splat-head__art {
+    left: -1rem;
+    width: 7rem;
+    height: 7rem;
+    opacity: 0.22;
+  }
+}

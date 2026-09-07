@@ -1,0 +1,66 @@
+---
+// Renders an article body from its ordered block list (see
+// src/content/config.ts `block` schema and .pages.yml `blocks`).
+// Unknown block types are skipped rather than throwing.
+import TextBlock from './TextBlock.astro';
+import ImageBlock from './ImageBlock.astro';
+import CalloutBlock from './CalloutBlock.astro';
+import QuoteBlock from './QuoteBlock.astro';
+import DividerBlock from './DividerBlock.astro';
+
+interface Props {
+  blocks?: Record<string, any>[];
+}
+
+const { blocks = [] } = Astro.props;
+---
+
+<div class="article-body">
+  {
+    blocks.map((b) => {
+      switch (b?.type) {
+        case 'text':
+          return <TextBlock markdown={b.markdown} />;
+        case 'image':
+          return (
+            <ImageBlock
+              image={b.image}
+              alt={b.alt}
+              caption={b.caption}
+              size={b.size}
+              tilt={b.tilt}
+            />
+          );
+        case 'callout':
+          return (
+            <CalloutBlock
+              variant={b.variant}
+              title={b.title}
+              eyebrow={b.eyebrow}
+              markdown={b.markdown}
+              steps={b.steps}
+              source={b.source}
+            />
+          );
+        case 'quote':
+          return <QuoteBlock quote={b.quote} attribution={b.attribution} />;
+        case 'divider':
+          return <DividerBlock dividerStyle={b.dividerStyle} />;
+        default:
+          return null;
+      }
+    })
+  }
+</div>
+
+<style>
+  .article-body {
+    max-width: var(--page-max);
+  }
+
+  /* consecutive prose/quote/callout blocks get breathing room; full-width
+     figures and dividers manage their own margins */
+  .article-body > :global(* + *) {
+    margin-top: var(--space-3);
+  }
+</style>

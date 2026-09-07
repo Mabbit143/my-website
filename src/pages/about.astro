@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Splatter from '../components/Splatter.astro';
 ---
 
 <BaseLayout
@@ -7,7 +8,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="Deconstructing Academia is founder-led by Mabbit. Here's the mission and the method."
 >
   <section class="wrap about">
-    <h1>About</h1>
+    <h1 class="splat-head">
+      <span class="splat-head__art" aria-hidden="true"><Splatter variant="burst" /></span>
+      About
+    </h1>
 
     <p class="lede">
       Deconstructing Academia is a public argument about knowledge: who gets to create it, whose
