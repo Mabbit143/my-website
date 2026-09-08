@@ -1,0 +1,18 @@
+{
+  "pages": [
+    { "id": "site", "name": "Site pages" },
+    { "id": "system", "name": "Style system" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html",          "page": "site",   "x": 0,    "y": 0, "w": 1360, "h": 4600, "expand": "fill", "title": "Homepage" },
+    { "file": "Article.dc.html",        "page": "site",   "x": 1480, "y": 0, "w": 1360, "h": 3800, "expand": "fill", "title": "Article" },
+    { "file": "ArticlesIndex.dc.html",  "page": "site",   "x": 2960, "y": 0, "w": 1360, "h": 2600, "expand": "fill", "title": "Articles index" },
+    { "file": "About.dc.html",          "page": "site",   "x": 4440, "y": 0, "w": 1360, "h": 3000, "expand": "fill", "title": "About" },
+    { "file": "Contact.dc.html",        "page": "site",   "x": 5920, "y": 0, "w": 1360, "h": 1700, "expand": "fill", "title": "Contact" },
+    { "file": "StyleTile.dc.html",      "page": "system", "x": 0,    "y": 0, "w": 1180, "h": 3400, "expand": "fill", "title": "Style tile" }
+  ],
+  "annotations": [
+    { "id": "note-mascot", "page": "site", "x": -640, "y": 40, "w": 520, "text": "Mascot + header icon use public/images/whonah.png (pink tank / denim pose). The tartan-skirt pose is kept as whonah-tartan.png. Say if you want that one instead, or a separate Mabbit wordmark added." }
+  ],
+  "launch": { "view": "canvas", "page": "site" }
+}

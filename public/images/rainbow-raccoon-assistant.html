@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Prism — Rainbow Raccoon Assistant</title>
+<style>
+  :root {
+    --bg-deep: #0c0a1f;
+    --bg-mid: #1a1438;
+    --card: rgba(24, 18, 46, 0.72);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --text-soft: #cfc9e8;
+    --text-dim: #8d84b3;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: radial-gradient(ellipse at 50% 20%, var(--bg-mid), var(--bg-deep) 70%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .field-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: fieldTwinkle 3.5s ease-in-out infinite;
+  }
+
+  @keyframes fieldTwinkle {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.75; }
+  }
+
+  .card {
+    position: relative;
+    width: min(92vw, 420px);
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 28px;
+    padding: 28px 24px 22px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.03),
+                0 20px 60px rgba(0,0,0,0.5),
+                0 0 90px rgba(140, 90, 220, 0.18);
+    text-align: center;
+  }
+
+  .label {
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--text-dim);
+    margin: 0 0 2px;
+  }
+
+  .title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-soft);
+    margin: 0 0 18px;
+  }
+
+  .stage {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .bubble {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translate(-50%, 6px);
+    max-width: 240px;
+    background: #f4f1fb;
+    color: #241b3f;
+    font-size: 13.5px;
+    line-height: 1.35;
+    padding: 9px 13px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 5;
+  }
+  .bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 7px 7px 0 7px;
+    border-style: solid;
+    border-color: #f4f1fb transparent transparent transparent;
+  }
+  .bubble.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  #raccoon-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: hue-rotate(0deg) drop-shadow(0 10px 26px rgba(120, 60, 200, 0.35));
+    animation: hueDrift 7s linear infinite, bob 3.1s ease-in-out infinite;
+    transform-origin: 50% 85%;
+  }
+
+  #raccoon-svg.bounce {
+    animation: hueDrift 7s linear infinite, petBounce 0.55s cubic-bezier(.34,1.6,.64,1) 1;
+  }
+
+  @keyframes hueDrift {
+    0% { filter: hue-rotate(0deg) drop-shadow(0 10px 26px rgba(120, 60, 200, 0.35)); }
+    100% { filter: hue-rotate(360deg) drop-shadow(0 10px 26px rgba(120, 60, 200, 0.35)); }
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-9px) rotate(-0.6deg); }
+  }
+
+  @keyframes petBounce {
+    0% { transform: translateY(0) scale(1, 1); }
+    30% { transform: translateY(-22px) scale(0.94, 1.08); }
+    55% { transform: translateY(4px) scale(1.07, 0.92); }
+    75% { transform: translateY(-6px) scale(0.98, 1.03); }
+    100% { transform: translateY(0) scale(1, 1); }
+  }
+
+  .eyes { transform-origin: center; animation: blink 4.6s ease-in-out infinite; }
+  @keyframes blink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    93%, 96% { transform: scaleY(0.12); }
+  }
+
+  .tail-group {
+    transform-origin: 255px 300px;
+    animation: tailSway 3.4s ease-in-out infinite;
+  }
+  @keyframes tailSway {
+    0%, 100% { transform: rotate(-4deg); }
+    50% { transform: rotate(6deg); }
+  }
+
+  .sparkle {
+    animation: twinkle 2.4s ease-in-out infinite;
+    transform-origin: center;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; transform: scale(0.6); }
+    50% { opacity: 1; transform: scale(1.15); }
+  }
+
+  .burst-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .burst {
+    position: absolute;
+    font-size: 18px;
+    opacity: 0;
+    animation: burstPop 0.9s ease-out forwards;
+  }
+  @keyframes burstPop {
+    0% { opacity: 0; transform: translate(0,0) scale(0.3) rotate(0deg); }
+    15% { opacity: 1; }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.1) rotate(180deg); }
+  }
+
+  .hint {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <p class="label">rainbow raccoon assistant</p>
+  <p class="title">✨ Prism ✨</p>
+
+  <div class="stage" id="stage" role="button" aria-label="Pet Prism the rainbow raccoon">
+    <div class="bubble" id="bubble"></div>
+
+    <svg id="raccoon-svg" viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rainbowFur" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ff5c8a"/>
+          <stop offset="20%" stop-color="#ff9a5c"/>
+          <stop offset="40%" stop-color="#ffe15c"/>
+          <stop offset="60%" stop-color="#6ee7a0"/>
+          <stop offset="80%" stop-color="#5cc9ff"/>
+          <stop offset="100%" stop-color="#b06bff"/>
+          <animateTransform attributeName="gradientTransform" type="rotate"
+            from="0 200 210" to="360 200 210" dur="6s" repeatCount="indefinite"/>
+        </linearGradient>
+        <radialGradient id="glow" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <circle cx="200" cy="200" r="185" fill="url(#glow)"/>
+
+      <!-- tail -->
+      <g class="tail-group">
+        <path d="M255 300 C 330 290, 345 200, 300 150 C 355 175, 360 270, 300 320 C 280 335, 260 320, 255 300 Z"
+              fill="url(#rainbowFur)"/>
+        <path d="M290 205 C 315 195, 325 220, 305 232 C 288 240, 278 218, 290 205 Z" fill="#241b3f" opacity="0.55"/>
+        <path d="M310 250 C 335 245, 340 268, 320 278 C 302 285, 296 260, 310 250 Z" fill="#241b3f" opacity="0.55"/>
+        <path d="M300 297 C 320 292, 322 313, 304 320 C 288 325, 285 304, 300 297 Z" fill="#241b3f" opacity="0.5"/>
+      </g>
+
+      <!-- feet -->
+      <ellipse cx="165" cy="385" rx="30" ry="17" fill="url(#rainbowFur)"/>
+      <ellipse cx="238" cy="385" rx="30" ry="17" fill="url(#rainbowFur)"/>
+
+      <!-- body -->
+      <ellipse cx="201" cy="295" rx="98" ry="105" fill="url(#rainbowFur)"/>
+      <ellipse cx="201" cy="315" rx="56" ry="68" fill="#fbf7ff" opacity="0.88"/>
+
+      <!-- arms -->
+      <path d="M115 260 C 85 268, 78 305, 100 320 C 118 330, 135 315, 133 295 Z" fill="url(#rainbowFur)"/>
+      <g>
+        <path d="M288 250 C 320 252, 335 285, 318 305 C 305 318, 285 305, 285 288 Z" fill="url(#rainbowFur)"/>
+        <line x1="322" y1="230" x2="345" y2="195" stroke="#e8def7" stroke-width="5" stroke-linecap="round"/>
+        <path d="M345 185 l7 12 l14 -2 l-10 10 l6 13 l-13 -7 l-10 10 l1 -14 l-13 -6 l14 -3 Z" fill="#fff6bf"/>
+      </g>
+
+      <!-- head -->
+      <g>
+        <ellipse cx="150" cy="118" rx="30" ry="34" fill="url(#rainbowFur)"/>
+        <ellipse cx="252" cy="118" rx="30" ry="34" fill="url(#rainbowFur)"/>
+        <ellipse cx="150" cy="122" rx="14" ry="17" fill="#3a2a5c" opacity="0.5"/>
+        <ellipse cx="252" cy="122" rx="14" ry="17" fill="#3a2a5c" opacity="0.5"/>
+
+        <circle cx="201" cy="170" r="88" fill="url(#rainbowFur)"/>
+
+        <path d="M130 158 C 150 132, 252 132, 272 158 C 268 190, 235 200, 201 200 C 167 200, 134 190, 130 158 Z"
+              fill="#241b3f" opacity="0.82"/>
+
+        <ellipse cx="163" cy="168" rx="17" ry="14" fill="#fdfbff"/>
+        <ellipse cx="239" cy="168" rx="17" ry="14" fill="#fdfbff"/>
+
+        <g class="eyes">
+          <circle cx="163" cy="169" r="9" fill="#221833"/>
+          <circle cx="166" cy="166" r="2.6" fill="#fff"/>
+          <circle cx="239" cy="169" r="9" fill="#221833"/>
+          <circle cx="242" cy="166" r="2.6" fill="#fff"/>
+        </g>
+
+        <path d="M191 189 Q201 200 211 189 Q201 195 191 189 Z" fill="#2a2040"/>
+        <path d="M201 196 Q193 208 183 202" stroke="#2a2040" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M201 196 Q209 208 219 202" stroke="#2a2040" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+        <g stroke="#ffffff" stroke-width="2" opacity="0.55" stroke-linecap="round">
+          <line x1="115" y1="178" x2="70" y2="172"/>
+          <line x1="115" y1="188" x2="70" y2="192"/>
+          <line x1="287" y1="178" x2="332" y2="172"/>
+          <line x1="287" y1="188" x2="332" y2="192"/>
+        </g>
+      </g>
+
+      <!-- ambient sparkles -->
+      <g fill="#fff8e8">
+        <path class="sparkle" style="animation-delay:0s" d="M60 90 l4 12 l12 4 l-12 4 l-4 12 l-4 -12 l-12 -4 l12 -4 Z"/>
+        <path class="sparkle" style="animation-delay:0.8s" d="M340 260 l3 9 l9 3 l-9 3 l-3 9 l-3 -9 l-9 -3 l9 -3 Z"/>
+        <path class="sparkle" style="animation-delay:1.5s" d="M85 320 l3 9 l9 3 l-9 3 l-3 9 l-3 -9 l-9 -3 l9 -3 Z"/>
+        <path class="sparkle" style="animation-delay:0.4s" d="M320 90 l4 11 l11 4 l-11 4 l-4 11 l-4 -11 l-11 -4 l11 -4 Z"/>
+        <path class="sparkle" style="animation-delay:2s" d="M200 30 l3 8 l8 3 l-8 3 l-3 8 l-3 -8 l-8 -3 l8 -3 Z"/>
+      </g>
+    </svg>
+
+    <div class="burst-layer" id="burstLayer"></div>
+  </div>
+
+  <p class="hint">tap Prism</p>
+</div>
+
+<script>
+  const messages = [
+    "Sparkle levels: maximum.",
+    "I organized your chaos into slightly less chaos.",
+    "Found three good ideas in the couch cushions.",
+    "Rainbow status: fully charged.",
+    "I believe in you. Also, glitter.",
+    "Fetching motivation... loading... here!",
+    "Trash panda, reporting for duty.",
+    "I raided the recycling bin for wisdom.",
+    "Glitter deployed. You're welcome.",
+    "Tiny paws, big magic.",
+    "Citations gathered. Snacks acquired. Priorities.",
+    "I would die for you, but first, sparkles."
+  ];
+
+  const stage = document.getElementById('stage');
+  const raccoon = document.getElementById('raccoon-svg');
+  const bubble = document.getElementById('bubble');
+  const burstLayer = document.getElementById('burstLayer');
+  let bubbleTimer;
+
+  function petRaccoon() {
+    raccoon.classList.remove('bounce');
+    void raccoon.offsetWidth;
+    raccoon.classList.add('bounce');
+
+    bubble.textContent = messages[Math.floor(Math.random() * messages.length)];
+    bubble.classList.add('show');
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => bubble.classList.remove('show'), 2600);
+
+    spawnBurst();
+  }
+
+  function spawnBurst() {
+    const glyphs = ['✨', '💫', '⭐'];
+    const rect = stage.getBoundingClientRect();
+    const cx = rect.width / 2;
+    const cy = rect.height / 2 + 20;
+
+    for (let i = 0; i < 9; i++) {
+      const el = document.createElement('span');
+      el.className = 'burst';
+      el.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 60 + Math.random() * 70;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist - 20;
+      el.style.left = cx + 'px';
+      el.style.top = cy + 'px';
+      el.style.setProperty('--dx', dx + 'px');
+      el.style.setProperty('--dy', dy + 'px');
+      el.style.fontSize = (13 + Math.random() * 10) + 'px';
+      burstLayer.appendChild(el);
+      setTimeout(() => el.remove(), 950);
+    }
+  }
+
+  stage.addEventListener('click', petRaccoon);
+  stage.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); petRaccoon(); }
+  });
+  stage.tabIndex = 0;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&family=Roboto+Mono:wght@400;500&family=Special+Elite&family=Caveat:wght@600&display=swap">
+  <style>
+    body { margin:0; background-color:#0d0b12; background-image: radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1.4px); background-size:8px 8px; color:#f3efe3; font-family:'Roboto',sans-serif; font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+    * { box-sizing:border-box; }
+    a { color:inherit; text-decoration-color:#ff3fd8; }
+    .rw { max-width:1200px; margin:0 auto; padding-inline:48px; }
+    h1 { font-family:'Anton',sans-serif; font-weight:400; text-transform:uppercase; line-height:0.95; margin:0; }
+    .strip { display:inline-block; font-family:'Anton',sans-serif; color:#0d0b12; padding:0.05em 0.22em; box-shadow:3px 4px 0 rgba(0,0,0,0.5); }
+    label { font-family:'Anton',sans-serif; font-weight:400; text-transform:uppercase; font-size:13px; letter-spacing:0.03em; color:#f3efe3; display:block; margin-bottom:6px; }
+    .fld { background:#fff; border:2px solid #ff3fd8; padding:0.65em 0.85em; font-family:'Roboto',sans-serif; font-size:16px; color:#6b6b6b; }
+  </style>
+</helmet>
+
+<div style="position:relative; overflow:hidden;">
+
+  <!-- HEADER -->
+  <header style="position:relative; z-index:5; border-bottom:3px solid #ff3fd8; background:#100c17;">
+    <div class="rw" style="display:flex; align-items:center; justify-content:space-between; gap:20px; padding-block:16px;">
+      <a href="#" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
+        <img src="icon.png" alt="" style="height:46px;">
+        <span style="font-family:'Anton',sans-serif; font-size:20px; line-height:0.95; text-transform:uppercase; color:#f3efe3;">Deconstructing<br><span style="color:#ff3fd8;">Academia</span></span>
+      </a>
+      <nav style="display:flex; gap:26px;">
+        <a href="#" style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:14px; letter-spacing:0.03em; text-decoration:none; color:#f3efe3; padding-bottom:3px; border-bottom:3px solid transparent;">Articles</a>
+        <a href="#" style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:14px; letter-spacing:0.03em; text-decoration:none; color:#f3efe3; padding-bottom:3px; border-bottom:3px solid transparent;">About</a>
+        <a href="#" style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:14px; letter-spacing:0.03em; text-decoration:none; color:#f3efe3; padding-bottom:3px; border-bottom:3px solid #b6ff3d;">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <section style="position:relative; overflow:hidden; padding-block:52px 72px;">
+    <svg viewBox="0 0 200 200" aria-hidden="true" style="position:absolute; bottom:-80px; right:-90px; width:400px; height:400px; opacity:0.3; color:#b6ff3d; filter:drop-shadow(0 0 14px rgba(182,255,61,0.4));"><g fill="currentColor"><circle cx="110" cy="110" r="44"/><circle cx="60" cy="70" r="13"/><circle cx="150" cy="60" r="9"/><path d="M110 148 q-6 40 4 60 q10 -16 6 -56z"/></g></svg>
+
+    <div class="rw" style="position:relative; z-index:2; max-width:680px;">
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px;">
+        <span class="strip" style="background:#b6ff3d; font-size:66px; transform:rotate(-2deg); clip-path:polygon(0 6%,100% 0,99% 94%,1% 100%);">SAY</span>
+        <span class="strip" style="background:#f3efe3; font-size:66px; transform:rotate(1.5deg); clip-path:polygon(1% 0,100% 4%,100% 100%,0 96%);">IT.</span>
+      </div>
+      <p style="color:rgba(243,239,227,0.9); max-width:560px;">Reach out about corrections, tips, pitches, speaking, or just to say the argument landed (or didn't).</p>
+
+      <div style="display:grid; gap:18px; margin-top:26px;">
+        <div><label>Name</label><div class="fld">&nbsp;</div></div>
+        <div><label>Email</label><div class="fld">&nbsp;</div></div>
+        <div><label>Reason for contact</label><div class="fld" style="display:flex; align-items:center; justify-content:space-between;">Choose one <span style="color:#ff3fd8;">&#9662;</span></div></div>
+        <div><label>Message</label><div class="fld" style="min-height:120px;">&nbsp;</div></div>
+        <span style="justify-self:start; font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; font-size:14px; background:#ff3fd8; color:#0d0b12; border:2px solid #ff3fd8; padding:0.75em 1.5em;">Send</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="position:relative; z-index:2; border-top:3px solid #ff3fd8; background:#0d0b12;">
+    <div class="rw" style="padding-block:36px; display:grid; gap:14px;">
+      <p style="font-family:'Anton',sans-serif; text-transform:uppercase; color:#b6ff3d; font-size:22px; margin:0;">Learn the rules. Question who wrote them.</p>
+      <div style="display:flex; gap:24px; flex-wrap:wrap; font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px;"><a href="#" style="text-decoration-color:#ff3fd8;">Articles</a><a href="#" style="text-decoration-color:#ff3fd8;">About</a><a href="#" style="text-decoration-color:#ff3fd8;">Contact</a><a href="#" style="text-decoration-color:#ff3fd8;">RSS</a></div>
+      <p style="font-family:'Roboto Mono',monospace; font-size:11px; color:rgba(243,239,227,0.55); margin:0;">&copy; 2026 Deconstructing Academia. All rights reserved.</p>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&family=Roboto+Mono:wght@400;500&family=Special+Elite&family=Caveat:wght@600&display=swap">
+  <style>
+    body { margin:0; background-color:#0d0b12; background-image: radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1.4px); background-size:8px 8px; color:#f3efe3; font-family:'Roboto',sans-serif; font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+    * { box-sizing:border-box; }
+    a { color:inherit; text-decoration-color:#ff3fd8; }
+    .rw { max-width:1200px; margin:0 auto; padding-inline:48px; }
+    h1,h2,h3 { font-family:'Anton',sans-serif; font-weight:400; text-transform:uppercase; line-height:0.95; margin:0; }
+    .strip { display:inline-block; font-family:'Anton',sans-serif; color:#0d0b12; padding:0.05em 0.22em; box-shadow:3px 4px 0 rgba(0,0,0,0.5); }
+    .card { position:relative; background:#151119; border:2px solid rgba(243,239,227,0.18); box-shadow:4px 5px 0 rgba(0,0,0,0.5); padding:20px; }
+    .tag { display:inline-flex; font-family:'Roboto Mono',monospace; font-size:10px; font-weight:500; text-transform:uppercase; letter-spacing:0.03em; padding:0.28em 0.6em; border:2px dashed #0d0b12; color:#0d0b12; transform:rotate(-1.5deg); }
+    .ct { font-family:'Roboto Condensed',sans-serif; font-weight:700; font-size:20px; line-height:1.15; margin:12px 0 8px; color:#f3efe3; }
+    .cd { font-family:'Special Elite',monospace; font-size:13px; color:rgba(243,239,227,0.82); margin:0 0 10px; }
+    .cm { font-family:'Roboto Mono',monospace; font-size:10px; text-transform:uppercase; color:rgba(243,239,227,0.55); margin:0; }
+  </style>
+</helmet>
+
+<div style="position:relative; overflow:hidden;">
+
+  <!-- HEADER -->
+  <header style="position:relative; z-index:5; border-bottom:3px solid #ff3fd8; background:#100c17;">
+    <div class="rw" style="display:flex; align-items:center; justify-content:space-between; gap:20px; padding-block:16px;">
+      <a href="#" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
+        <img src="icon.png" alt="" style="height:46px;">
+        <span style="font-family:'Anton',sans-serif; font-size:20px; line-height:0.95; text-transform:uppercase; color:#f3efe3;">Deconstructing<br><span style="color:#ff3fd8;">Academia</span></span>
+      </a>
+      <nav style="display:flex; gap:26px;">
+        <a href="#" style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:14px; letter-spacing:0.03em; text-decoration:none; color:#f3efe3; padding-bottom:3px; border-bottom:3px solid #b6ff3d;">Articles</a>
+        <a href="#" style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:14px; letter-spacing:0.03em; text-decoration:none; color:#f3efe3; padding-bottom:3px; border-bottom:3px solid transparent;">About</a>
+        <a href="#" style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:14px; letter-spacing:0.03em; text-decoration:none; color:#f3efe3; padding-bottom:3px; border-bottom:3px solid transparent;">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HEADER BLOCK -->
+  <section style="position:relative; overflow:hidden; padding-block:52px 30px;">
+    <svg viewBox="0 0 200 200" aria-hidden="true" style="position:absolute; top:-70px; left:-90px; width:400px; height:400px; opacity:0.4; color:#ff3fd8; filter:drop-shadow(0 0 14px rgba(255,63,216,0.4));"><g fill="currentColor"><circle cx="80" cy="80" r="46"/><circle cx="140" cy="60" r="14"/><circle cx="50" cy="140" r="14"/><path d="M80 118 q-6 44 4 66 q10 -18 6 -62z"/></g></svg>
+    <div class="rw" style="position:relative; z-index:2;">
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+        <span class="strip" style="background:#f3efe3; font-size:64px; transform:rotate(-2deg); clip-path:polygon(0 6%,100% 0,99% 94%,1% 100%);">ALL</span>
+        <span class="strip" style="background:#ff3fd8; font-size:64px; transform:rotate(1.5deg); clip-path:polygon(1% 0,100% 4%,100% 100%,0 96%);">ARTICLES</span>
+      </div>
+      <p style="max-width:640px; color:rgba(243,239,227,0.88);">Every piece belongs to one of eight series. Filter below, or just start reading &mdash; filters update the list without leaving the page.</p>
+    </div>
+  </section>
+
+  <!-- FILTERS -->
+  <section class="rw" style="position:relative; z-index:2; display:flex; flex-wrap:wrap; gap:8px; padding-bottom:28px;">
+    <span style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.02em; background:#ff3fd8; color:#0d0b12; border:2px solid #ff3fd8; padding:0.4em 0.85em;">All</span>
+    <span style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.02em; color:#f3efe3; border:2px solid rgba(243,239,227,0.22); border-left:4px solid #ff3fd8; padding:0.4em 0.85em; background:#161219;">Whose Peers?</span>
+    <span style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.02em; color:#f3efe3; border:2px solid rgba(243,239,227,0.22); border-left:4px solid #ff3fd8; padding:0.4em 0.85em; background:#161219;">Academic Autopsy</span>
+    <span style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.02em; color:#f3efe3; border:2px solid rgba(243,239,227,0.22); border-left:4px solid #9db8e0; padding:0.4em 0.85em; background:#161219;">Receipts or It Didn't Happen</span>
+    <span style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.02em; color:#f3efe3; border:2px solid rgba(243,239,227,0.22); border-left:4px solid #b6ff3d; padding:0.4em 0.85em; background:#161219;">Field Notes From the Other Side</span>
+    <span style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.02em; color:#f3efe3; border:2px solid rgba(243,239,227,0.22); border-left:4px solid #22e2f5; padding:0.4em 0.85em; background:#161219;">The Syllabus Left This Out</span>
+    <span style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.02em; color:#f3efe3; border:2px solid rgba(243,239,227,0.22); border-left:4px solid #5c8aff; padding:0.4em 0.85em; background:#161219;">Use the Damn Tool</span>
+    <span style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.02em; color:#f3efe3; border:2px solid rgba(243,239,227,0.22); border-left:4px solid #a855f7; padding:0.4em 0.85em; background:#161219;">Dog-Eared Dissent</span>
+    <span style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.02em; color:#f3efe3; border:2px solid rgba(243,239,227,0.22); border-left:4px solid #5c8aff; padding:0.4em 0.85em; background:#161219;">Where the Work Is</span>
+  </section>
+
+  <!-- GRID -->
+  <section class="rw" style="position:relative; z-index:2; padding-bottom:64px;">
+    <div style="display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:22px;">
+      <div class="card" style="border-left:6px solid #5c8aff; transform:rotate(-0.5deg);"><span class="tag" style="background:#bcd0ff;">Use the Damn Tool</span><h3 class="ct">Zotero Never Forgets a Source</h3><p class="cd">Turn "I read that somewhere" into a citation you can produce.</p><p class="cm">Sep 4, 2026</p></div>
+      <div class="card" style="border-left:6px solid #b6ff3d; transform:rotate(0.6deg);"><span class="tag" style="background:#d7ffb0;">Field Notes</span><h3 class="ct">The 60-Second Bullshit Scan</h3><p class="cd">How to spot what your course materials may be leaving out.</p><p class="cm">Sep 6, 2026</p></div>
+      <div class="card" style="border-left:6px solid #22e2f5; transform:rotate(-0.3deg);"><span class="tag" style="background:#b6f0ff;">Syllabus Left This Out</span><h3 class="ct">Reading Between the Lines</h3><p class="cd">A clear answer lets you plan and stop losing points because you guessed wrong.</p><p class="cm">Sep 2, 2026</p></div>
+      <div class="card" style="border-left:6px solid #ff3fd8; transform:rotate(0.4deg);"><span class="tag" style="background:#ffc7ef;">Academic Autopsy</span><h3 class="ct">Education and Colonialism</h3><p class="cd">The university was a colonial instrument before it was anything else.</p><p class="cm">Sep 1, 2026</p></div>
+      <div class="card" style="border-left:6px solid #9db8e0; transform:rotate(-0.6deg);"><span class="tag" style="background:#d4dff0;">Receipts or It Didn't Happen</span><h3 class="ct">The Footnote Doesn't Say That</h3><p class="cd">Tracing a stat back through five citations to a study that measured something else.</p><p class="cm">Aug 28, 2026</p></div>
+      <div class="card" style="border-left:6px solid #a855f7; transform:rotate(0.5deg);"><span class="tag" style="background:#e2c7ff;">Dog-Eared Dissent</span><h3 class="ct">Reading Abolition by Argument</h3><p class="cd">Movement books judged on their reasoning, not their inspirational quotes.</p><p class="cm">Aug 24, 2026</p></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="position:relative; z-index:2; border-top:3px solid #ff3fd8; background:#0d0b12;">
+    <div class="rw" style="padding-block:36px; display:grid; gap:14px;">
+      <p style="font-family:'Anton',sans-serif; text-transform:uppercase; color:#b6ff3d; font-size:22px; margin:0;">Learn the rules. Question who wrote them.</p>
+      <div style="display:flex; gap:24px; flex-wrap:wrap; font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px;"><a href="#" style="text-decoration-color:#ff3fd8;">Articles</a><a href="#" style="text-decoration-color:#ff3fd8;">About</a><a href="#" style="text-decoration-color:#ff3fd8;">Contact</a><a href="#" style="text-decoration-color:#ff3fd8;">RSS</a></div>
+      <p style="font-family:'Roboto Mono',monospace; font-size:11px; color:rgba(243,239,227,0.55); margin:0;">&copy; 2026 Deconstructing Academia. All rights reserved.</p>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&family=Roboto+Mono:wght@400;500&family=Special+Elite&family=Caveat:wght@600&display=swap">
+  <style>
+    body {
+      margin: 0;
+      background-color: #0d0b12;
+      background-image:
+        radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1.4px);
+      background-size: 8px 8px;
+      color: #f3efe3;
+      font-family: 'Roboto', -apple-system, 'Segoe UI', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #ff3fd8; text-decoration-thickness: 2px; text-underline-offset: 0.15em; }
+    a:hover { color: #f3efe3; }
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+
+<div style="position: relative; overflow: hidden; max-width: 1180px; margin: 0 auto; padding: 56px 50px 80px;">
+
+  <!-- ================= SPRAY / SPLATTER ATMOSPHERE ================= -->
+  <svg viewBox="0 0 200 200" aria-hidden="true" style="position:absolute; top:-70px; left:-90px; width:420px; height:420px; opacity:0.55; color:#a855f7; filter: drop-shadow(0 0 14px rgba(168,85,247,0.5)); pointer-events:none;">
+    <g fill="currentColor">
+      <circle cx="70" cy="70" r="46"/><circle cx="128" cy="52" r="14"/><circle cx="150" cy="96" r="9"/>
+      <circle cx="40" cy="128" r="12"/><circle cx="112" cy="128" r="20"/><circle cx="24" cy="60" r="7"/>
+      <circle cx="160" cy="140" r="5"/><circle cx="92" cy="24" r="6"/><circle cx="150" cy="30" r="4"/>
+      <path d="M70 108 q-6 40 4 62 q10 -18 6 -60z"/>
+      <path d="M118 96 q22 26 20 54 q-16 -8 -28 -48z"/>
+    </g>
+  </svg>
+  <svg viewBox="0 0 200 200" aria-hidden="true" style="position:absolute; top:120px; right:-80px; width:300px; height:300px; opacity:0.5; color:#b6ff3d; filter: drop-shadow(0 0 12px rgba(182,255,61,0.45)); pointer-events:none;">
+    <g fill="currentColor">
+      <circle cx="120" cy="80" r="40"/><circle cx="60" cy="60" r="12"/><circle cx="70" cy="120" r="16"/>
+      <circle cx="150" cy="140" r="8"/><circle cx="40" cy="100" r="6"/><circle cx="170" cy="60" r="5"/>
+      <path d="M120 118 q-8 46 2 70 q12 -20 8 -66z"/>
+    </g>
+  </svg>
+  <svg viewBox="0 0 200 200" aria-hidden="true" style="position:absolute; bottom:200px; left:-60px; width:280px; height:280px; opacity:0.42; color:#22e2f5; filter: drop-shadow(0 0 12px rgba(34,226,245,0.45)); pointer-events:none;">
+    <g fill="currentColor">
+      <circle cx="90" cy="100" r="38"/><circle cx="140" cy="70" r="13"/><circle cx="50" cy="150" r="15"/>
+      <circle cx="150" cy="130" r="7"/><circle cx="30" cy="90" r="6"/>
+    </g>
+  </svg>
+
+  <!-- ================= MASTHEAD ================= -->
+  <div style="position: relative; z-index: 2; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 20px;">
+    <div style="font-family: 'Roboto Mono', monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #b6ff3d; border: 1px solid rgba(182,255,61,0.5); padding: 6px 10px; transform: rotate(-1.5deg);">
+      Deconstructing Academia &nbsp;/&nbsp; Visual System v2 &nbsp;/&nbsp; Style Tile
+    </div>
+    <div style="position: relative; width: 116px; height: 116px; flex-shrink: 0; border: 2px solid #ff3fd8; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; transform: rotate(-8deg); filter: drop-shadow(0 0 8px rgba(255,63,216,0.4));">
+      <div style="position: absolute; inset: 5px; border: 1px dashed #ff3fd8; border-radius: 50%;"></div>
+      <span style="font-family: 'Roboto Mono', monospace; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #ff8fe0; line-height: 1.35;">Case File<br>No. 01<br>&#9650;</span>
+    </div>
+  </div>
+
+  <!-- ================= RANSOM-NOTE HEADLINE ================= -->
+  <div style="position: relative; z-index: 2; margin: 8px 0 14px;">
+    <div style="display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: center; max-width: 900px;">
+      <span style="display:inline-block; background:#f3efe3; color:#0d0b12; font-family:'Anton',sans-serif; font-size:74px; line-height:0.82; padding:0.06em 0.26em; transform:rotate(-2.5deg); box-shadow:3px 5px 0 rgba(0,0,0,0.55); clip-path: polygon(0 5%, 100% 0, 99% 95%, 1% 100%);">MAKE</span>
+      <span style="display:inline-block; background:#b6ff3d; color:#0d0b12; font-family:'Anton',sans-serif; font-size:74px; line-height:0.82; padding:0.06em 0.26em; transform:rotate(1.5deg); box-shadow:3px 5px 0 rgba(0,0,0,0.55); clip-path: polygon(1% 0, 100% 4%, 100% 100%, 0 96%);">KNOWLEDGE</span>
+      <span style="display:inline-block; background:#f3efe3; color:#0d0b12; font-family:'Anton',sans-serif; font-size:74px; line-height:0.82; padding:0.06em 0.26em; transform:rotate(-1deg); box-shadow:3px 5px 0 rgba(0,0,0,0.55); clip-path: polygon(0 2%, 100% 0, 98% 100%, 2% 97%);">HARDER</span>
+      <span style="display:inline-block; background:#0d0b12; color:#f3efe3; border:2px solid #f3efe3; font-family:'Anton',sans-serif; font-size:74px; line-height:0.82; padding:0.06em 0.26em; transform:rotate(2deg); box-shadow:3px 5px 0 rgba(0,0,0,0.55);">TO</span>
+      <span style="display:inline-block; background:#ff3fd8; color:#0d0b12; font-family:'Anton',sans-serif; font-size:74px; line-height:0.82; padding:0.06em 0.3em; transform:rotate(-3deg); box-shadow:3px 5px 0 rgba(0,0,0,0.55); clip-path: polygon(0 0, 100% 3%, 97% 96%, 3% 100%); filter: drop-shadow(0 0 10px rgba(255,63,216,0.35));">HOARD.</span>
+    </div>
+    <p style="font-family: 'Special Elite', 'Courier New', monospace; font-size: 15px; color: rgba(243,239,227,0.82); max-width: 620px; margin: 22px 0 0;">
+      The headline is the logo. Every H1 is set as cut-out strips &mdash; alternating dirty&#8209;porcelain paper and neon tape, black condensed type, each word torn and rotated a degree or two off true. Never a clean single line.
+    </p>
+  </div>
+
+  <!-- ================= MASCOT + PULL QUOTE ================= -->
+  <div style="position: relative; z-index: 2; display: flex; gap: 28px; align-items: flex-end; margin: 30px 0 8px; flex-wrap: wrap;">
+    <img src="mascot.png" alt="Deconstructing Academia mascot: a purple-haired punk raccoon in a green tartan skirt standing with a harnessed German shepherd" style="width: 240px; height: auto; filter: drop-shadow(6px 8px 0 rgba(0,0,0,0.5));">
+    <div style="flex: 1 1 440px; min-width: 300px;">
+      <div style="display: inline-block; font-family: 'Anton', sans-serif; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: #22e2f5; border: 2px solid #22e2f5; padding: 3px 9px; transform: rotate(-3deg); opacity: 0.9; margin-bottom: 16px;">The Voice</div>
+      <p style="font-family: 'Anton', sans-serif; font-size: 30px; line-height: 1.05; text-transform: uppercase; color: #f3efe3; margin: 0 0 14px;">
+        You are <span style="background:#b6ff3d; color:#0d0b12; padding:0 0.12em; box-decoration-break: clone; -webkit-box-decoration-break: clone;">not behind</span>. The map was <span style="background:#ff3fd8; color:#0d0b12; padding:0 0.12em;">hidden</span>.
+      </p>
+      <p style="font-family: 'Caveat', cursive; font-size: 24px; color: #ff8fe0; margin: 0;">&mdash; the point is not to make academia friendlier.</p>
+    </div>
+  </div>
+
+  <!-- ================= SECTION: COLOR ================= -->
+  <div style="position: relative; z-index: 2; margin-top: 46px; border-top: 2px solid rgba(243,239,227,0.16); padding-top: 26px;">
+    <h2 style="font-family:'Anton',sans-serif; font-size:34px; text-transform:uppercase; margin:0 0 4px; color:#f3efe3;">Ink, Paper &amp; the Neon</h2>
+    <p style="font-family:'Roboto Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:rgba(243,239,227,0.55); margin:0 0 20px;">Spray paint on a wall &mdash; not pen on paper. Ink is the ground; paper is what you write with.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-width: 520px; margin-bottom: 26px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="width:52px; height:52px; background:#0d0b12; border:2px solid rgba(243,239,227,0.35); flex-shrink:0;"></span>
+        <span style="font-family:'Roboto Mono',monospace; font-size:12px;">Blackberry Ink<br><span style="color:rgba(243,239,227,0.55)">#0D0B12 &middot; page</span></span>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="width:52px; height:52px; background:#f3efe3; flex-shrink:0;"></span>
+        <span style="font-family:'Roboto Mono',monospace; font-size:12px;">Dirty Porcelain<br><span style="color:rgba(243,239,227,0.55)">#F3EFE3 &middot; the mark</span></span>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 12px;">
+      <!-- palette row template -->
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <span style="width:130px; font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.04em; color:#ff3fd8;">Red Pen Society</span>
+        <span style="display:flex; gap:0;">
+          <span style="width:64px; height:40px; background:#ff3fd8;"></span>
+          <span style="width:64px; height:40px; background:#ff8fe0;"></span>
+          <span style="width:64px; height:40px; background:#ffe36e;"></span>
+        </span>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; color:rgba(243,239,227,0.5);">Riot Magenta / Bubblegum / Caution Gold</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <span style="width:130px; font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.04em; color:#22e2f5;">Archive Diving</span>
+        <span style="display:flex; gap:0;">
+          <span style="width:64px; height:40px; background:#22e2f5;"></span>
+          <span style="width:64px; height:40px; background:#5ec8ff;"></span>
+          <span style="width:64px; height:40px; background:#b8c6ff;"></span>
+        </span>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; color:rgba(243,239,227,0.5);">Electric Cyan / Sky Volt / Periwinkle</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <span style="width:130px; font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.04em; color:#b6ff3d;">Field Notes</span>
+        <span style="display:flex; gap:0;">
+          <span style="width:64px; height:40px; background:#b6ff3d;"></span>
+          <span style="width:64px; height:40px; background:#ff8a3d;"></span>
+          <span style="width:64px; height:40px; background:#ffd23d;"></span>
+        </span>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; color:rgba(243,239,227,0.5);">Acid Lime / Blaze Orange / Amber</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <span style="width:130px; font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.04em; color:#5c8aff;">Public Record</span>
+        <span style="display:flex; gap:0;">
+          <span style="width:64px; height:40px; background:#5c8aff;"></span>
+          <span style="width:64px; height:40px; background:#8fb0ff;"></span>
+          <span style="width:64px; height:40px; background:#ff3b5c;"></span>
+        </span>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; color:rgba(243,239,227,0.5);">Cobalt Volt / Pale Cobalt / Alert Red</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <span style="width:130px; font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:0.04em; color:#a855f7;">Electric / Chalkboard</span>
+        <span style="display:flex; gap:0;">
+          <span style="width:64px; height:40px; background:#a855f7;"></span>
+          <span style="width:64px; height:40px; background:#ff2e63;"></span>
+          <span style="width:64px; height:40px; background:#ffd23d;"></span>
+          <span style="width:64px; height:40px; background:#1a0f2e; border:1px solid rgba(233,223,199,0.3);"></span>
+        </span>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; color:rgba(243,239,227,0.5);">Riot Violet / Punch Red / Marigold / Violet-black panel</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SECTION: TYPE ================= -->
+  <div style="position: relative; z-index: 2; margin-top: 46px; border-top: 2px solid rgba(243,239,227,0.16); padding-top: 26px;">
+    <h2 style="font-family:'Anton',sans-serif; font-size:34px; text-transform:uppercase; margin:0 0 20px; color:#f3efe3;">Type &mdash; six jobs</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 40px; max-width: 960px;">
+      <div>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:#b6ff3d;">Anton &middot; display / headline</span>
+        <div style="font-family:'Anton',sans-serif; font-size:44px; line-height:0.95; text-transform:uppercase; color:#f3efe3; margin-top:6px;">Learn the rules</div>
+      </div>
+      <div>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:#b6ff3d;">Roboto Condensed 700 &middot; labels / nav</span>
+        <div style="font-family:'Roboto Condensed',sans-serif; font-weight:700; font-size:22px; text-transform:uppercase; letter-spacing:0.04em; color:#f3efe3; margin-top:6px;">Question who wrote them</div>
+      </div>
+      <div>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:#b6ff3d;">Roboto &middot; body</span>
+        <div style="font-family:'Roboto',sans-serif; font-size:16px; color:rgba(243,239,227,0.9); margin-top:6px;">A public argument about knowledge: who gets to create it, whose language is treated as intelligent, whose experience counts as evidence.</div>
+      </div>
+      <div>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:#b6ff3d;">Special Elite &middot; typewriter / decks</span>
+        <div style="font-family:'Special Elite',monospace; font-size:16px; color:rgba(243,239,227,0.88); margin-top:6px;">A 15-day field guide to the hidden curriculum.</div>
+      </div>
+      <div>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:#b6ff3d;">Roboto Mono &middot; meta / stamps / dates</span>
+        <div style="font-family:'Roboto Mono',monospace; font-size:14px; text-transform:uppercase; letter-spacing:0.03em; color:rgba(243,239,227,0.8); margin-top:6px;">Filed &middot; 06 Sep 2026 &middot; Case No. 01</div>
+      </div>
+      <div>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:#b6ff3d;">Caveat &middot; margin notes / annotations</span>
+        <div style="font-family:'Caveat',cursive; font-size:26px; color:#ff8fe0; margin-top:6px;">who benefits from you not knowing this?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SECTION: COMPONENTS ================= -->
+  <div style="position: relative; z-index: 2; margin-top: 46px; border-top: 2px solid rgba(243,239,227,0.16); padding-top: 26px;">
+    <h2 style="font-family:'Anton',sans-serif; font-size:34px; text-transform:uppercase; margin:0 0 22px; color:#f3efe3;">The Kit</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px; align-items: start;">
+
+      <!-- Buttons -->
+      <div>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:rgba(243,239,227,0.5);">Calls to action</span>
+        <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top:12px;">
+          <span style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; font-size:14px; background:#ff3fd8; color:#0d0b12; border:2px solid #ff3fd8; padding:0.75em 1.4em;">Get the kit &rarr;</span>
+          <span style="font-family:'Roboto Condensed',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; font-size:14px; background:transparent; color:#f3efe3; border:2px solid #f3efe3; padding:0.75em 1.4em;">All articles &rarr;</span>
+        </div>
+      </div>
+
+      <!-- Series pill + stamp label -->
+      <div>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:rgba(243,239,227,0.5);">Series tag &amp; rubber stamp</span>
+        <div style="display:flex; gap:16px; align-items:center; margin-top:12px; flex-wrap:wrap;">
+          <span style="display:inline-flex; align-items:center; gap:0.4em; font-family:'Roboto Mono',monospace; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:0.03em; padding:0.3em 0.7em; border:2px dashed #0d0b12; background:#ffe9a8; color:#0d0b12; transform:rotate(-1.5deg);">Field Notes</span>
+          <span style="display:inline-block; font-family:'Anton',sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:0.06em; color:#b6ff3d; border:2px solid #b6ff3d; padding:0.15em 0.5em; transform:rotate(-3deg); opacity:0.9;">Decolonized Lit Review</span>
+        </div>
+      </div>
+
+      <!-- Highlighter -->
+      <div>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:rgba(243,239,227,0.5);">Highlighter swipe</span>
+        <p style="font-size:17px; margin:12px 0 0; line-height:1.9;">
+          Spot the <span style="background-image:linear-gradient(to bottom, transparent 12%, #ffe36e 12%, #ffe36e 86%, transparent 86%); color:#0d0b12; padding:0 0.08em;">hallucinated citations</span> and the <span style="background-image:linear-gradient(to bottom, transparent 12%, #ff3fd8 12%, #ff3fd8 86%, transparent 86%); color:#0d0b12; padding:0 0.08em;">borrowed prestige</span>.
+        </p>
+      </div>
+
+      <!-- Sticky note + tape -->
+      <div>
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:rgba(243,239,227,0.5);">Pinned note &amp; tape</span>
+        <div style="position:relative; margin-top:18px; display:inline-block;">
+          <span style="position:absolute; top:-12px; left:24px; width:60px; height:22px; background:rgba(255,227,110,0.7); border:1px solid rgba(243,239,227,0.15); box-shadow:0 2px 3px rgba(0,0,0,0.35); transform:rotate(-4deg);"></span>
+          <div style="background:#ffe9a8; border:1px solid rgba(13,11,18,0.3); box-shadow:2px 3px 0 rgba(0,0,0,0.35); padding:16px; font-family:'Caveat',cursive; font-size:19px; line-height:1.25; color:#0d0b12; transform:rotate(2deg); max-width:220px;">
+            check the syllabus for what it refuses to grade.
+          </div>
+        </div>
+      </div>
+
+      <!-- Article card -->
+      <div style="grid-column: 1 / -1;">
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:rgba(243,239,227,0.5);">Article card &mdash; torn clipping, tape, corner splatter</span>
+        <div style="position:relative; margin-top:16px; max-width:380px; background:#151119; border:2px solid rgba(243,239,227,0.18); border-left:6px solid #b6ff3d; box-shadow:5px 6px 0 rgba(0,0,0,0.5); padding:22px; transform:rotate(-0.6deg); clip-path: polygon(0% 0%, 100% 0%, 100% 96%, 96% 100%, 88% 96%, 78% 100%, 68% 96%, 58% 100%, 48% 96%, 38% 100%, 28% 96%, 18% 100%, 8% 96%, 0% 100%);">
+          <span style="position:absolute; top:-10px; left:26px; width:56px; height:20px; background:rgba(255,227,110,0.7); border:1px solid rgba(13,11,18,0.18); box-shadow:0 2px 3px rgba(0,0,0,0.3); transform:rotate(-4deg);"></span>
+          <svg viewBox="0 0 200 200" aria-hidden="true" style="position:absolute; right:-24px; top:-24px; width:110px; height:110px; opacity:0.22; color:#b6ff3d;"><g fill="currentColor"><circle cx="120" cy="80" r="34"/><circle cx="70" cy="60" r="10"/><circle cx="90" cy="120" r="14"/></g></svg>
+          <span style="display:inline-flex; font-family:'Roboto Mono',monospace; font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.03em; padding:0.3em 0.7em; border:2px dashed #0d0b12; background:#d7ffb0; color:#0d0b12; transform:rotate(-1.5deg);">Field Notes</span>
+          <h3 style="font-family:'Roboto Condensed',sans-serif; font-weight:700; font-size:22px; line-height:1.15; margin:14px 0 8px; color:#f3efe3;">The 60-Second Bullshit Scan</h3>
+          <p style="font-family:'Special Elite',monospace; font-size:14px; color:rgba(243,239,227,0.82); margin:0 0 12px;">How to spot what your course materials may be leaving out.</p>
+          <p style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.03em; color:rgba(243,239,227,0.6); margin:0;">06 Sep 2026</p>
+        </div>
+      </div>
+
+      <!-- Callout -->
+      <div style="grid-column: 1 / -1;">
+        <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:rgba(243,239,227,0.5);">Chalkboard callout &mdash; &ldquo;receipts or it didn&rsquo;t happen&rdquo;</span>
+        <div style="position:relative; margin-top:16px; background:#1a0f2e; border:2px solid #9db8e0; padding:24px 26px; max-width:640px; box-shadow:0 0 22px -6px rgba(157,184,224,0.4);">
+          <div style="font-family:'Anton',sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#e3c14f; margin-bottom:10px;">Receipts or it didn&rsquo;t happen</div>
+          <p style="font-family:'Roboto',sans-serif; font-size:16px; color:#e9dfc7; margin:0;">
+            &ldquo;Representation is not just about who appears. It is about <span style="color:#b6ff3d;">who gets authority</span>.&rdquo; Every claim on this site links to a source you can open yourself.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= SECTION: TEXTURE ================= -->
+  <div style="position: relative; z-index: 2; margin-top: 46px; border-top: 2px solid rgba(243,239,227,0.16); padding-top: 26px;">
+    <h2 style="font-family:'Anton',sans-serif; font-size:34px; text-transform:uppercase; margin:0 0 20px; color:#f3efe3;">Surfaces</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; max-width: 760px;">
+      <div style="height:120px; background-color:#0d0b12; background-image: radial-gradient(circle at center, rgba(255,255,255,0.16) 1.6px, transparent 1.8px); background-size: 9px 9px; border:1px solid rgba(243,239,227,0.15); display:flex; align-items:flex-end; padding:8px; font-family:'Roboto Mono',monospace; font-size:10px; text-transform:uppercase; color:rgba(243,239,227,0.7);">Halftone dot</div>
+      <div style="height:120px; background-color:#0d0b12; background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;); border:1px solid rgba(243,239,227,0.15); display:flex; align-items:flex-end; padding:8px; font-family:'Roboto Mono',monospace; font-size:10px; text-transform:uppercase; color:rgba(243,239,227,0.7);">Spray grain</div>
+      <div style="height:120px; background-color:#211a14; background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E&quot;); border:1px solid rgba(243,239,227,0.15); display:flex; align-items:flex-end; padding:8px; font-family:'Roboto Mono',monospace; font-size:10px; text-transform:uppercase; color:rgba(243,239,227,0.7);">Concrete wash</div>
+    </div>
+    <p style="font-family:'Special Elite',monospace; font-size:14px; color:rgba(243,239,227,0.7); max-width:620px; margin:18px 0 0;">
+      Splatter is inline SVG in the live accent colour, layered at 0.4&ndash;0.6 opacity with a soft neon glow &mdash; it bleeds off edges, it never sits politely inside a box.
+    </p>
+  </div>
+
+  <!-- ================= FOOTER STRIP ================= -->
+  <div style="position: relative; z-index: 2; margin-top: 54px; padding-top: 20px; border-top: 3px solid #ff3fd8; display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;">
+    <span style="font-family:'Anton',sans-serif; font-size:20px; text-transform:uppercase; color:#f3efe3;">Deconstructing <span style="color:#ff3fd8;">Academia</span></span>
+    <span style="font-family:'Roboto Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:rgba(243,239,227,0.55);">Learn the rules &middot; Question who wrote them</span>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>
