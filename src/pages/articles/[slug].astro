@@ -137,6 +137,7 @@ const series = getSeries(entry.data.series);
   .article {
     position: relative;
     isolation: isolate;
+    overflow-x: clip;
     padding-block: var(--space-4) var(--space-6);
     background: var(--color-bg);
     color: var(--color-fg);
@@ -174,7 +175,9 @@ const series = getSeries(entry.data.series);
 
   .article-header h1 {
     margin-top: var(--space-2);
-    font-size: var(--step-5);
+    max-width: 100%;
+    font-size: clamp(2.5rem, 6.5vw, 4.8rem);
+    overflow-wrap: anywhere;
   }
 
   .article-header h1 span {
@@ -190,7 +193,8 @@ const series = getSeries(entry.data.series);
 
   .deck {
     font-size: var(--step-1);
-    max-width: var(--content-max);
+    width: min(100%, var(--content-max));
+    overflow-wrap: anywhere;
   }
 
   .byline {
@@ -285,12 +289,17 @@ const series = getSeries(entry.data.series);
     gap: var(--space-2);
   }
 
-  @media (max-width: 40rem) {
-    .article-header h1 { font-size: 2.8rem; }
+  @media (max-width: 56rem) {
     .reading-desk { grid-template-columns: 1fr; }
     .reading-desk__rail { position: static; display: grid; grid-template-columns: 1fr; }
     .reading-desk__rail dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-1); }
     .reading-desk__note { max-width: 17rem; }
+  }
+
+  @media (max-width: 40rem) {
+    .article-header h1 { font-size: clamp(2.25rem, 12vw, 3.15rem); }
+    .article-header h1 span { box-shadow: 4px 5px 0 color-mix(in srgb, var(--accent-1) 70%, transparent); }
+    .reading-desk__rail dl { grid-template-columns: 1fr; }
     .article-cover {
       transform: none;
       box-shadow: 3px 4px 0 rgb(0 0 0 / 40%);
