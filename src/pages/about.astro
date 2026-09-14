@@ -111,8 +111,8 @@ import Splatter from '../components/Splatter.astro';
   .about-hero h1 strong { background: var(--accent-1); transform: rotate(0.8deg); }
   .about-hero__deck { font-family: var(--font-typewriter); font-size: var(--step-1); }
   .about-hero__thesis { width: min(100%, 36rem); margin: var(--space-3) 0 0 8%; padding: var(--space-2); background: var(--accent-3); color: var(--ink); font-family: var(--font-annotation); font-size: var(--step-1); line-height: 1.15; transform: rotate(-1.5deg); box-shadow: 5px 5px 0 rgb(0 0 0 / 45%); }
-  .about-hero__portrait { position: relative; min-height: 37rem; overflow: hidden; }
-  .about-hero__portrait img { position: absolute; left: -20rem; bottom: 0; width: auto; max-width: none; height: 38rem; filter: drop-shadow(8px 7px 0 rgb(0 0 0 / 55%)); }
+  .about-hero__portrait { position: relative; min-height: 38rem; overflow: hidden; }
+  .about-hero__portrait img { position: absolute; left: -20rem; bottom: 0; width: auto; max-width: none; height: 37rem; filter: drop-shadow(8px 7px 0 rgb(0 0 0 / 55%)); }
   .method-band { padding-block: var(--space-5); background: var(--paper); color: var(--ink); }
   .method-grid { display: grid; grid-template-columns: minmax(15rem, 0.6fr) minmax(0, 1.4fr); gap: clamp(2rem, 7vw, 6rem); }
   .method-grid header { position: sticky; top: var(--space-3); align-self: start; }
@@ -149,7 +149,8 @@ import Splatter from '../components/Splatter.astro';
     .about-hero__copy { padding-bottom: var(--space-2); }
     .about-hero h1 { font-size: 3rem; }
     .about-hero__thesis { margin-left: 0; }
-    .about-hero__portrait { min-height: 25rem; }
+    .about-hero__thesis { width: 100%; padding-inline: 0.8rem; transform: none; }
+    .about-hero__portrait { min-height: 28rem; }
     .about-hero__portrait img { left: -12.5rem; height: 27rem; }
     .method-grid ol,.values-grid,.commitments ul { grid-template-columns: 1fr; }
     .method-grid li { min-height: auto; }

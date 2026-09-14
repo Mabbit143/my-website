@@ -84,7 +84,7 @@ import Splatter from '../components/Splatter.astro';
   .contact-hero h1 strong { background: var(--accent-1); transform: rotate(0.7deg); }
   .contact-hero__deck { font-family: var(--font-typewriter); font-size: var(--step-1); }
   .contact-hero__art { position: relative; min-height: 23rem; overflow: hidden; }
-  .contact-hero__art img { position: absolute; right: -8rem; bottom: -1rem; width: 36rem; max-width: none; filter: drop-shadow(8px 7px 0 rgb(0 0 0 / 55%)); }
+  .contact-hero__art img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%; object-fit: contain; object-position: center bottom; filter: drop-shadow(8px 7px 0 rgb(0 0 0 / 55%)); }
   .contact-routing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding-block: var(--space-4); }
   .contact-routing article { min-height: 12rem; padding: var(--space-3); border-top: 7px solid var(--accent-1); background: color-mix(in srgb, var(--ink) 94%, white); }
   .contact-routing span { font-family: var(--font-mono); color: var(--accent-1); }
@@ -106,7 +106,6 @@ import Splatter from '../components/Splatter.astro';
   button { justify-self: start; }
   @media (max-width: 48rem) {
     .contact-hero { grid-template-columns: minmax(0, 1fr) 13rem; }
-    .contact-hero__art img { right: -12rem; }
     .contact-grid { grid-template-columns: 1fr; }
     .contact-grid aside { position: static; }
   }
@@ -115,7 +114,6 @@ import Splatter from '../components/Splatter.astro';
     .contact-hero > div:first-of-type { padding-bottom: var(--space-2); }
     .contact-hero h1 { font-size: 3rem; }
     .contact-hero__art { min-height: 14rem; }
-    .contact-hero__art img { right: -4rem; width: 25rem; }
     .contact-routing,.field-row { grid-template-columns: 1fr; }
     .contact-routing article { min-height: auto; }
     form { box-shadow: 5px 6px 0 var(--ink); }
