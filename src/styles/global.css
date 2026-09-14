@@ -1,30 +1,18 @@
 /* ============================================================
    DECONSTRUCTING ACADEMIA — design tokens
-   REBRAND — confirmed 6 Sep 2026. Replaces the "editorial-collage"
-   light system (porcelain paper, muted red-pen/archive/field-notes
-   palettes) with the neon graffiti-punk system from the finished
-   badge logo and Instagram carousel set. Locked decisions:
-     - Whole site goes dark (was: light paper background).
-     - Each series KEEPS its own accent palette, just re-cut in
-       neon — the red-pen/archive/field-notes/public-record/electric
-       mapping from 1 Sep 2026 is unchanged, only the hex values
-       under each name changed. See src/lib/series.ts — nothing
-       there needed to change.
-     - The new circular splatter badge is a social-only asset
-       (see /mnt/user-data/outputs/social-assets/). Header/footer
-       keep the existing plain character cutout — not touched here.
+   VISUAL SYSTEM V2 — current six-color lock, 9 Sep 2026.
+   Every series uses combinations of the same six colors:
+     - Void Black #0D0B12
+     - Electric Violet #5B16D9
+     - Acid Lime #B7FF18
+     - Hot Pink #FF168C
+     - Signal Cyan #10D9D0
+     - Paper White #F5F2EA
 
-   Ink (Blackberry #0D0B12) and Paper (Dirty Porcelain #F3EFE3) are
-   UNCHANGED as literal colors — only their JOB flipped. Ink used to
-   be the ground floor is now the background; Paper used to be the
-   page is now the ink you write with. Think spray paint on a wall
-   instead of pen on paper.
-
-   Every accent below was run through a WCAG contrast check against
-   the new #0d0b12 background (script output, not eyeballed) —
-   everything here clears 4.5:1 for normal text. public-record's
-   original "cobalt" neon (#3b6bff) only cleared 4.41, so it's a
-   half-step brighter here (#5c8aff, 6.09:1) instead.
+   Series still have distinct emphasis, but not separate palettes.
+   Variety comes from composition, texture, scale, and which locked
+   accent leads. The whole site remains dark graffiti-punk; the old
+   beige/manila dossier treatment and substitute neons are retired.
 
    Typography is unchanged: Anton (headline) already reads as
    spray-stencil/poster type, so it carries the new look without
@@ -35,15 +23,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&family=Roboto+Mono:wght@400;500&family=Special+Elite&family=Caveat:wght@600&display=swap');
 
 :root {
-  /* --- constants: same hex as always, different job (see header note) --- */
+  /* --- locked constants --- */
   --ink: #0d0b12;
-  --paper: #f3efe3;
+  --paper: #f5f2ea;
 
   /* --- accent set: defaults to Red Pen Society, the site anchor,
      now "Riot Pink" instead of "Academic Red" --- */
-  --accent-1: #ff3fd8; /* Riot Magenta — headline emphasis, underlines, borders */
-  --accent-2: #ff8fe0; /* Bubblegum Pink — secondary fill */
-  --accent-3: #ffe36e; /* Caution Gold — tertiary fill / tape */
+  --accent-1: #ff168c; /* Hot Pink — headline emphasis, underlines, borders */
+  --accent-2: #5b16d9; /* Electric Violet — secondary fill */
+  --accent-3: #b7ff18; /* Acid Lime — tertiary fill / tape */
   --accent-4: var(--accent-2);
 
   /* derived, contrast-safe tokens — recompute automatically inside any
@@ -65,8 +53,8 @@
   --da-pink: var(--accent-1);
   --da-chartreuse: var(--accent-3);
   --da-teal: var(--accent-2);
-  --da-ultraviolet: #8b2fff; /* brightened for the neon system; kept only for placeholder-note callouts */
-  --da-periwinkle: #c7d6ff;
+  --da-ultraviolet: #5b16d9;
+  --da-periwinkle: #f5f2ea;
 
   /* --- semantic roles — FLIPPED from the light system --- */
   --color-bg: var(--ink);
@@ -106,34 +94,34 @@
    assignments as before (src/lib/series.ts is unchanged); only the
    hex values changed, from muted/editorial to neon. --- */
 [data-palette='red-pen'] {
-  --accent-1: #ff3fd8; /* Riot Magenta */
-  --accent-2: #ff8fe0; /* Bubblegum Pink */
-  --accent-3: #ffe36e; /* Caution Gold */
+  --accent-1: #ff168c; /* Hot Pink */
+  --accent-2: #5b16d9; /* Electric Violet */
+  --accent-3: #b7ff18; /* Acid Lime */
   --accent-4: var(--accent-2);
 }
 [data-palette='archive'] {
-  --accent-1: #22e2f5; /* Electric Cyan */
-  --accent-2: #5ec8ff; /* Sky Volt */
-  --accent-3: #b8c6ff; /* Neon Periwinkle */
+  --accent-1: #10d9d0; /* Signal Cyan */
+  --accent-2: #5b16d9; /* Electric Violet */
+  --accent-3: #f5f2ea; /* Paper White */
   --accent-4: var(--accent-2);
 }
 [data-palette='field-notes'] {
-  --accent-1: #b6ff3d; /* Acid Lime */
-  --accent-2: #ff8a3d; /* Blaze Orange */
-  --accent-3: #ffd23d; /* Amber Marigold */
+  --accent-1: #b7ff18; /* Acid Lime */
+  --accent-2: #ff168c; /* Hot Pink */
+  --accent-3: #10d9d0; /* Signal Cyan */
   --accent-4: var(--accent-2);
 }
 [data-palette='public-record'] {
-  --accent-1: #5c8aff; /* Cobalt Volt (brightened for contrast, see header note) */
-  --accent-2: #8fb0ff; /* Pale Cobalt */
-  --accent-3: #ff3b5c; /* Alert Red */
+  --accent-1: #10d9d0; /* Signal Cyan */
+  --accent-2: #5b16d9; /* Electric Violet */
+  --accent-3: #b7ff18; /* Acid Lime */
   --accent-4: var(--accent-2);
 }
 [data-palette='electric'] {
-  --accent-1: #a855f7; /* Riot Violet */
-  --accent-2: #ff2e63; /* Punch Red */
-  --accent-3: #ffd23d; /* Marigold */
-  --accent-4: #d9b8ff; /* Neon Lilac */
+  --accent-1: #5b16d9; /* Electric Violet */
+  --accent-2: #ff168c; /* Hot Pink */
+  --accent-3: #b7ff18; /* Acid Lime */
+  --accent-4: #10d9d0; /* Signal Cyan */
 }
 
 /* Chalkboard — used to be "the one palette that goes dark" when
@@ -143,11 +131,11 @@
    own distinct surface sitting on the near-black page, for "Receipts
    or It Didn't Happen" and the reusable ChalkCallout component. */
 [data-palette='chalkboard'] {
-  --color-bg: #1a0f2e;
-  --color-fg: #e9dfc7;
-  --accent-1: #9db8e0; /* Chalk Blue — brightened from the original for AA on the new bg */
-  --accent-2: #e3c14f; /* Chalk Yellow */
-  --accent-3: #cfc6ab; /* Chalk Dust */
+  --color-bg: #0d0b12;
+  --color-fg: #f5f2ea;
+  --accent-1: #10d9d0; /* Signal Cyan */
+  --accent-2: #b7ff18; /* Acid Lime */
+  --accent-3: #f5f2ea; /* Paper White */
   --accent-4: var(--accent-2);
   --accent-1-strong: color-mix(in srgb, var(--accent-1) 80%, var(--color-fg));
 }
