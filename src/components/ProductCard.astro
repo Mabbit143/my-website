@@ -1,0 +1,118 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description: string;
+  price?: string;
+  href: string;
+  cta?: string;
+  bullets?: string[];
+}
+
+const {
+  eyebrow = 'DA field tool',
+  title,
+  description,
+  price,
+  href,
+  cta = 'See the tool',
+  bullets = [],
+} = Astro.props;
+---
+
+<article class="product-card concrete" data-palette="field-notes">
+  <span class="product-card__tape" aria-hidden="true"></span>
+  <div class="product-card__copy">
+    <p class="product-card__eyebrow">{eyebrow}</p>
+    <h2>{title}</h2>
+    <p>{description}</p>
+    {bullets.length > 0 && (
+      <ul>
+        {bullets.map((bullet) => <li>{bullet}</li>)}
+      </ul>
+    )}
+  </div>
+  <div class="product-card__action">
+    {price && <p class="product-card__price">{price}</p>}
+    <a class="btn" href={href}>{cta} →</a>
+    <p class="product-card__fine">Checkout happens on Etsy.</p>
+  </div>
+</article>
+
+<style>
+  .product-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-4);
+    align-items: center;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border: 2px solid var(--paper);
+    border-left: 10px solid var(--accent-1);
+    background-color: color-mix(in srgb, var(--ink) 92%, var(--accent-1));
+    box-shadow: 8px 8px 0 var(--accent-3);
+  }
+
+  .product-card__tape {
+    position: absolute;
+    top: -0.8rem;
+    right: 15%;
+    width: 5rem;
+    height: 1.5rem;
+    background: color-mix(in srgb, var(--accent-3) 76%, transparent);
+    transform: rotate(4deg);
+  }
+
+  .product-card__eyebrow,
+  .product-card__fine {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .product-card__eyebrow {
+    color: var(--accent-1);
+    font-weight: 700;
+  }
+
+  .product-card h2 {
+    font-size: var(--step-3);
+  }
+
+  .product-card ul {
+    padding-left: 1.25rem;
+    margin-bottom: 0;
+  }
+
+  .product-card li::marker {
+    color: var(--accent-1);
+  }
+
+  .product-card__action {
+    min-width: 11rem;
+    text-align: center;
+  }
+
+  .product-card__price {
+    margin-bottom: var(--space-1);
+    font-family: var(--font-headline);
+    font-size: var(--step-2);
+    color: var(--accent-3);
+  }
+
+  .product-card__fine {
+    margin: 0.7rem 0 0;
+    opacity: 0.72;
+  }
+
+  @media (max-width: 42rem) {
+    .product-card {
+      grid-template-columns: 1fr;
+    }
+
+    .product-card__action {
+      text-align: left;
+    }
+  }
+</style>

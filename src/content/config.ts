@@ -19,7 +19,7 @@ const SERIES_SLUGS = [
 // src/components/blocks/BlockRenderer.astro.
 const block = z
   .object({
-    type: z.enum(['text', 'image', 'callout', 'quote', 'divider']).default('text'),
+    type: z.enum(['text', 'image', 'callout', 'quote', 'divider', 'pinboard']).default('text'),
     // text
     markdown: z.string().optional(),
     // image
@@ -39,6 +39,20 @@ const block = z
     attribution: z.string().optional(),
     // divider
     dividerStyle: z.enum(['splatter', 'rule', 'space']).default('splatter').optional(),
+    // pinboard — a visual cluster of short pinned notes / links
+    intro: z.string().optional(),
+    notes: z
+      .array(
+        z.object({
+          title: z.string().optional(),
+          body: z.string().optional(),
+          link: z.string().optional(),
+          linkLabel: z.string().optional(),
+          color: z.enum(['pink', 'cyan', 'lime', 'yellow', 'porcelain']).default('yellow').optional(),
+        }),
+      )
+      .default([])
+      .optional(),
   })
   .passthrough();
 

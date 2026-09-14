@@ -2,7 +2,9 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
+import CharacterPanel from '../components/CharacterPanel.astro';
 import EmailSignup from '../components/EmailSignup.astro';
+import ProductCard from '../components/ProductCard.astro';
 import Splatter from '../components/Splatter.astro';
 import { SERIES } from '../lib/series';
 
@@ -18,33 +20,78 @@ const latest = allArticles.slice(1, 4);
   description="A critical academic-literacy publication. Learn the rules. Question who wrote them."
 >
   <section class="hero wrap" data-palette="red-pen">
-    <span class="tape tape--right" aria-hidden="true"></span>
     <span class="hero-splat hero-splat--1" aria-hidden="true"><Splatter variant="burst" /></span>
     <span class="hero-splat hero-splat--2" aria-hidden="true"><Splatter variant="drip" seed={12} /></span>
-    <div class="hero-main">
-      <h1>Make knowledge<br />harder to <span class="mark">hoard</span>.</h1>
-      <p class="lede">
-        Deconstructing Academia is a public argument about knowledge: who gets to create it,
-        whose language is treated as intelligent, whose experience counts as evidence, whose
-        work gets cited, and who gets shut out before the conversation begins.
+    <div class="hero__copy">
+      <p class="hero__kicker">Academic literacy for people academia expected to figure it out alone</p>
+      <h1>
+        <span class="headline-strip headline-strip--paper">Make knowledge</span>
+        <span class="headline-strip headline-strip--pink">harder to hoard.</span>
+      </h1>
+      <p class="hero__deck">
+        We take apart hidden rules, trace the evidence, and build tools you can actually use.
+        Prestige does not get to grade its own homework here.
       </p>
-      <p class="tagline">Learn the rules. Question who wrote them.</p>
-    </div>
-    <div class="hero-side">
-      <div class="stamp" aria-hidden="true">
-        <span>Learn the Rules · Question Who Wrote Them</span>
+      <div class="hero__actions">
+        <a href="#start-here" class="btn">Start with the evidence →</a>
+        <a href="/shop/" class="btn btn--ghost">Use a field tool →</a>
       </div>
-      <p class="note">The point is not to make academia friendlier.</p>
+      <p class="hero__note">Mabbit takes it apart.<br />Whonah follows the receipts.</p>
+    </div>
+    <div class="hero__characters">
+      <span class="hero__circle" aria-hidden="true"></span>
+      <div class="hero__mabbit-frame">
+        <img
+          class="hero__mabbit"
+          src="/images/characters/Mabbit-front-arms-crossed.png"
+          alt="Mabbit, the tattooed rabbit character with purple hair, standing with arms crossed"
+          width="1376"
+          height="768"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+      <img
+        class="hero__whonah"
+        src="/images/characters/Whonah-sitting-forward.png"
+        alt="Whonah, a German Shepherd in a green harness, sitting beside Mabbit"
+        width="256"
+        height="470"
+        loading="eager"
+        decoding="async"
+      />
     </div>
   </section>
 
+  <nav class="route-strip wrap" aria-label="Choose where to start">
+    <a href="/articles/" data-palette="archive">
+      <span>01 · Read</span>
+      <strong>Follow an argument</strong>
+      <small>Articles, evidence, and the missing comparison →</small>
+    </a>
+    <a href="/articles/?series=use-the-damn-tool" data-palette="public-record">
+      <span>02 · Use</span>
+      <strong>Learn the damn tool</strong>
+      <small>Practical research moves without the institutional fog →</small>
+    </a>
+    <a href="/shop/" data-palette="field-notes">
+      <span>03 · Take it with you</span>
+      <strong>Get the field kit</strong>
+      <small>Downloadable worksheets and trackers →</small>
+    </a>
+  </nav>
+
   {
     featured && (
-      <section class="wrap featured" aria-labelledby="featured-heading">
-        <h2 id="featured-heading" class="eyebrow">
-          Start here
-        </h2>
-        <ArticleCard entry={featured} />
+      <section id="start-here" class="wrap lead-story" aria-labelledby="featured-heading">
+        <div class="lead-story__label">
+          <span>Read this first</span>
+          <p>The newest field note from inside the machine.</p>
+        </div>
+        <div class="lead-story__card">
+          <h2 id="featured-heading" class="visually-hidden">Start here</h2>
+          <ArticleCard entry={featured} />
+        </div>
       </section>
     )
   }
@@ -52,75 +99,63 @@ const latest = allArticles.slice(1, 4);
   {
     latest.length > 0 && (
       <section class="wrap latest" aria-labelledby="latest-heading">
-        <h2 id="latest-heading" class="splat-head">
-          <span class="splat-head__art" aria-hidden="true">
-            <Splatter variant="burst" seed={31} />
-          </span>
-          Latest
-        </h2>
-        <div class="grid">
-          {latest.map((entry) => (
-            <ArticleCard entry={entry} />
-          ))}
+        <header class="section-heading">
+          <div>
+            <p class="section-heading__label">Fresh evidence</p>
+            <h2 id="latest-heading">Latest dispatches</h2>
+          </div>
+          <a href="/articles/">Open the full archive →</a>
+        </header>
+        <div class="latest__grid">
+          {latest.map((entry) => <ArticleCard entry={entry} />)}
         </div>
-        <a href="/articles/" class="btn btn--ghost">
-          All articles →
-        </a>
       </section>
     )
   }
 
-  <section class="wrap series" aria-labelledby="series-heading">
-    <h2 id="series-heading" class="splat-head">
-      <span class="splat-head__art" aria-hidden="true">
-        <Splatter variant="blob" seed={48} />
-      </span>
-      The series
-    </h2>
-    <div class="series-grid">
-      {
-        SERIES.map((s) => (
-          <a href={`/articles/?series=${s.slug}`} class="series-card" data-palette={s.palette}>
-            <h3>{s.name}</h3>
-            <p>{s.description}</p>
-          </a>
-        ))
-      }
-    </div>
-  </section>
-
-  <section class="wrap about-teaser">
-    <h2>Who's asking</h2>
-    <p>
-      I'm Mabbit Rountree—a nontraditional student and freelance researcher who learned academia's
-      hidden rules the expensive way, then started writing them down.
-    </p>
-    <a href="/about/" class="btn btn--ghost">More about this project →</a>
-  </section>
-
-  <div class="wrap">
-    <div class="shop-banner">
-      <div class="shop-banner__inner">
-        <div class="shop-banner__text">
-          <p class="shop-banner__label">Now on Etsy</p>
-          <h2>The Syllabus Audit Kit + Grade Tracker</h2>
-          <p>
-            The free Quick Audit, built all the way out: the full rule-by-rule audit worksheet
-            plus a grade tracker that tells you where you actually stand before the syllabus does.
-          </p>
-          <p class="shop-banner__price">$12 · instant download</p>
+  <section class="series-band" aria-labelledby="series-heading">
+    <div class="wrap">
+      <header class="section-heading">
+        <div>
+          <p class="section-heading__label">Eight ways in</p>
+          <h2 id="series-heading">Pick the question, not a content bucket</h2>
         </div>
-        <a
-          href="https://www.etsy.com/listing/4568126568/syllabus-audit-kit-grade-tracker"
-          class="btn btn--primary"
-        >
-          Get the kit →
-        </a>
+      </header>
+      <div class="series-grid">
+        {SERIES.map((series, index) => (
+          <a href={`/articles/?series=${series.slug}`} class="series-card" data-palette={series.palette}>
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <h3>{series.name}</h3>
+            <p>{series.description}</p>
+          </a>
+        ))}
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="wrap">
+  <section id="shop" class="wrap shop-section" aria-labelledby="shop-heading">
+    <h2 id="shop-heading" class="visually-hidden">Shop practical tools</h2>
+    <ProductCard
+      eyebrow="Now on Etsy · instant download"
+      title="The Syllabus Audit Kit + Grade Tracker"
+      description="Decode the fine print, surface the unanswered questions, and calculate where your grade actually stands before the syllabus gets the last word."
+      price="$12"
+      href="/shop/"
+      cta="See what is inside"
+    />
+  </section>
+
+  <section class="wrap character-section">
+    <CharacterPanel
+      eyebrow="Who is making this mess useful"
+      title="Inside academia. Taking notes."
+      body="Mabbit Rountree is a nontraditional student and freelance researcher who learned academia's hidden rules the expensive way, then started writing them down. Whonah is here because every evidence trail deserves a German Shepherd."
+      linkHref="/about/"
+      linkLabel="Meet the project →"
+    />
+  </section>
+
+  <div class="wrap signup-wrap">
     <EmailSignup />
   </div>
 </BaseLayout>
@@ -129,234 +164,121 @@ const latest = allArticles.slice(1, 4);
   .hero {
     position: relative;
     isolation: isolate;
-    padding-block: var(--space-5) var(--space-4);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-4);
-    align-items: flex-start;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(16rem, 0.55fr);
+    gap: clamp(1rem, 4vw, 4rem);
+    align-items: end;
+    min-height: 42rem;
+    padding-block: var(--space-5) 0;
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .hero-splat {
-    position: absolute;
-    z-index: 0;
-    pointer-events: none;
-  }
-  .hero-splat--1 {
-    top: -2rem;
-    left: -4rem;
-    width: 26rem;
-    height: 26rem;
-    color: var(--accent-1);
-    opacity: 0.24;
-  }
-  .hero-splat--2 {
-    top: 5rem;
-    right: 1rem;
-    width: 14rem;
-    height: 14rem;
+  .hero > :not(.hero-splat) { position: relative; z-index: 1; }
+  .hero-splat { position: absolute; z-index: 0; pointer-events: none; }
+  .hero-splat--1 { width: 32rem; height: 32rem; left: -10rem; top: -8rem; color: var(--accent-1); opacity: 0.28; }
+  .hero-splat--2 { width: 18rem; height: 18rem; right: -2rem; bottom: 2rem; color: var(--accent-3); opacity: 0.2; }
+
+  .hero__copy { align-self: center; padding-bottom: var(--space-5); }
+  .hero__kicker,
+  .section-heading__label {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
     color: var(--accent-3);
-    opacity: 0.2;
-  }
-
-  .hero > :not(.hero-splat):not(.tape) {
-    position: relative;
-    z-index: 1;
-  }
-  .hero > .tape {
-    z-index: 2;
-  }
-
-  .hero-main {
-    flex: 2 1 30rem;
-    min-width: 0;
   }
 
   .hero h1 {
-    margin-block: var(--space-2);
+    display: grid;
+    justify-items: start;
+    gap: 0.12em;
+    margin-block: var(--space-2) var(--space-3);
     font-size: var(--step-5);
   }
 
-  .lede {
-    font-size: var(--step-1);
-    max-width: var(--content-max);
+  .headline-strip {
+    display: inline-block;
+    padding: 0.08em 0.15em;
+    color: var(--ink);
+    line-height: 0.9;
+    box-shadow: 7px 7px 0 rgb(0 0 0 / 48%);
   }
+  .headline-strip--paper { background: var(--paper); transform: rotate(-1deg); }
+  .headline-strip--pink { background: var(--accent-1); transform: rotate(0.6deg); }
 
-  .tagline {
-    font-family: var(--font-label);
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    color: var(--accent-1);
+  .hero__deck { max-width: 46rem; font-family: var(--font-typewriter); font-size: var(--step-1); }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-3); }
+
+  .hero__characters { min-height: 36rem; }
+  .hero__mabbit-frame { position: absolute; inset: auto auto 0 0; width: 18rem; height: 36rem; overflow: hidden; }
+  .hero__mabbit { position: absolute; inset: auto auto 0 0; width: auto; max-width: none; height: 36rem; filter: drop-shadow(8px 6px 0 rgb(0 0 0 / 55%)); }
+  .hero__whonah { position: absolute; z-index: 2; left: 8.75rem; bottom: 0; width: auto; height: 14.5rem; filter: drop-shadow(8px 6px 0 rgb(0 0 0 / 55%)); }
+  .hero__circle { position: absolute; width: 120%; aspect-ratio: 1; left: -10%; top: 8%; border: 4px dashed var(--accent-3); border-radius: 50%; transform: rotate(-8deg); }
+  .hero__note { display: inline-block; width: min(100%, 19rem); margin: var(--space-3) 0 0 clamp(0rem, 8vw, 5rem); padding: 0.8rem 1rem; background: var(--accent-3); color: var(--ink); font-family: var(--font-annotation); font-size: var(--step-1); line-height: 1.1; transform: rotate(-2deg); box-shadow: 4px 5px 0 rgb(0 0 0 / 40%); }
+
+  .route-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    padding-block: var(--space-3);
   }
+  .route-strip a { display: grid; gap: 0.35rem; min-height: 10rem; padding: var(--space-3); border-top: 6px solid var(--accent-1); background: color-mix(in srgb, var(--ink) 92%, var(--accent-1)); text-decoration: none; }
+  .route-strip a:hover { background: color-mix(in srgb, var(--ink) 82%, var(--accent-1)); }
+  .route-strip span { font-family: var(--font-mono); font-size: var(--step--1); color: var(--accent-1); text-transform: uppercase; }
+  .route-strip strong { font-family: var(--font-headline); font-size: var(--step-2); text-transform: uppercase; line-height: 1; }
+  .route-strip small { align-self: end; font-family: var(--font-typewriter); }
 
-  .hero-side {
-    flex: 1 1 14rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-3);
-    padding-top: var(--space-2);
-  }
+  .lead-story { display: grid; grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1fr); gap: var(--space-3); padding-block: var(--space-5); align-items: center; }
+  .lead-story__label { border: 2px dashed var(--accent-1); padding: var(--space-3); transform: rotate(-2deg); }
+  .lead-story__label span { font-family: var(--font-headline); font-size: var(--step-3); text-transform: uppercase; color: var(--accent-1); }
+  .lead-story__label p { margin: var(--space-1) 0 0; font-family: var(--font-annotation); font-size: var(--step-1); }
 
-  .hero-side .stamp {
-    align-self: center;
-  }
-
-  .hero-side .note {
-    align-self: flex-end;
-  }
-
-  .eyebrow {
-    font-size: var(--step--1);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    /* was var(--ink) — invisible on the dark page */
-    color: var(--color-fg);
-    opacity: 0.6;
-  }
-
-  .featured,
   .latest,
-  .series,
-  .about-teaser {
-    position: relative;
-    padding-block: var(--space-4);
-    /* was 3px solid var(--da-black) — vanished into the dark page. A soft
-       paper-tinted rule still reads as a section seam without stacking
-       four loud neon lines down the page. */
-    border-top: 1px solid var(--color-border);
+  .shop-section,
+  .character-section,
+  .signup-wrap { padding-block: var(--space-5); }
+
+  .section-heading { display: flex; justify-content: space-between; gap: var(--space-3); align-items: end; margin-bottom: var(--space-3); border-bottom: 2px solid var(--paper); }
+  .section-heading h2 { max-width: 48rem; font-size: var(--step-3); }
+  .section-heading > a { margin-bottom: var(--space-2); font-family: var(--font-label); font-weight: 700; text-transform: uppercase; }
+  .latest__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+
+  .series-band { padding-block: var(--space-5); background: var(--paper); color: var(--ink); transform: skewY(-0.5deg); }
+  .series-band > .wrap { transform: skewY(0.5deg); }
+  .series-band .section-heading { border-color: var(--ink); }
+  .series-band .section-heading__label { color: #7b245f; }
+  .series-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); }
+  .series-card { position: relative; min-height: 13rem; padding: var(--space-2); border: 2px solid var(--ink); border-top: 8px solid var(--accent-1); background: var(--paper); color: var(--ink); text-decoration: none; box-shadow: 5px 5px 0 var(--ink); }
+  .series-card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--accent-1); }
+  .series-card > span { font-family: var(--font-mono); color: color-mix(in srgb, var(--accent-1) 70%, var(--ink)); }
+  .series-card h3 { margin-top: var(--space-2); }
+  .series-card p { font-size: var(--step--1); line-height: 1.45; }
+
+  @media (max-width: 55rem) {
+    .hero { grid-template-columns: minmax(0, 1.2fr) minmax(13rem, 0.8fr); }
+    .route-strip { grid-template-columns: 1fr; }
+    .route-strip a { min-height: auto; }
+    .latest__grid { grid-template-columns: repeat(2, 1fr); }
+    .series-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  /* a spray fleck sitting on the section seam */
-  .latest::before,
-  .series::before {
-    content: '';
-    position: absolute;
-    top: -0.6rem;
-    left: var(--space-3);
-    width: 1.1rem;
-    height: 1.1rem;
-    border-radius: 50%;
-    background: var(--accent-1);
-    box-shadow:
-      1.6rem 0.2rem 0 -0.35rem var(--accent-1),
-      3rem -0.1rem 0 -0.5rem var(--accent-1),
-      -0.9rem 0.3rem 0 -0.55rem var(--accent-1);
-    opacity: 0.8;
-  }
-
-  /* .splat-head / .splat-head__art live in global.css */
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    gap: var(--space-2);
-    margin-block: var(--space-3);
-  }
-
-  .series-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: var(--space-2);
-    margin-top: var(--space-3);
-  }
-
-  .series-card {
-    display: block;
-    /* same fix as ArticleCard: an ink border on the ink page was invisible.
-       Soft paper-tinted border + a slightly lifted panel so the card reads
-       as its own surface. */
-    border: 2px solid color-mix(in srgb, var(--paper) 18%, transparent);
-    border-radius: var(--radius);
-    padding: var(--space-2);
-    text-decoration: none;
-    background: color-mix(in srgb, var(--color-bg) 100%, white 6%);
-    color: var(--color-fg);
-    border-left-width: 6px;
-    border-left-color: var(--accent-1);
-  }
-
-  .series-card h3 {
-    font-size: var(--step-0);
-    margin-bottom: 0.3em;
-  }
-
-  .series-card p {
-    font-size: var(--step--1);
-    max-width: none;
-    margin: 0;
-  }
-
-  .about-teaser {
-    max-width: var(--content-max);
-  }
-
-  .shop-banner {
-    /* was a flat --da-black box on a light page. On the dark page that
-       box disappeared entirely — now a lifted panel with a neon frame
-       and inner glow so the CTA reads as lit from within. */
-    background: color-mix(in srgb, var(--accent-1) 10%, var(--color-bg));
-    color: var(--da-chartreuse);
-    border: 2px solid var(--accent-1);
-    box-shadow: 0 0 26px -8px color-mix(in srgb, var(--accent-1) 55%, transparent);
-    border-radius: var(--radius);
-    padding-block: var(--space-4);
-    padding-inline: var(--space-4);
-  }
-
-  .shop-banner__inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
-  }
-
-  .shop-banner__text {
-    flex: 2 1 20rem;
-  }
-
-  .shop-banner__label {
-    font-family: var(--font-label);
-    font-size: var(--step--1);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--da-pink);
-    font-weight: 700;
-    margin-bottom: var(--space-1);
-  }
-
-  .shop-banner h2 {
-    color: var(--da-chartreuse);
-    margin-block: var(--space-1);
-  }
-
-  .shop-banner p {
-    color: var(--da-chartreuse);
-    opacity: 0.85;
-    max-width: var(--content-max);
-  }
-
-  .shop-banner__price {
-    font-family: var(--font-label);
-    font-weight: 700;
-    font-size: var(--step-0);
-    opacity: 1 !important;
-    color: var(--da-pink) !important;
-    margin-top: var(--space-2);
-  }
-
-  .shop-banner .btn--primary {
-    flex-shrink: 0;
-    background: var(--da-chartreuse);
-    color: var(--da-black);
-    border-color: var(--da-chartreuse);
-    font-weight: 700;
-  }
-
-  .shop-banner .btn--primary:hover {
-    background: var(--da-pink);
-    border-color: var(--da-pink);
-    color: var(--da-black);
+  @media (max-width: 40rem) {
+    .hero { grid-template-columns: 1fr; min-height: 0; }
+    .hero__copy { padding-bottom: 0; }
+    .hero h1 { font-size: 2.55rem; }
+    .headline-strip { max-width: 100%; }
+    .hero__actions { display: grid; justify-items: start; }
+    .hero__characters { min-height: 27rem; }
+    .hero__mabbit-frame { width: 14rem; height: 27rem; }
+    .hero__mabbit { height: 27rem; }
+    .hero__whonah { left: 7.5rem; height: 11.5rem; }
+    .hero__note { width: min(100%, 17rem); margin-left: 0; font-size: var(--step-0); }
+    .lead-story { grid-template-columns: 1fr; }
+    .lead-story__label { transform: none; }
+    .latest__grid,
+    .series-grid { grid-template-columns: 1fr; }
+    .section-heading { align-items: flex-start; flex-direction: column; }
   }
 </style>

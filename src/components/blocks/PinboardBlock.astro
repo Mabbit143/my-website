@@ -1,0 +1,130 @@
+---
+import { md, mdInline } from '../../lib/markdown';
+
+interface PinNote {
+  title?: string;
+  body?: string;
+  link?: string;
+  linkLabel?: string;
+  color?: 'pink' | 'cyan' | 'lime' | 'yellow' | 'porcelain';
+}
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  notes?: PinNote[];
+}
+
+const { eyebrow = 'Pinned evidence', title, intro, notes = [] } = Astro.props;
+const introHtml = md(intro);
+---
+
+<section class="pinboard concrete" aria-label={title ?? eyebrow}>
+  <header class="pinboard__header">
+    <p>{eyebrow}</p>
+    {title && <h2>{title}</h2>}
+    {introHtml && <div class="pinboard__intro" set:html={introHtml} />}
+  </header>
+  {notes.length > 0 && (
+    <div class="pinboard__notes">
+      {notes.map((note, index) => (
+        <article class="pin-note" data-color={note.color ?? 'yellow'} style={`--note-tilt: ${index % 2 === 0 ? '-1.25deg' : '1deg'}`}>
+          <span class="pin-note__pin" aria-hidden="true"></span>
+          {note.title && <h3 set:html={mdInline(note.title)} />}
+          {note.body && <div class="pin-note__body" set:html={md(note.body)} />}
+          {note.link && (
+            <a href={note.link}>{note.linkLabel || 'Open source'} →</a>
+          )}
+        </article>
+      ))}
+    </div>
+  )}
+</section>
+
+<style>
+  .pinboard {
+    margin: var(--space-5) 0;
+    padding: clamp(1.25rem, 4vw, 3rem);
+    border: 3px solid var(--paper);
+    background-color: #211f24;
+    box-shadow: inset 0 0 0 6px color-mix(in srgb, var(--ink) 75%, transparent);
+  }
+
+  .pinboard__header {
+    max-width: var(--content-max);
+    margin-bottom: var(--space-3);
+  }
+
+  .pinboard__header > p {
+    margin-bottom: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-1);
+  }
+
+  .pinboard__intro :global(p) {
+    font-family: var(--font-typewriter);
+  }
+
+  .pinboard__notes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    gap: var(--space-3);
+    align-items: start;
+  }
+
+  .pin-note {
+    --note-bg: #ffe36e;
+    position: relative;
+    min-height: 10rem;
+    padding: var(--space-3);
+    background: var(--note-bg);
+    color: var(--ink);
+    box-shadow: 5px 6px 0 rgb(0 0 0 / 48%);
+    transform: rotate(var(--note-tilt));
+  }
+
+  .pin-note[data-color='pink'] { --note-bg: #ff8fe0; }
+  .pin-note[data-color='cyan'] { --note-bg: #8feaf4; }
+  .pin-note[data-color='lime'] { --note-bg: #c9ff73; }
+  .pin-note[data-color='porcelain'] { --note-bg: var(--paper); }
+
+  .pin-note__pin {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.7rem;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--ink);
+    box-shadow: 0 2px 0 rgb(255 255 255 / 35%);
+  }
+
+  .pin-note h3 {
+    padding-right: 1rem;
+    font-family: var(--font-annotation);
+    font-size: var(--step-2);
+  }
+
+  .pin-note__body :global(p),
+  .pin-note__body :global(li) {
+    font-size: var(--step--1);
+    line-height: 1.5;
+  }
+
+  .pin-note a {
+    font-family: var(--font-label);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 40rem) {
+    .pin-note {
+      transform: none;
+    }
+  }
+</style>

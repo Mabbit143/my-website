@@ -1,0 +1,156 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  body: string;
+  linkHref?: string;
+  linkLabel?: string;
+  compact?: boolean;
+}
+
+const {
+  eyebrow = 'Mabbit + Whonah',
+  title,
+  body,
+  linkHref,
+  linkLabel,
+  compact = false,
+} = Astro.props;
+---
+
+<aside class:list={['character-panel', { 'character-panel--compact': compact }]}>
+  <div class="character-panel__art" aria-hidden="true">
+    <span class="character-panel__halo"></span>
+    <span class="character-panel__mabbit-frame">
+      <img class="character-panel__mabbit" src="/images/characters/Mabbit-front-arms-crossed.png" alt="" width="1376" height="768" loading="lazy" decoding="async" />
+    </span>
+    <img class="character-panel__whonah" src="/images/characters/Whonah-sitting-forward.png" alt="" width="256" height="470" loading="lazy" decoding="async" />
+  </div>
+  <div class="character-panel__copy">
+    <p class="character-panel__eyebrow">{eyebrow}</p>
+    <h2>{title}</h2>
+    <p>{body}</p>
+    {linkHref && linkLabel && <a class="btn btn--ghost" href={linkHref}>{linkLabel}</a>}
+  </div>
+</aside>
+
+<style>
+  .character-panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.7fr) minmax(18rem, 1.3fr);
+    align-items: end;
+    gap: clamp(1rem, 4vw, 3.5rem);
+    border: 2px solid var(--paper);
+    border-right: 8px solid var(--accent-1);
+    padding: clamp(1rem, 3vw, 2.5rem);
+    background: color-mix(in srgb, var(--ink) 91%, var(--accent-1));
+    box-shadow: 8px 9px 0 color-mix(in srgb, var(--accent-1) 70%, transparent);
+  }
+
+  .character-panel__art {
+    position: relative;
+    min-height: 17rem;
+    align-self: stretch;
+  }
+
+  .character-panel__mabbit-frame {
+    position: absolute;
+    inset: auto auto -2.5rem 0;
+    overflow: hidden;
+    width: 13rem;
+    height: 23rem;
+  }
+
+  .character-panel__mabbit {
+    position: absolute;
+    inset: auto auto 0 0;
+    width: auto;
+    max-width: none;
+    height: 23rem;
+    filter: drop-shadow(7px 7px 0 rgb(0 0 0 / 55%));
+  }
+
+  .character-panel__whonah {
+    position: absolute;
+    z-index: 2;
+    left: 7.5rem;
+    bottom: -2.5rem;
+    width: auto;
+    height: 10rem;
+    filter: drop-shadow(6px 6px 0 rgb(0 0 0 / 55%));
+  }
+
+  .character-panel__halo {
+    position: absolute;
+    inset: 8% 0 auto 10%;
+    width: 82%;
+    aspect-ratio: 1;
+    border: 3px dashed var(--accent-3);
+    border-radius: 50%;
+    transform: rotate(-7deg);
+    opacity: 0.75;
+  }
+
+  .character-panel__copy {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+  }
+
+  .character-panel__eyebrow {
+    margin: 0 0 0.6rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-3);
+  }
+
+  .character-panel h2 {
+    font-size: var(--step-3);
+  }
+
+  .character-panel p:not(.character-panel__eyebrow) {
+    font-family: var(--font-typewriter);
+    font-size: var(--step-1);
+  }
+
+  .character-panel--compact {
+    grid-template-columns: 10rem 1fr;
+  }
+
+  .character-panel--compact .character-panel__art {
+    min-height: 13rem;
+  }
+
+  @media (max-width: 42rem) {
+    .character-panel,
+    .character-panel--compact {
+      grid-template-columns: 1fr;
+    }
+
+    .character-panel__art,
+    .character-panel--compact .character-panel__art {
+      min-height: 15rem;
+      order: 2;
+    }
+
+    .character-panel__mabbit-frame {
+      width: 11rem;
+      height: 19rem;
+    }
+
+    .character-panel__mabbit {
+      height: 19rem;
+    }
+
+    .character-panel__whonah {
+      left: 6.5rem;
+      height: 8rem;
+    }
+  }
+</style>

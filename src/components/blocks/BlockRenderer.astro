@@ -7,6 +7,7 @@ import ImageBlock from './ImageBlock.astro';
 import CalloutBlock from './CalloutBlock.astro';
 import QuoteBlock from './QuoteBlock.astro';
 import DividerBlock from './DividerBlock.astro';
+import PinboardBlock from './PinboardBlock.astro';
 
 interface Props {
   blocks?: Record<string, any>[];
@@ -46,6 +47,15 @@ const { blocks = [] } = Astro.props;
           return <QuoteBlock quote={b.quote} attribution={b.attribution} />;
         case 'divider':
           return <DividerBlock dividerStyle={b.dividerStyle} />;
+        case 'pinboard':
+          return (
+            <PinboardBlock
+              eyebrow={b.eyebrow}
+              title={b.title}
+              intro={b.intro}
+              notes={b.notes}
+            />
+          );
         default:
           return null;
       }

@@ -33,7 +33,7 @@ files change. `npm run build` produces the production files in `dist/`.
 ```
 src/
   content/articles/   ← every article, as a .md file (see the README in there)
-  pages/               ← the actual site pages (home, articles, about, contact)
+  pages/               ← the actual site pages (home, articles, shop, about, contact)
   components/          ← reusable pieces (article cards, header, footer, series pill)
   layouts/              ← the shared page shell (SEO tags, header/footer)
   lib/series.ts         ← the 8 editorial series: names, descriptions, palette
@@ -43,10 +43,15 @@ public/                 ← files copied as-is (favicon, robots.txt)
 
 ## Adding an article
 
-Copy one of the sample files in `src/content/articles/` (delete the
-`placeholder: true` line and the sample content), fill in the frontmatter
-(title, deck, series, date, etc.), write the piece in Markdown below the
-`---`. It shows up on the site automatically — no other file needs to change.
+The easiest route is **Pages CMS → Blog Articles → New**. Fill in the basic
+fields, then build the article by adding and dragging content blocks. Text,
+images, pull quotes, callouts, dividers, and pinned-note boards are available.
+Keep **Keep as Draft** switched on until the piece is ready to appear publicly.
+
+For hand editing, use the exact examples in
+`src/content/articles/_README.md`. Article content belongs in the frontmatter
+`blocks:` list; legacy Markdown below the frontmatter still renders, but it is
+not the preferred workflow.
 
 ## Changing the design
 
@@ -68,18 +73,22 @@ in the `:root` block:
 Which series uses which palette is set in `src/lib/series.ts` (the `palette`
 field on each series).
 
-## Still outstanding (not blockers to previewing/building, but need your
-input before real launch)
+## Connected capabilities
 
-- Exact logo/wordmark files (currently a plain text wordmark)
-- Contact form provider + destination inbox + the actual "reason for
-  contact" options (currently a placeholder)
+- Contact messages submit to the existing Formspree form. The endpoint is in
+  `src/pages/contact.astro`; do not replace it during visual edits.
+- Newsletter signups submit to the existing Kit form (details below).
+- Shop buttons lead to the DA Etsy listing. Product presentation is reusable
+  through `src/components/ProductCard.astro`.
+- The accidental **Still Testing** article is retained as a draft, so it stays
+  available for CMS experiments without appearing on the public site.
+
+## Still outstanding
+
 - Analytics decision (currently none)
-- Final homepage copy and About bio
-- 3–5 real launch articles (currently 3 samples marked `placeholder: true`)
-- Privacy policy / copyright text
+- Privacy policy and final copyright/legal language
 - Social links for the footer
-- DNS cutover from IONOS (site is already live at Cloudflare Pages, see below)
+- Additional finished products or free tools when their final URLs are ready
 
 ## Newsletter signup
 

@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import CharacterPanel from '../components/CharacterPanel.astro';
+import Splatter from '../components/Splatter.astro';
+---
+
+<BaseLayout
+  title="Shop"
+  description="Practical Deconstructing Academia tools for finding the rules before the rules find your grade."
+>
+  <section class="wrap shop-hero" data-palette="field-notes">
+    <span class="shop-hero__splat" aria-hidden="true"><Splatter variant="burst" seed={22} /></span>
+    <p class="stamp-label">Tools, not motivational wallpaper</p>
+    <h1>Find the rule.<br /><span class="mark">Keep the receipt.</span></h1>
+    <p class="shop-hero__deck">
+      Downloadable tools for students who need the actual policy, the actual math, and the actual
+      next move—not another lecture about trying harder.
+    </p>
+  </section>
+
+  <section class="wrap products" aria-labelledby="products-heading">
+    <h2 id="products-heading" class="visually-hidden">Available tools</h2>
+    <ProductCard
+      eyebrow="Available now · instant download"
+      title="The Syllabus Audit Kit + Grade Tracker"
+      description="A rule-by-rule worksheet for decoding what the syllabus says, what it leaves vague, and what those choices can do to your grade."
+      price="$12"
+      href="https://www.etsy.com/listing/4568126568/syllabus-audit-kit-grade-tracker"
+      cta="Get it on Etsy"
+      bullets={[
+        'Audit attendance, late-work, participation, and grading rules',
+        'Track where your grade actually stands',
+        'Keep the unanswered questions visible before they become penalties',
+      ]}
+    />
+  </section>
+
+  <section class="wrap shop-guide">
+    <CharacterPanel
+      compact
+      eyebrow="The field-test rule"
+      title="A tool should lower the fog."
+      body="Mabbit takes the policy apart. Whonah stays on the evidence trail. If a worksheet cannot tell you what to look for or what to do next, it is just prettier homework."
+      linkHref="/articles/?series=use-the-damn-tool"
+      linkLabel="Read Use the Damn Tool →"
+    />
+  </section>
+</BaseLayout>
+
+<style>
+  .shop-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: var(--space-5) var(--space-4);
+  }
+
+  .shop-hero > :not(.shop-hero__splat) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .shop-hero__splat {
+    position: absolute;
+    right: -4rem;
+    top: -5rem;
+    width: 25rem;
+    height: 25rem;
+    color: var(--accent-1);
+    opacity: 0.22;
+  }
+
+  .shop-hero h1 {
+    margin-top: var(--space-2);
+    font-size: var(--step-5);
+  }
+
+  .shop-hero__deck {
+    max-width: 48rem;
+    font-family: var(--font-typewriter);
+    font-size: var(--step-1);
+  }
+
+  .products,
+  .shop-guide {
+    padding-block: var(--space-4);
+  }
+</style>

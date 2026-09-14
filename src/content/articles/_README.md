@@ -2,7 +2,9 @@
 
 Each article is one Markdown file in this folder. Everything lives in the
 YAML frontmatter now — **there is no free-text body below the `---`.** The
-article body is the `blocks:` list (see below).
+article body is the `blocks:` list (see below). Blocks can be dragged into
+any order, so a piece can read like a straight essay, a scrapbook, or a
+whiteboard without changing the site code.
 
 ## The easy way: Pages CMS
 
@@ -99,6 +101,31 @@ For a normal sourced block quote *inside* prose, just use Markdown `>` in a
   - type: divider
     dividerStyle: splatter   # splatter | rule | space   (default: splatter)
 ```
+
+### `pinboard` — a cluster of pinned notes or source cards
+
+Use this when the argument needs a visual whiteboard: several short facts,
+questions, definitions, or links that should be seen together rather than
+buried in one long paragraph.
+
+```yaml
+  - type: pinboard
+    eyebrow: "Evidence board"
+    title: "What the policy says / what it does"
+    intro: "Optional **Markdown** introduction."
+    notes:
+      - title: "The official rule"
+        body: "Short note text. Markdown works here."
+        color: yellow # yellow | pink | cyan | lime | porcelain
+        link: "https://example.edu/policy"
+        linkLabel: "Read the policy"
+      - title: "The missing question"
+        body: "Who can comply with this schedule without asking for an exception?"
+        color: pink
+```
+
+In Pages CMS, choose **Pinned-note board**, add as many notes as needed, and
+drag the whole board wherever it belongs in the article.
 
 ## Images
 

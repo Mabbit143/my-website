@@ -14,18 +14,28 @@ const allArticles = (await getCollection('articles', ({ data }) => !data.draft))
   title="Articles"
   description="Browse everything Deconstructing Academia has published, filterable by series."
 >
-  <section class="wrap header-block">
-    <h1 class="splat-head">
-      <span class="splat-head__art" aria-hidden="true"><Splatter variant="burst" /></span>
-      Articles
-    </h1>
-    <p>
-      Every piece belongs to one of eight series. Filter below, or just start reading — filters
-      update the list without leaving the page.
-    </p>
+  <section class="wrap archive-hero" data-palette="archive">
+    <span class="archive-hero__splat" aria-hidden="true"><Splatter variant="burst" /></span>
+    <div class="archive-hero__copy">
+      <p class="archive-hero__eyebrow">The evidence wall · {allArticles.length} dispatches filed</p>
+      <h1><span>Open the</span><strong>archive.</strong></h1>
+      <p class="archive-hero__deck">
+        Eight questions, multiple ways into the machinery. Filter by the argument you need—or start
+        pulling threads and see what comes loose.
+      </p>
+      <p class="archive-hero__annotation">No velvet rope. No database login. Just the work.</p>
+    </div>
+    <div class="archive-hero__character" aria-hidden="true">
+      <img src="/images/characters/Whonah-laying-eyes-forwards.png" alt="" width="1376" height="768" />
+    </div>
   </section>
 
-  <section class="wrap filters" aria-label="Filter by series">
+  <section class="wrap filter-desk" aria-labelledby="filter-heading">
+    <div class="filter-desk__label">
+      <span>File by question</span>
+      <h2 id="filter-heading">Choose a series</h2>
+    </div>
+    <div class="filters" aria-label="Filter by series">
     <button type="button" class="filter-btn is-active" data-series="all">All</button>
     {
       SERIES.map((s) => (
@@ -34,9 +44,10 @@ const allArticles = (await getCollection('articles', ({ data }) => !data.draft))
         </button>
       ))
     }
+    </div>
   </section>
 
-  <section class="wrap">
+  <section class="wrap archive-results" aria-live="polite">
     {
       allArticles.length === 0 ? (
         <p class="placeholder-note">
@@ -60,15 +71,57 @@ const allArticles = (await getCollection('articles', ({ data }) => !data.draft))
 </BaseLayout>
 
 <style>
-  .header-block {
-    padding-block: var(--space-4);
+  .archive-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 0.75fr);
+    align-items: end;
+    min-height: 31rem;
+    padding-block: var(--space-5) 0;
+    border-bottom: 1px solid var(--color-border);
   }
+
+  .archive-hero__splat {
+    position: absolute;
+    z-index: -1;
+    left: -7rem;
+    top: -9rem;
+    width: 28rem;
+    color: var(--accent-1);
+    opacity: 0.22;
+  }
+
+  .archive-hero__copy { align-self: center; padding-bottom: var(--space-5); }
+  .archive-hero__eyebrow,
+  .filter-desk__label span { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-1); }
+  .archive-hero h1 { display: grid; justify-items: start; gap: 0.1em; margin-block: var(--space-2); font-size: var(--step-5); }
+  .archive-hero h1 span,
+  .archive-hero h1 strong { padding: 0.05em 0.16em; color: var(--ink); line-height: 0.92; box-shadow: 6px 7px 0 rgb(0 0 0 / 48%); }
+  .archive-hero h1 span { background: var(--paper); transform: rotate(-1deg); }
+  .archive-hero h1 strong { background: var(--accent-1); font-weight: 400; transform: rotate(0.8deg); }
+  .archive-hero__deck { font-family: var(--font-typewriter); font-size: var(--step-1); }
+  .archive-hero__annotation { margin: var(--space-3) 0 0 10%; font-family: var(--font-annotation); font-size: var(--step-1); color: var(--accent-3); transform: rotate(-2deg); }
+  .archive-hero__character { position: relative; min-height: 20rem; overflow: hidden; }
+  .archive-hero__character img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%; object-fit: contain; object-position: center bottom; filter: drop-shadow(8px 7px 0 rgb(0 0 0 / 55%)); }
+
+  .filter-desk {
+    display: grid;
+    grid-template-columns: 12rem 1fr;
+    gap: var(--space-3);
+    align-items: start;
+    padding-block: var(--space-4) var(--space-3);
+  }
+  .filter-desk__label { padding-top: 0.45rem; border-top: 5px solid var(--accent-1); }
+  .filter-desk__label h2 { margin-top: 0.35rem; font-size: var(--step-2); }
+
+  .archive-results { padding-bottom: var(--space-5); }
 
   .filters {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-1);
-    padding-bottom: var(--space-3);
   }
 
   .filter-btn {
@@ -102,6 +155,19 @@ const allArticles = (await getCollection('articles', ({ data }) => !data.draft))
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
     gap: var(--space-2);
     padding-bottom: var(--space-5);
+  }
+
+  @media (max-width: 52rem) {
+    .archive-hero { grid-template-columns: minmax(0, 1fr) 14rem; }
+    .filter-desk { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 40rem) {
+    .archive-hero { grid-template-columns: 1fr; padding-top: var(--space-4); }
+    .archive-hero__copy { padding-bottom: var(--space-2); }
+    .archive-hero h1 { font-size: 3.2rem; }
+    .archive-hero__character { min-height: 13rem; }
+    .archive-hero__annotation { margin-left: 0; }
   }
 </style>
 

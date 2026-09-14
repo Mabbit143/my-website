@@ -2,7 +2,9 @@
 import Splatter from './Splatter.astro';
 
 const nav = [
+  { href: '/#start-here', label: 'Start here' },
   { href: '/articles/', label: 'Articles' },
+  { href: '/shop/', label: 'Shop' },
   { href: '/about/', label: 'About' },
   { href: '/contact/', label: 'Contact' },
 ];
@@ -13,7 +15,9 @@ const path = Astro.url.pathname;
   <span class="site-header__splat" aria-hidden="true"><Splatter variant="fleck" /></span>
   <div class="wrap site-header__inner">
     <a href="/" class="wordmark" aria-label="Deconstructing Academia — home">
-      <img src="/images/da-header-icon.png" alt="" class="wordmark__icon" width="198" height="220" />
+      <span class="wordmark__portrait" aria-hidden="true">
+        <img src="/images/characters/Mabbit-front-arms-crossed.png" alt="" width="1376" height="768" />
+      </span>
       <span class="wordmark__text">Deconstructing<br /><span class="wordmark__accent">Academia</span></span>
     </a>
 
@@ -22,7 +26,11 @@ const path = Astro.url.pathname;
         {
           nav.map((item) => (
             <li>
-              <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>
+              <a
+                href={item.href}
+                class:list={{ 'nav-shop': item.href === '/shop/' }}
+                aria-current={item.href !== '/#start-here' && path.startsWith(item.href) ? 'page' : undefined}
+              >
                 {item.label}
               </a>
             </li>
@@ -75,10 +83,23 @@ const path = Astro.url.pathname;
     text-decoration: none;
   }
 
-  .wordmark__icon {
-    height: 3.2rem;
+  .wordmark__portrait {
+    position: relative;
+    overflow: hidden;
+    flex: 0 0 2.8rem;
+    width: 2.8rem;
+    height: 3.4rem;
+    border: 2px solid var(--da-chartreuse);
+    background: var(--ink);
+  }
+
+  .wordmark__portrait img {
+    position: absolute;
+    top: 0;
+    left: -0.15rem;
     width: auto;
-    display: block;
+    max-width: none;
+    height: 8.7rem;
   }
 
   .wordmark__text {
@@ -119,5 +140,61 @@ const path = Astro.url.pathname;
   nav a:hover,
   nav a[aria-current='page'] {
     border-bottom-color: var(--da-chartreuse);
+  }
+
+  nav a.nav-shop {
+    padding: 0.45em 0.8em;
+    border: 2px solid var(--da-chartreuse);
+    color: var(--da-chartreuse);
+  }
+
+  nav a.nav-shop:hover,
+  nav a.nav-shop[aria-current='page'] {
+    background: var(--da-chartreuse);
+    color: var(--ink);
+  }
+
+  @media (max-width: 46rem) {
+    .site-header__inner {
+      align-items: flex-start;
+    }
+
+    nav {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 0.35rem;
+    }
+
+    nav ul {
+      width: max-content;
+      flex-wrap: nowrap;
+      gap: var(--space-2);
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .wordmark__portrait {
+      flex-basis: 2.4rem;
+      width: 2.4rem;
+      height: 3rem;
+    }
+
+    .wordmark__portrait img {
+      height: 7.8rem;
+    }
+
+    nav {
+      overflow-x: visible;
+    }
+
+    nav ul {
+      width: auto;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.1rem;
+    }
+
+    nav a {
+      font-size: 0.78rem;
+    }
   }
 </style>
