@@ -185,7 +185,10 @@ const series = getSeries(entry.data.series);
     padding: 0.04em 0.13em;
     background: var(--paper);
     color: var(--ink);
-    line-height: 1.08;
+    /* Each wrapped line is its own paper strip. Reserve enough line-box
+       height for the cloned padding and cyan shadow so the strips do not
+       collide when a long article title wraps. */
+    line-height: 1.66;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
     box-shadow: 7px 8px 0 color-mix(in srgb, var(--accent-1) 70%, transparent);
@@ -298,7 +301,10 @@ const series = getSeries(entry.data.series);
 
   @media (max-width: 40rem) {
     .article-header h1 { font-size: clamp(2.25rem, 12vw, 3.15rem); }
-    .article-header h1 span { box-shadow: 4px 5px 0 color-mix(in srgb, var(--accent-1) 70%, transparent); }
+    .article-header h1 span {
+      line-height: 1.7;
+      box-shadow: 4px 5px 0 color-mix(in srgb, var(--accent-1) 70%, transparent);
+    }
     .reading-desk__rail dl { grid-template-columns: 1fr; }
     .article-cover {
       transform: none;
