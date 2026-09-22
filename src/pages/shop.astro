@@ -34,6 +34,19 @@ import Splatter from '../components/Splatter.astro';
         'Keep the unanswered questions visible before they become penalties',
       ]}
     />
+    <ProductCard
+      eyebrow="Now on Etsy · instant download"
+      title="The Curriculum Bias Audit Kit"
+      description="A worksheet for reading a syllabus, reading list, or course pack the way you'd read a source: whose names show up, whose don't, and what that pattern is quietly teaching you about who counts as an expert."
+      price="$9"
+      href="https://deconstructacademia.etsy.com"
+      cta="Get it on Etsy"
+      bullets={[
+        "Map who's actually on the reading list — by discipline, era, and perspective",
+        "Spot the gaps before a professor calls them \"balance\"",
+        'Turn the pattern into a specific, answerable question you can actually ask',
+      ]}
+    />
   </section>
 
   <section class="wrap shop-guide">
@@ -80,6 +93,11 @@ import Splatter from '../components/Splatter.astro';
     max-width: 48rem;
     font-family: var(--font-typewriter);
     font-size: var(--step-1);
+  }
+
+  .products {
+    display: grid;
+    gap: var(--space-3);
   }
 
   .products,
