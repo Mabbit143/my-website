@@ -8,5 +8,10 @@ import sitemap from '@astrojs/sitemap';
 // so those files are correct on day one, even though the site isn't live there yet.
 export default defineConfig({
   site: 'https://deconstructingacademia.com',
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    // The Canvas (src/pages/write/) is an authoring tool, not a public page —
+    // it's already noindex, but it should not show up in the sitemap either.
+    sitemap({ filter: (page) => !page.includes('/write/') }),
+  ],
 });
