@@ -25,13 +25,26 @@ import Splatter from '../components/Splatter.astro';
       eyebrow="Available now · instant download"
       title="The Syllabus Audit Kit + Grade Tracker"
       description="A rule-by-rule worksheet for decoding what the syllabus says, what it leaves vague, and what those choices can do to your grade."
-      price="$12"
+      price="$7"
       href="https://www.etsy.com/listing/4568126568/syllabus-audit-kit-grade-tracker"
       cta="Get it on Etsy"
       bullets={[
         'Audit attendance, late-work, participation, and grading rules',
         'Track where your grade actually stands',
         'Keep the unanswered questions visible before they become penalties',
+      ]}
+    />
+    <ProductCard
+      eyebrow="Now on Etsy · instant download"
+      title="The Curriculum Bias Audit Kit"
+      description="A worksheet for reading a syllabus, reading list, or course pack the way you'd read a source: whose names show up, whose don't, and what that pattern is quietly teaching you about who counts as an expert."
+      price="$9"
+      href="https://deconstructacademia.etsy.com"
+      cta="Get it on Etsy"
+      bullets={[
+        "Map who's actually on the reading list — by discipline, era, and perspective",
+        "Spot the gaps before a professor calls them \"balance\"",
+        'Turn the pattern into a specific, answerable question you can actually ask',
       ]}
     />
   </section>
@@ -80,6 +93,11 @@ import Splatter from '../components/Splatter.astro';
     max-width: 48rem;
     font-family: var(--font-typewriter);
     font-size: var(--step-1);
+  }
+
+  .products {
+    display: grid;
+    gap: var(--space-3);
   }
 
   .products,

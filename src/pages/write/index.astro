@@ -1,0 +1,1478 @@
+---
+// The Canvas — a visual block editor for Deconstructing Academia articles.
+// Not linked from the public nav (direct URL only) and marked noindex: this
+// is an authoring tool, not a public page. It renders every block with the
+// site's real design-system CSS so what you see here is what ships, then
+// either downloads a ready-to-commit .md (matching src/content/config.ts +
+// .pages.yml exactly) or — if a GitHub token is configured — publishes
+// straight to the repo via the Contents API. Everything runs client-side;
+// there is no server component, matching the rest of this static site.
+import '../../styles/global.css';
+import { SERIES } from '../../lib/series';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Canvas — Deconstructing Academia</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="ce-body">
+    <div class="ce-app">
+      <header class="ce-toolbar">
+        <div class="ce-toolbar__brand">
+          <span class="ce-toolbar__mark">DA</span>
+          <div>
+            <p class="ce-toolbar__eyebrow">Deconstructing Academia</p>
+            <h1>The Canvas</h1>
+          </div>
+        </div>
+        <div class="ce-toolbar__actions">
+          <label class="ce-open">
+            <span>Open</span>
+            <select id="openSelect" class="ce-select">
+              <option value="">+ New article…</option>
+            </select>
+          </label>
+          <button type="button" class="btn btn--ghost" id="newBtn">New</button>
+          <button type="button" class="btn btn--ghost" id="settingsBtn">⚙ Publish settings</button>
+          <button type="button" class="btn btn--ghost" id="copyBtn">Copy YAML</button>
+          <button type="button" class="btn btn--ghost" id="downloadBtn">Download .md</button>
+          <button type="button" class="btn" id="publishBtn">Publish →</button>
+        </div>
+      </header>
+
+      <p class="ce-status" id="statusLine" role="status" aria-live="polite" hidden></p>
+
+      <div class="ce-restore-banner" id="restoreBanner" hidden>
+        <span>You have an unsaved draft from a previous session.</span>
+        <button type="button" class="btn btn--ghost" id="restoreBtn">Restore it</button>
+        <button type="button" class="btn btn--ghost" id="discardBtn">Discard</button>
+      </div>
+
+      <div class="ce-layout">
+        <aside class="ce-rail" id="frontmatterRail" aria-label="Article details">
+          <h2 class="ce-rail__heading">File details</h2>
+
+          <div class="ce-field">
+            <label for="f-title">Headline</label>
+            <input id="f-title" class="ce-input" type="text" placeholder="What's the argument?" />
+          </div>
+
+          <div class="ce-field">
+            <label for="f-deck">Short introduction</label>
+            <textarea id="f-deck" class="ce-textarea" rows="3" placeholder="One or two sentences — what this piece argues and why it matters."></textarea>
+          </div>
+
+          <div class="ce-field">
+            <label for="f-series">Series</label>
+            <select id="f-series" class="ce-select"></select>
+          </div>
+
+          <div class="ce-field">
+            <label for="f-topics">Topics (comma separated)</label>
+            <input id="f-topics" class="ce-input" type="text" placeholder="syllabus, grading, first-gen" />
+          </div>
+
+          <div class="ce-field-row">
+            <div class="ce-field">
+              <label for="f-pubDate">Publish date</label>
+              <input id="f-pubDate" class="ce-input" type="date" />
+            </div>
+            <div class="ce-field">
+              <label for="f-updatedDate">Updated (optional)</label>
+              <input id="f-updatedDate" class="ce-input" type="date" />
+            </div>
+          </div>
+
+          <div class="ce-field">
+            <label for="f-author">Byline</label>
+            <input id="f-author" class="ce-input" type="text" value="Mabbit" />
+          </div>
+
+          <div class="ce-field">
+            <label for="f-description">Search / sharing description</label>
+            <textarea id="f-description" class="ce-textarea" rows="2" placeholder="~150 characters for SEO and shared links."></textarea>
+          </div>
+
+          <h2 class="ce-rail__heading ce-rail__heading--spaced">Featured graphic</h2>
+          <div class="ce-field" id="coverImagePicker"></div>
+          <div class="ce-field">
+            <label for="f-coverAlt">Alt text</label>
+            <input id="f-coverAlt" class="ce-input" type="text" placeholder="Describe it for screen readers." />
+          </div>
+          <div class="ce-field">
+            <label for="f-coverCaption">Caption (optional)</label>
+            <input id="f-coverCaption" class="ce-input" type="text" />
+          </div>
+
+          <h2 class="ce-rail__heading ce-rail__heading--spaced">Social sharing graphic</h2>
+          <div class="ce-field" id="socialImagePicker"></div>
+
+          <h2 class="ce-rail__heading ce-rail__heading--spaced">Status</h2>
+          <label class="ce-checkbox"><input id="f-draft" type="checkbox" checked /> Keep as draft</label>
+          <p class="ce-hint">Drafts never appear on the live site.</p>
+
+          <p class="ce-filename" id="filenameLine"></p>
+        </aside>
+
+        <main class="ce-canvas">
+          <div class="ce-article-header" id="articleHeaderPreview" aria-label="Article header preview"></div>
+
+          <div class="ce-blocks" id="blockList"></div>
+
+          <div class="ce-add-block">
+            <p>+ Add a block</p>
+            <div class="ce-add-block__buttons" id="addButtons"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div class="ce-drawer-backdrop" id="drawerBackdrop" hidden></div>
+    <aside class="ce-drawer" id="settingsDrawer" hidden aria-label="Publish settings">
+      <div class="ce-drawer__head">
+        <h2>Publish settings</h2>
+        <button type="button" class="ce-drawer__close" id="closeDrawer" aria-label="Close">✕</button>
+      </div>
+      <p class="ce-hint">
+        Publishing commits straight to GitHub — the same repo Cloudflare Pages deploys from, so a
+        publish here triggers a live rebuild automatically, same as the CMS.
+      </p>
+      <div class="ce-field">
+        <label for="gh-owner">Repo owner</label>
+        <input id="gh-owner" class="ce-input" type="text" value="mabbit143" />
+      </div>
+      <div class="ce-field">
+        <label for="gh-repo">Repo name</label>
+        <input id="gh-repo" class="ce-input" type="text" value="my-website" />
+      </div>
+      <div class="ce-field">
+        <label for="gh-branch">Branch</label>
+        <input id="gh-branch" class="ce-input" type="text" value="main" />
+      </div>
+      <div class="ce-field">
+        <label for="gh-token">GitHub token</label>
+        <input id="gh-token" class="ce-input" type="password" autocomplete="off" placeholder="ghp_… or a fine-grained token" />
+      </div>
+      <p class="ce-hint">
+        Create a fine-grained personal access token scoped to just this repo with
+        <strong>Contents: Read and write</strong> permission, at
+        <code>github.com/settings/personal-access-tokens</code>. It's stored only in this browser's
+        local storage — never sent anywhere except <code>api.github.com</code>, and never included in
+        anything you download or copy.
+      </p>
+      <div class="ce-drawer__actions">
+        <button type="button" class="btn" id="saveSettingsBtn">Save</button>
+        <button type="button" class="btn btn--ghost" id="forgetTokenBtn">Forget token</button>
+      </div>
+    </aside>
+
+    <script>
+      import { marked } from 'marked';
+      import { SERIES } from '../../lib/series';
+
+      marked.setOptions({ gfm: true, breaks: false });
+      const md = (s: string | undefined | null) => (s && s.trim() ? (marked.parse(s) as string) : '');
+      const mdInline = (s: string | undefined | null) => (s && s.trim() ? (marked.parseInline(s) as string) : '');
+
+      // ---------------------------------------------------------------
+      // Types + defaults
+      // ---------------------------------------------------------------
+      type BlockType = 'text' | 'image' | 'callout' | 'quote' | 'divider' | 'pinboard';
+      interface PinNote {
+        title?: string;
+        body?: string;
+        link?: string;
+        linkLabel?: string;
+        color?: 'pink' | 'cyan' | 'lime' | 'yellow' | 'porcelain';
+      }
+      interface Block {
+        _id: string;
+        type: BlockType;
+        markdown?: string;
+        image?: string;
+        alt?: string;
+        caption?: string;
+        size?: 'inline' | 'wide' | 'full';
+        tilt?: 'left' | 'none' | 'right';
+        variant?: 'second-look' | 'warning' | 'plain';
+        title?: string;
+        eyebrow?: string;
+        steps?: number;
+        source?: string;
+        quote?: string;
+        attribution?: string;
+        dividerStyle?: 'splatter' | 'rule' | 'space';
+        intro?: string;
+        notes?: PinNote[];
+        _file?: File;
+      }
+      interface Frontmatter {
+        title: string;
+        deck: string;
+        series: string;
+        topics: string[];
+        pubDate: string;
+        updatedDate: string;
+        author: string;
+        description: string;
+        socialImage: string;
+        coverImage: string;
+        coverAlt: string;
+        coverCaption: string;
+        draft: boolean;
+        placeholder: boolean;
+        _coverImageFile?: File;
+        _socialImageFile?: File;
+      }
+      interface EditorState {
+        filename: string | null;
+        frontmatter: Frontmatter;
+        blocks: Block[];
+      }
+
+      const todayISO = () => new Date().toISOString().slice(0, 10);
+      const uid = () => (crypto.randomUUID ? crypto.randomUUID() : `b${Math.random().toString(36).slice(2)}`);
+
+      function freshFrontmatter(): Frontmatter {
+        return {
+          title: '',
+          deck: '',
+          series: SERIES[0].slug,
+          topics: [],
+          pubDate: todayISO(),
+          updatedDate: '',
+          author: 'Mabbit',
+          description: '',
+          socialImage: '',
+          coverImage: '',
+          coverAlt: '',
+          coverCaption: '',
+          draft: true,
+          placeholder: false,
+        };
+      }
+      function freshBlock(type: BlockType): Block {
+        const base: Block = { _id: uid(), type };
+        if (type === 'text') base.markdown = '';
+        if (type === 'image') { base.size = 'wide'; base.tilt = 'left'; }
+        if (type === 'callout') base.variant = 'second-look';
+        if (type === 'divider') base.dividerStyle = 'splatter';
+        if (type === 'pinboard') { base.eyebrow = 'Pinned evidence'; base.notes = []; }
+        return base;
+      }
+
+      let state: EditorState = {
+        filename: null,
+        frontmatter: freshFrontmatter(),
+        blocks: [freshBlock('text')],
+      };
+
+      // ---------------------------------------------------------------
+      // DOM refs
+      // ---------------------------------------------------------------
+      const $ = <T extends Element = Element>(sel: string) => document.querySelector(sel) as T;
+      const statusLine = $('#statusLine') as HTMLElement;
+      const blockList = $('#blockList') as HTMLElement;
+      const addButtons = $('#addButtons') as HTMLElement;
+      const openSelect = $('#openSelect') as HTMLSelectElement;
+      const filenameLine = $('#filenameLine') as HTMLElement;
+      const articleHeaderPreview = $('#articleHeaderPreview') as HTMLElement;
+      const seriesSelect = $('#f-series') as HTMLSelectElement;
+
+      let statusTimer: ReturnType<typeof setTimeout> | undefined;
+      function showStatus(text: string, kind: 'info' | 'success' | 'error' = 'info') {
+        statusLine.hidden = false;
+        statusLine.textContent = text;
+        statusLine.dataset.kind = kind;
+        clearTimeout(statusTimer);
+        if (kind !== 'error') statusTimer = setTimeout(() => (statusLine.hidden = true), 6000);
+      }
+
+      // ---------------------------------------------------------------
+      // Splatter — ported from src/components/Splatter.astro so previews
+      // use the same deterministic spray-paint shapes as the live site.
+      // ---------------------------------------------------------------
+      function rng(s: number) {
+        return function () {
+          s |= 0;
+          s = (s + 0x6d2b79f5) | 0;
+          let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const SPLAT_CONFIGS = {
+        burst: { seed: 7, drops: 46, spread: 92, core: 26 },
+        blob: { seed: 21, drops: 28, spread: 60, core: 34 },
+        fleck: { seed: 4, drops: 40, spread: 104, core: 0 },
+      } as const;
+      function splatterSVG(variant: keyof typeof SPLAT_CONFIGS): string {
+        const cfg = SPLAT_CONFIGS[variant];
+        const rand = rng(cfg.seed);
+        const CX = 100, CY = 100;
+        const circles: string[] = [];
+        if (cfg.core > 0) circles.push(`<circle cx="${CX}" cy="${CY}" r="${cfg.core}"/>`);
+        for (let i = 0; i < cfg.drops; i++) {
+          const dist = cfg.spread * Math.pow(rand(), 1.7);
+          const ang = rand() * Math.PI * 2;
+          const r = 1.1 + 13 * Math.pow(rand(), 3);
+          const cx = (CX + Math.cos(ang) * dist).toFixed(2);
+          const cy = (CY + Math.sin(ang) * dist).toFixed(2);
+          circles.push(`<circle cx="${cx}" cy="${cy}" r="${r.toFixed(2)}"/>`);
+        }
+        return `<svg class="ce-splat" viewBox="0 0 200 200" aria-hidden="true"><g fill="currentColor">${circles.join('')}</g></svg>`;
+      }
+
+      // ---------------------------------------------------------------
+      // YAML serialization — hand-written to match the exact conventions
+      // already used in src/content/articles/*.md (see _README.md).
+      // ---------------------------------------------------------------
+      function yamlScalar(value: unknown): string {
+        if (value === null || value === undefined) return '""';
+        const str = String(value);
+        if (str === '') return '""';
+        const needsQuote =
+          /^\s|\s$|^[-?:,\[\]{}#&*!|>'"%@`]|:\s|:$|\s#/.test(str) ||
+          ['true', 'false', 'null', '~'].includes(str.toLowerCase());
+        return needsQuote ? JSON.stringify(str) : str;
+      }
+      function pushScalarOrBlock(lines: string[], key: string, text: string | undefined, indent: number, required = false) {
+        const pad = ' '.repeat(indent);
+        const value = text ?? '';
+        if (!value && !required) return;
+        if (value.includes('\n')) {
+          const innerPad = ' '.repeat(indent + 2);
+          const bodyLines = value.replace(/\r\n/g, '\n').split('\n');
+          while (bodyLines.length > 1 && bodyLines[bodyLines.length - 1] === '') bodyLines.pop();
+          lines.push(`${pad}${key}: |`);
+          bodyLines.forEach((l) => lines.push(l ? innerPad + l : ''));
+        } else {
+          lines.push(`${pad}${key}: ${yamlScalar(value)}`);
+        }
+      }
+      function emitBlock(b: Block): string {
+        const lines: string[] = [`  - type: ${b.type}`];
+        switch (b.type) {
+          case 'text':
+            pushScalarOrBlock(lines, 'markdown', b.markdown, 4, true);
+            break;
+          case 'image':
+            if (b.image) lines.push(`    image: ${yamlScalar(b.image)}`);
+            if (b.alt) lines.push(`    alt: ${yamlScalar(b.alt)}`);
+            if (b.caption) lines.push(`    caption: ${yamlScalar(b.caption)}`);
+            lines.push(`    size: ${b.size || 'wide'}`);
+            lines.push(`    tilt: ${b.tilt || 'left'}`);
+            break;
+          case 'callout':
+            lines.push(`    variant: ${b.variant || 'second-look'}`);
+            if (b.title) lines.push(`    title: ${yamlScalar(b.title)}`);
+            if (b.eyebrow) lines.push(`    eyebrow: ${yamlScalar(b.eyebrow)}`);
+            pushScalarOrBlock(lines, 'markdown', b.markdown, 4);
+            if ((b.variant || 'second-look') === 'second-look') {
+              if (b.steps) lines.push(`    steps: ${Number(b.steps)}`);
+              if (b.source) lines.push(`    source: ${yamlScalar(b.source)}`);
+            }
+            break;
+          case 'quote':
+            pushScalarOrBlock(lines, 'quote', b.quote, 4, true);
+            if (b.attribution) lines.push(`    attribution: ${yamlScalar(b.attribution)}`);
+            break;
+          case 'divider':
+            lines.push(`    dividerStyle: ${b.dividerStyle || 'splatter'}`);
+            break;
+          case 'pinboard':
+            lines.push(`    eyebrow: ${yamlScalar(b.eyebrow || 'Pinned evidence')}`);
+            if (b.title) lines.push(`    title: ${yamlScalar(b.title)}`);
+            pushScalarOrBlock(lines, 'intro', b.intro, 4);
+            if (b.notes && b.notes.length) {
+              lines.push('    notes:');
+              b.notes.forEach((n) => {
+                lines.push(`      - title: ${yamlScalar(n.title || '')}`);
+                lines.push(`        body: ${yamlScalar(n.body || '')}`);
+                lines.push(`        color: ${n.color || 'yellow'}`);
+                if (n.link) lines.push(`        link: ${yamlScalar(n.link)}`);
+                if (n.linkLabel) lines.push(`        linkLabel: ${yamlScalar(n.linkLabel)}`);
+              });
+            } else {
+              lines.push('    notes: []');
+            }
+            break;
+        }
+        return lines.join('\n') + '\n';
+      }
+      function toYAML(s: EditorState): string {
+        const fm = s.frontmatter;
+        const lines: string[] = ['---'];
+        pushScalarOrBlock(lines, 'title', fm.title, 0, true);
+        pushScalarOrBlock(lines, 'deck', fm.deck, 0, true);
+        lines.push(`series: ${fm.series}`);
+        if (fm.topics.length) {
+          lines.push('topics:');
+          fm.topics.forEach((t) => lines.push(`  - ${yamlScalar(t)}`));
+        } else {
+          lines.push('topics: []');
+        }
+        lines.push(`pubDate: ${fm.pubDate}`);
+        if (fm.updatedDate) lines.push(`updatedDate: ${fm.updatedDate}`);
+        pushScalarOrBlock(lines, 'author', fm.author || 'Mabbit', 0, true);
+        pushScalarOrBlock(lines, 'description', fm.description, 0, true);
+        if (fm.socialImage) lines.push(`socialImage: ${yamlScalar(fm.socialImage)}`);
+        if (fm.coverImage) lines.push(`coverImage: ${yamlScalar(fm.coverImage)}`);
+        pushScalarOrBlock(lines, 'coverAlt', fm.coverAlt, 0);
+        pushScalarOrBlock(lines, 'coverCaption', fm.coverCaption, 0);
+        lines.push(`draft: ${!!fm.draft}`);
+        lines.push(`placeholder: ${!!fm.placeholder}`);
+        lines.push('blocks:');
+        const body = lines.join('\n') + '\n' + s.blocks.map(emitBlock).join('') + '---\n';
+        return body;
+      }
+
+      // ---------------------------------------------------------------
+      // Frontmatter rail
+      // ---------------------------------------------------------------
+      seriesSelect.innerHTML = SERIES.map((s) => `<option value="${s.slug}">${s.name}</option>`).join('');
+
+      function renderImagePicker(container: HTMLElement, pathValue: string, onPath: (v: string) => void, onFile: (f: File | null) => void, defaultPrefix = 'article-images') {
+        container.innerHTML = `
+          <label>Image path or upload</label>
+          <input class="ce-input ce-image-path" type="text" placeholder="/article-images/example.webp" value="${pathValue.replace(/"/g, '&quot;')}" />
+          <input class="ce-file" type="file" accept="image/*" />
+        `;
+        const pathInput = container.querySelector('.ce-image-path') as HTMLInputElement;
+        const fileInput = container.querySelector('.ce-file') as HTMLInputElement;
+        pathInput.addEventListener('input', () => onPath(pathInput.value));
+        fileInput.addEventListener('change', () => {
+          const file = fileInput.files?.[0] || null;
+          onFile(file);
+          if (file && !pathInput.value) {
+            const safe = file.name.trim().replace(/[^a-zA-Z0-9._-]/g, '-');
+            pathInput.value = `/${defaultPrefix}/${safe}`;
+            onPath(pathInput.value);
+          }
+        });
+      }
+
+      function renderFrontmatterRail() {
+        const fm = state.frontmatter;
+        (document.getElementById('f-title') as HTMLInputElement).value = fm.title;
+        (document.getElementById('f-deck') as HTMLTextAreaElement).value = fm.deck;
+        seriesSelect.value = fm.series;
+        (document.getElementById('f-topics') as HTMLInputElement).value = fm.topics.join(', ');
+        (document.getElementById('f-pubDate') as HTMLInputElement).value = fm.pubDate;
+        (document.getElementById('f-updatedDate') as HTMLInputElement).value = fm.updatedDate;
+        (document.getElementById('f-author') as HTMLInputElement).value = fm.author;
+        (document.getElementById('f-description') as HTMLTextAreaElement).value = fm.description;
+        (document.getElementById('f-coverAlt') as HTMLInputElement).value = fm.coverAlt;
+        (document.getElementById('f-coverCaption') as HTMLInputElement).value = fm.coverCaption;
+        (document.getElementById('f-draft') as HTMLInputElement).checked = fm.draft;
+
+        renderImagePicker(
+          document.getElementById('coverImagePicker')!,
+          fm.coverImage,
+          (v) => { fm.coverImage = v; scheduleAutosave(); renderHeaderPreview(); },
+          (f) => { fm._coverImageFile = f || undefined; },
+        );
+        renderImagePicker(
+          document.getElementById('socialImagePicker')!,
+          fm.socialImage,
+          (v) => { fm.socialImage = v; scheduleAutosave(); },
+          (f) => { fm._socialImageFile = f || undefined; },
+        );
+
+        filenameLine.textContent = state.filename
+          ? `File: src/content/articles/${state.filename}`
+          : `Will save as: src/content/articles/${sanitizeFilename(fm.title) || 'untitled'}.md`;
+
+        renderHeaderPreview();
+      }
+
+      function sanitizeFilename(title: string): string {
+        return title.trim().replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, ' ').slice(0, 150);
+      }
+
+      function renderHeaderPreview() {
+        const fm = state.frontmatter;
+        const series = SERIES.find((s) => s.slug === fm.series);
+        const dateStr = fm.pubDate
+          ? new Date(fm.pubDate + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+          : '';
+        articleHeaderPreview.innerHTML = `
+          ${series ? `<span class="pill" data-palette="${series.palette}">${series.name}</span>` : ''}
+          <h1 class="ce-preview-h1"><span>${fm.title || 'Untitled article'}</span></h1>
+          <p class="typewriter ce-preview-deck">${fm.deck || 'The deck goes here.'}</p>
+          <p class="meta-mono ce-preview-byline">By ${fm.author || 'Mabbit'}${dateStr ? ' · ' + dateStr : ''}</p>
+          ${fm.coverImage ? `<figure class="ce-fig ce-fig--wide ce-fig--tilt-left"><span class="ce-fig__tape" aria-hidden="true"></span><img src="${fm.coverImage}" alt="" />${fm.coverCaption ? `<figcaption>${mdInline(fm.coverCaption)}</figcaption>` : ''}</figure>` : ''}
+        `;
+        articleHeaderPreview.dataset.palette = series?.palette || '';
+      }
+
+      [
+        ['f-title', (v: string) => (state.frontmatter.title = v)],
+        ['f-deck', (v: string) => (state.frontmatter.deck = v)],
+        ['f-author', (v: string) => (state.frontmatter.author = v)],
+        ['f-description', (v: string) => (state.frontmatter.description = v)],
+        ['f-coverAlt', (v: string) => (state.frontmatter.coverAlt = v)],
+        ['f-coverCaption', (v: string) => (state.frontmatter.coverCaption = v)],
+        ['f-pubDate', (v: string) => (state.frontmatter.pubDate = v)],
+        ['f-updatedDate', (v: string) => (state.frontmatter.updatedDate = v)],
+      ].forEach(([id, setter]) => {
+        const el = document.getElementById(id as string) as HTMLInputElement | HTMLTextAreaElement;
+        el.addEventListener('input', () => {
+          (setter as (v: string) => void)(el.value);
+          scheduleAutosave();
+          if (id === 'f-title' || id === 'f-author' || id === 'f-deck' || id === 'f-pubDate') renderHeaderPreview();
+          if (id === 'f-title') filenameLine.textContent = state.filename
+            ? `File: src/content/articles/${state.filename}`
+            : `Will save as: src/content/articles/${sanitizeFilename(state.frontmatter.title) || 'untitled'}.md`;
+        });
+      });
+      seriesSelect.addEventListener('change', () => { state.frontmatter.series = seriesSelect.value; scheduleAutosave(); renderHeaderPreview(); });
+      document.getElementById('f-topics')!.addEventListener('input', (e) => {
+        state.frontmatter.topics = (e.target as HTMLInputElement).value.split(',').map((t) => t.trim()).filter(Boolean);
+        scheduleAutosave();
+      });
+      document.getElementById('f-draft')!.addEventListener('change', (e) => {
+        state.frontmatter.draft = (e.target as HTMLInputElement).checked;
+        scheduleAutosave();
+      });
+
+      // ---------------------------------------------------------------
+      // Blocks — fields + live preview, ported from src/components/blocks/*
+      // ---------------------------------------------------------------
+      const BLOCK_LABELS: Record<BlockType, string> = {
+        text: 'Text',
+        image: 'Image',
+        callout: 'Callout box',
+        quote: 'Pull quote',
+        divider: 'Divider',
+        pinboard: 'Pinned-note board',
+      };
+
+      addButtons.innerHTML = (Object.keys(BLOCK_LABELS) as BlockType[])
+        .map((t) => `<button type="button" class="btn btn--ghost ce-add-btn" data-type="${t}">+ ${BLOCK_LABELS[t]}</button>`)
+        .join('');
+      addButtons.addEventListener('click', (e) => {
+        const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.ce-add-btn');
+        if (!btn) return;
+        state.blocks.push(freshBlock(btn.dataset.type as BlockType));
+        scheduleAutosave();
+        renderBlocks();
+      });
+
+      function moveBlock(id: string, dir: -1 | 1) {
+        const i = state.blocks.findIndex((b) => b._id === id);
+        const j = i + dir;
+        if (i < 0 || j < 0 || j >= state.blocks.length) return;
+        [state.blocks[i], state.blocks[j]] = [state.blocks[j], state.blocks[i]];
+        scheduleAutosave();
+        renderBlocks();
+      }
+      function removeBlock(id: string) {
+        state.blocks = state.blocks.filter((b) => b._id !== id);
+        scheduleAutosave();
+        renderBlocks();
+      }
+      function duplicateBlock(id: string) {
+        const i = state.blocks.findIndex((b) => b._id === id);
+        if (i < 0) return;
+        const copy = { ...state.blocks[i], _id: uid(), notes: state.blocks[i].notes ? [...state.blocks[i].notes!] : undefined };
+        state.blocks.splice(i + 1, 0, copy);
+        scheduleAutosave();
+        renderBlocks();
+      }
+
+      function fieldsFor(b: Block): string {
+        switch (b.type) {
+          case 'text':
+            return `<label>Markdown</label><textarea class="ce-textarea ce-f-markdown" rows="6" placeholder="Ordinary Markdown — headings, lists, links, > quotes, inline images.">${escAttr(b.markdown || '')}</textarea>`;
+          case 'image':
+            return `
+              <div id="img-picker-${b._id}"></div>
+              <label>Alt text</label><input class="ce-input ce-f-alt" type="text" value="${escAttr(b.alt || '')}" />
+              <label>Caption (optional)</label><input class="ce-input ce-f-caption" type="text" value="${escAttr(b.caption || '')}" />
+              <div class="ce-field-row">
+                <div><label>Width</label><select class="ce-select ce-f-size">
+                  <option value="inline" ${b.size === 'inline' ? 'selected' : ''}>In the text column</option>
+                  <option value="wide" ${(b.size || 'wide') === 'wide' ? 'selected' : ''}>A little wider</option>
+                  <option value="full" ${b.size === 'full' ? 'selected' : ''}>Full width</option>
+                </select></div>
+                <div><label>Tilt</label><select class="ce-select ce-f-tilt">
+                  <option value="left" ${(b.tilt || 'left') === 'left' ? 'selected' : ''}>Left</option>
+                  <option value="none" ${b.tilt === 'none' ? 'selected' : ''}>Straight</option>
+                  <option value="right" ${b.tilt === 'right' ? 'selected' : ''}>Right</option>
+                </select></div>
+              </div>`;
+          case 'callout':
+            return `
+              <label>Style</label><select class="ce-select ce-f-variant">
+                <option value="second-look" ${(b.variant || 'second-look') === 'second-look' ? 'selected' : ''}>Second Look (chalkboard)</option>
+                <option value="warning" ${b.variant === 'warning' ? 'selected' : ''}>Warning (hazard tape)</option>
+                <option value="plain" ${b.variant === 'plain' ? 'selected' : ''}>Plain note</option>
+              </select>
+              <label>Heading</label><input class="ce-input ce-f-title" type="text" value="${escAttr(b.title || '')}" />
+              <label>Label (optional)</label><input class="ce-input ce-f-eyebrow" type="text" placeholder="${b.variant === 'second-look' || !b.variant ? 'Second Look' : 'Heads up'}" value="${escAttr(b.eyebrow || '')}" />
+              <label>Body (Markdown)</label><textarea class="ce-textarea ce-f-markdown" rows="4">${escAttr(b.markdown || '')}</textarea>
+              ${(b.variant || 'second-look') === 'second-look' ? `
+                <div class="ce-field-row">
+                  <div><label>Citation-trail steps</label><input class="ce-input ce-f-steps" type="number" min="0" value="${b.steps ?? ''}" /></div>
+                  <div><label>Trail endpoint</label><input class="ce-input ce-f-source" type="text" value="${escAttr(b.source || '')}" /></div>
+                </div>` : ''}`;
+          case 'quote':
+            return `
+              <label>Quote</label><textarea class="ce-textarea ce-f-quote" rows="3">${escAttr(b.quote || '')}</textarea>
+              <label>Attribution (optional)</label><input class="ce-input ce-f-attribution" type="text" value="${escAttr(b.attribution || '')}" />`;
+          case 'divider':
+            return `<label>Style</label><select class="ce-select ce-f-dividerStyle">
+                <option value="splatter" ${(b.dividerStyle || 'splatter') === 'splatter' ? 'selected' : ''}>Spray-paint flecks</option>
+                <option value="rule" ${b.dividerStyle === 'rule' ? 'selected' : ''}>Neon rule</option>
+                <option value="space" ${b.dividerStyle === 'space' ? 'selected' : ''}>Blank space</option>
+              </select>`;
+          case 'pinboard':
+            return `
+              <label>Label</label><input class="ce-input ce-f-eyebrow" type="text" value="${escAttr(b.eyebrow || 'Pinned evidence')}" />
+              <label>Title (optional)</label><input class="ce-input ce-f-title" type="text" value="${escAttr(b.title || '')}" />
+              <label>Intro (optional, Markdown)</label><textarea class="ce-textarea ce-f-intro" rows="2">${escAttr(b.intro || '')}</textarea>
+              <div class="ce-notes-editor" id="notes-${b._id}"></div>
+              <button type="button" class="btn btn--ghost ce-add-note" data-block="${b._id}">+ Add pinned note</button>`;
+        }
+      }
+
+      function previewFor(b: Block): string {
+        switch (b.type) {
+          case 'text':
+            return md(b.markdown) ? `<div class="prose">${md(b.markdown)}</div>` : '<p class="ce-empty">Nothing yet.</p>';
+          case 'image':
+            if (!b.image) return '<p class="ce-empty">Add an image path or upload a file.</p>';
+            return `<figure class="ce-fig ce-fig--${b.size || 'wide'} ce-fig--tilt-${b.tilt || 'left'}">
+              <span class="ce-fig__tape" aria-hidden="true"></span>
+              <img src="${b.image}" alt="${escAttr(b.alt || '')}" />
+              ${b.caption ? `<figcaption>${mdInline(b.caption)}</figcaption>` : ''}
+            </figure>`;
+          case 'callout': {
+            const variant = b.variant || 'second-look';
+            const bodyHtml = md(b.markdown);
+            if (variant === 'second-look') {
+              const steps = b.steps || 0;
+              const dots = Array.from({ length: steps }, (_, i) => `${i > 0 ? '<span class="ce-chalk-dash"></span>' : ''}<span class="ce-chalk-dot">${i + 1}</span>`).join('');
+              return `<div class="ce-chalk" data-palette="chalkboard">
+                <div class="ce-chalk-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="6"/><line x1="15" y1="15" x2="21" y2="21"/></svg>${b.eyebrow || 'Second Look'}</div>
+                <p class="ce-chalk-title">${b.title || 'Untitled'}</p>
+                <div class="ce-chalk-body">${bodyHtml}</div>
+                ${steps || b.source ? `<div class="ce-chalk-trail">${dots}${b.source ? `<span class="ce-chalk-source">→ ${b.source}</span>` : ''}</div>` : ''}
+              </div>`;
+            }
+            return `<div class="ce-callout ce-callout--${variant}">
+              <p class="ce-callout-eyebrow">${b.eyebrow || (variant === 'warning' ? 'Heads up' : 'Note')}</p>
+              ${b.title ? `<p class="ce-callout-title">${b.title}</p>` : ''}
+              <div class="ce-callout-body">${bodyHtml}</div>
+            </div>`;
+          }
+          case 'quote':
+            if (!b.quote) return '<p class="ce-empty">Add the quote text.</p>';
+            return `<figure class="ce-pq"><span class="ce-pq-blot">${splatterSVG('blob')}</span><blockquote class="ce-pq-text">${escHtml(b.quote)}</blockquote>${b.attribution ? `<figcaption class="ce-pq-attr">— ${mdInline(b.attribution)}</figcaption>` : ''}</figure>`;
+          case 'divider': {
+            const style = b.dividerStyle || 'splatter';
+            if (style === 'space') return '<div class="ce-divider ce-divider--space"></div>';
+            if (style === 'rule') return '<div class="ce-divider ce-divider--rule"></div>';
+            return `<div class="ce-divider ce-divider--splatter">${splatterSVG('fleck')}</div>`;
+          }
+          case 'pinboard': {
+            const notes = b.notes || [];
+            return `<section class="ce-pinboard">
+              <header class="ce-pinboard-header"><p>${b.eyebrow || 'Pinned evidence'}</p>${b.title ? `<h2>${b.title}</h2>` : ''}${b.intro ? `<div>${md(b.intro)}</div>` : ''}</header>
+              ${notes.length ? `<div class="ce-pinboard-notes">${notes.map((n, i) => `
+                <article class="ce-pin-note" data-color="${n.color || 'yellow'}" style="--note-tilt:${i % 2 === 0 ? '-1.25deg' : '1deg'}">
+                  <span class="ce-pin-note__pin"></span>
+                  ${n.title ? `<h3>${mdInline(n.title)}</h3>` : ''}
+                  ${n.body ? `<div>${md(n.body)}</div>` : ''}
+                  ${n.link ? `<a href="${escAttr(n.link)}">${n.linkLabel || 'Open source'} →</a>` : ''}
+                </article>`).join('')}</div>` : '<p class="ce-empty">No pinned notes yet.</p>'}
+            </section>`;
+          }
+        }
+      }
+
+      function escAttr(s: string) {
+        return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+      }
+      function escHtml(s: string) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function updateBlockPreview(card: HTMLElement, b: Block) {
+        const previewEl = card.querySelector('.ce-block-preview')!;
+        previewEl.innerHTML = previewFor(b) || '';
+      }
+
+      function bindNoteFields(card: HTMLElement, b: Block) {
+        const container = card.querySelector(`#notes-${b._id}`) as HTMLElement;
+        if (!container) return;
+        container.innerHTML = (b.notes || [])
+          .map(
+            (n, i) => `
+          <div class="ce-note-editor" data-index="${i}">
+            <div class="ce-field-row">
+              <input class="ce-input ce-n-title" type="text" placeholder="Note heading" value="${escAttr(n.title || '')}" />
+              <select class="ce-select ce-n-color">
+                <option value="yellow" ${(n.color || 'yellow') === 'yellow' ? 'selected' : ''}>Caution yellow</option>
+                <option value="pink" ${n.color === 'pink' ? 'selected' : ''}>Riot pink</option>
+                <option value="cyan" ${n.color === 'cyan' ? 'selected' : ''}>Archive cyan</option>
+                <option value="lime" ${n.color === 'lime' ? 'selected' : ''}>Field-note lime</option>
+                <option value="porcelain" ${n.color === 'porcelain' ? 'selected' : ''}>Dirty porcelain</option>
+              </select>
+            </div>
+            <textarea class="ce-textarea ce-n-body" rows="2" placeholder="Note text">${escAttr(n.body || '')}</textarea>
+            <div class="ce-field-row">
+              <input class="ce-input ce-n-link" type="text" placeholder="Optional link" value="${escAttr(n.link || '')}" />
+              <input class="ce-input ce-n-linkLabel" type="text" placeholder="Link label" value="${escAttr(n.linkLabel || '')}" />
+            </div>
+            <button type="button" class="ce-note-remove" data-index="${i}" aria-label="Remove note">✕</button>
+          </div>`,
+          )
+          .join('');
+
+        container.querySelectorAll<HTMLElement>('.ce-note-editor').forEach((noteEl) => {
+          const i = Number(noteEl.dataset.index);
+          const note = b.notes![i];
+          const bind = (sel: string, key: keyof PinNote) => {
+            const el = noteEl.querySelector(sel) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+            el.addEventListener('input', () => {
+              (note as any)[key] = el.value;
+              scheduleAutosave();
+              updateBlockPreview(card, b);
+            });
+            el.addEventListener('change', () => {
+              (note as any)[key] = el.value;
+              scheduleAutosave();
+              updateBlockPreview(card, b);
+            });
+          };
+          bind('.ce-n-title', 'title');
+          bind('.ce-n-body', 'body');
+          bind('.ce-n-color', 'color');
+          bind('.ce-n-link', 'link');
+          bind('.ce-n-linkLabel', 'linkLabel');
+        });
+        container.querySelectorAll<HTMLButtonElement>('.ce-note-remove').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            b.notes!.splice(Number(btn.dataset.index), 1);
+            scheduleAutosave();
+            bindNoteFields(card, b);
+            updateBlockPreview(card, b);
+          });
+        });
+      }
+
+      function bindBlockFields(card: HTMLElement, b: Block) {
+        const bind = (sel: string, key: keyof Block, isNumber = false) => {
+          const el = card.querySelector(sel) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+          if (!el) return;
+          const handler = () => {
+            (b as any)[key] = isNumber ? Number((el as HTMLInputElement).value) || undefined : el.value;
+            scheduleAutosave();
+            updateBlockPreview(card, b);
+            if (key === 'variant' || key === 'dividerStyle' || key === 'size' || key === 'tilt') renderBlocks();
+          };
+          el.addEventListener('input', handler);
+          el.addEventListener('change', handler);
+        };
+        bind('.ce-f-markdown', 'markdown');
+        bind('.ce-f-alt', 'alt');
+        bind('.ce-f-caption', 'caption');
+        bind('.ce-f-size', 'size');
+        bind('.ce-f-tilt', 'tilt');
+        bind('.ce-f-variant', 'variant');
+        bind('.ce-f-title', 'title');
+        bind('.ce-f-eyebrow', 'eyebrow');
+        bind('.ce-f-steps', 'steps', true);
+        bind('.ce-f-source', 'source');
+        bind('.ce-f-quote', 'quote');
+        bind('.ce-f-attribution', 'attribution');
+        bind('.ce-f-dividerStyle', 'dividerStyle');
+        bind('.ce-f-intro', 'intro');
+
+        if (b.type === 'image') {
+          renderImagePicker(
+            card.querySelector(`#img-picker-${b._id}`) as HTMLElement,
+            b.image || '',
+            (v) => { b.image = v; scheduleAutosave(); updateBlockPreview(card, b); },
+            (f) => { b._file = f || undefined; if (f) { b.image = URL.createObjectURL(f); scheduleAutosave(); updateBlockPreview(card, b); } },
+          );
+        }
+        if (b.type === 'pinboard') {
+          bindNoteFields(card, b);
+          card.querySelector('.ce-add-note')?.addEventListener('click', () => {
+            b.notes = b.notes || [];
+            b.notes.push({ color: 'yellow' });
+            scheduleAutosave();
+            bindNoteFields(card, b);
+            updateBlockPreview(card, b);
+          });
+        }
+      }
+
+      function renderBlocks() {
+        blockList.innerHTML = state.blocks
+          .map(
+            (b, i) => `
+          <article class="ce-block" draggable="true" data-id="${b._id}">
+            <header class="ce-block__head">
+              <span class="ce-block__drag" aria-hidden="true">⠿</span>
+              <span class="ce-block__type">${BLOCK_LABELS[b.type]}</span>
+              <span class="ce-block__spacer"></span>
+              <button type="button" class="ce-icon-btn" data-action="up" ${i === 0 ? 'disabled' : ''} aria-label="Move up">↑</button>
+              <button type="button" class="ce-icon-btn" data-action="down" ${i === state.blocks.length - 1 ? 'disabled' : ''} aria-label="Move down">↓</button>
+              <button type="button" class="ce-icon-btn" data-action="dup" aria-label="Duplicate">⧉</button>
+              <button type="button" class="ce-icon-btn ce-icon-btn--danger" data-action="del" aria-label="Delete">✕</button>
+            </header>
+            <div class="ce-block__body">
+              <div class="ce-block__fields">${fieldsFor(b)}</div>
+              <div class="ce-block__preview-wrap">
+                <p class="ce-block__preview-label">Live preview</p>
+                <div class="ce-block-preview">${previewFor(b) || ''}</div>
+              </div>
+            </div>
+          </article>`,
+          )
+          .join('');
+
+        blockList.querySelectorAll<HTMLElement>('.ce-block').forEach((card) => {
+          const id = card.dataset.id!;
+          const b = state.blocks.find((x) => x._id === id)!;
+          bindBlockFields(card, b);
+          card.querySelector('[data-action="up"]')?.addEventListener('click', () => moveBlock(id, -1));
+          card.querySelector('[data-action="down"]')?.addEventListener('click', () => moveBlock(id, 1));
+          card.querySelector('[data-action="dup"]')?.addEventListener('click', () => duplicateBlock(id));
+          card.querySelector('[data-action="del"]')?.addEventListener('click', () => {
+            if (confirm('Remove this block?')) removeBlock(id);
+          });
+
+          card.addEventListener('dragstart', () => card.classList.add('is-dragging'));
+          card.addEventListener('dragend', () => card.classList.remove('is-dragging'));
+          card.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const dragging = blockList.querySelector('.is-dragging') as HTMLElement | null;
+            if (!dragging || dragging === card) return;
+            const rect = card.getBoundingClientRect();
+            const before = (e as DragEvent).clientY < rect.top + rect.height / 2;
+            blockList.insertBefore(dragging, before ? card : card.nextSibling);
+          });
+          card.addEventListener('drop', () => {
+            const newOrder = Array.from(blockList.querySelectorAll<HTMLElement>('.ce-block')).map((el) => el.dataset.id);
+            state.blocks.sort((a, b2) => newOrder.indexOf(a._id) - newOrder.indexOf(b2._id));
+            scheduleAutosave();
+          });
+        });
+      }
+
+      // ---------------------------------------------------------------
+      // New / Open
+      // ---------------------------------------------------------------
+      function newArticle() {
+        state = { filename: null, frontmatter: freshFrontmatter(), blocks: [freshBlock('text')] };
+        openSelect.value = '';
+        renderFrontmatterRail();
+        renderBlocks();
+        showStatus('New article. Nothing published yet.');
+      }
+      document.getElementById('newBtn')!.addEventListener('click', () => {
+        if (confirm('Start a new article? Unsaved changes in the current one will be lost (unless already autosaved).')) newArticle();
+      });
+
+      let articlesIndex: any[] = [];
+      async function loadArticlesIndex() {
+        try {
+          const res = await fetch('/write/articles.json');
+          articlesIndex = await res.json();
+          openSelect.innerHTML =
+            '<option value="">+ New article…</option>' +
+            articlesIndex.map((a, i) => `<option value="${i}">${escAttr(a.title || a.id)} — ${a.pubDate}${a.draft ? ' (draft)' : ''}</option>`).join('');
+        } catch {
+          showStatus('Could not load the existing-articles list (this only affects "Open").', 'error');
+        }
+      }
+      openSelect.addEventListener('change', () => {
+        if (openSelect.value === '') { newArticle(); return; }
+        const a = articlesIndex[Number(openSelect.value)];
+        state = {
+          filename: a.id,
+          frontmatter: {
+            title: a.title || '',
+            deck: a.deck || '',
+            series: a.series || SERIES[0].slug,
+            topics: a.topics || [],
+            pubDate: a.pubDate || todayISO(),
+            updatedDate: a.updatedDate || '',
+            author: a.author || 'Mabbit',
+            description: a.description || '',
+            socialImage: a.socialImage || '',
+            coverImage: a.coverImage || '',
+            coverAlt: a.coverAlt || '',
+            coverCaption: a.coverCaption || '',
+            draft: !!a.draft,
+            placeholder: !!a.placeholder,
+          },
+          blocks: (a.blocks && a.blocks.length ? a.blocks : [{ type: 'text', markdown: '' }]).map((b: any) => ({ _id: uid(), ...b })),
+        };
+        renderFrontmatterRail();
+        renderBlocks();
+        showStatus(`Opened "${state.frontmatter.title}".`);
+      });
+
+      // ---------------------------------------------------------------
+      // Autosave (single-slot, browser-local safety net)
+      // ---------------------------------------------------------------
+      const AUTOSAVE_KEY = 'da-editor-draft';
+      let autosaveTimer: ReturnType<typeof setTimeout> | undefined;
+      function scheduleAutosave() {
+        clearTimeout(autosaveTimer);
+        autosaveTimer = setTimeout(() => {
+          try {
+            const { _coverImageFile, _socialImageFile, ...fm } = state.frontmatter;
+            const blocks = state.blocks.map(({ _file, ...b }) => b);
+            localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({ filename: state.filename, frontmatter: fm, blocks }));
+          } catch {
+            /* storage full or unavailable — autosave is best-effort only */
+          }
+        }, 1200);
+      }
+
+      const restoreBanner = document.getElementById('restoreBanner')!;
+      const savedDraftRaw = (() => {
+        try { return localStorage.getItem(AUTOSAVE_KEY); } catch { return null; }
+      })();
+      if (savedDraftRaw) restoreBanner.hidden = false;
+      document.getElementById('restoreBtn')!.addEventListener('click', () => {
+        try {
+          const saved = JSON.parse(savedDraftRaw!);
+          state = { filename: saved.filename, frontmatter: { ...freshFrontmatter(), ...saved.frontmatter }, blocks: saved.blocks.map((b: any) => ({ _id: uid(), ...b })) };
+          renderFrontmatterRail();
+          renderBlocks();
+          showStatus('Draft restored.');
+        } catch {
+          showStatus('Could not restore that draft.', 'error');
+        }
+        restoreBanner.hidden = true;
+      });
+      document.getElementById('discardBtn')!.addEventListener('click', () => {
+        try { localStorage.removeItem(AUTOSAVE_KEY); } catch { /* ignore */ }
+        restoreBanner.hidden = true;
+      });
+
+      // ---------------------------------------------------------------
+      // Settings drawer (GitHub publish target + token)
+      // ---------------------------------------------------------------
+      const drawer = document.getElementById('settingsDrawer')!;
+      const backdrop = document.getElementById('drawerBackdrop')!;
+      function openDrawer() { drawer.hidden = false; backdrop.hidden = false; }
+      function closeDrawer() { drawer.hidden = true; backdrop.hidden = true; }
+      document.getElementById('settingsBtn')!.addEventListener('click', openDrawer);
+      document.getElementById('closeDrawer')!.addEventListener('click', closeDrawer);
+      backdrop.addEventListener('click', closeDrawer);
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+
+      const SETTINGS_KEY = 'da-editor-gh-settings';
+      const TOKEN_KEY = 'da-editor-gh-token';
+      function loadSettings() {
+        try {
+          const raw = localStorage.getItem(SETTINGS_KEY);
+          if (raw) {
+            const s = JSON.parse(raw);
+            (document.getElementById('gh-owner') as HTMLInputElement).value = s.owner || 'mabbit143';
+            (document.getElementById('gh-repo') as HTMLInputElement).value = s.repo || 'my-website';
+            (document.getElementById('gh-branch') as HTMLInputElement).value = s.branch || 'main';
+          }
+          const token = localStorage.getItem(TOKEN_KEY);
+          if (token) (document.getElementById('gh-token') as HTMLInputElement).value = token;
+        } catch { /* ignore */ }
+      }
+      function getSettings() {
+        return {
+          owner: (document.getElementById('gh-owner') as HTMLInputElement).value.trim(),
+          repo: (document.getElementById('gh-repo') as HTMLInputElement).value.trim(),
+          branch: (document.getElementById('gh-branch') as HTMLInputElement).value.trim() || 'main',
+          token: (document.getElementById('gh-token') as HTMLInputElement).value.trim(),
+        };
+      }
+      document.getElementById('saveSettingsBtn')!.addEventListener('click', () => {
+        const s = getSettings();
+        try {
+          localStorage.setItem(SETTINGS_KEY, JSON.stringify({ owner: s.owner, repo: s.repo, branch: s.branch }));
+          if (s.token) localStorage.setItem(TOKEN_KEY, s.token);
+        } catch { /* ignore */ }
+        showStatus('Publish settings saved in this browser.');
+        closeDrawer();
+      });
+      document.getElementById('forgetTokenBtn')!.addEventListener('click', () => {
+        try { localStorage.removeItem(TOKEN_KEY); } catch { /* ignore */ }
+        (document.getElementById('gh-token') as HTMLInputElement).value = '';
+        showStatus('Token forgotten.');
+      });
+      loadSettings();
+
+      // ---------------------------------------------------------------
+      // Validation, export, publish
+      // ---------------------------------------------------------------
+      function validate(): string[] {
+        const fm = state.frontmatter;
+        const errors: string[] = [];
+        if (!fm.title.trim()) errors.push('Headline is required.');
+        if (!fm.deck.trim()) errors.push('Short introduction is required.');
+        if (!fm.description.trim()) errors.push('Search/sharing description is required.');
+        if (!fm.pubDate) errors.push('Publish date is required.');
+        if (!SERIES.some((s) => s.slug === fm.series)) errors.push('Series is invalid.');
+        return errors;
+      }
+
+      document.getElementById('copyBtn')!.addEventListener('click', async () => {
+        const errors = validate();
+        if (errors.length) { showStatus(errors.join(' '), 'error'); return; }
+        await navigator.clipboard.writeText(toYAML(state));
+        showStatus('YAML copied to clipboard.');
+      });
+      document.getElementById('downloadBtn')!.addEventListener('click', () => {
+        const errors = validate();
+        if (errors.length) { showStatus(errors.join(' '), 'error'); return; }
+        const filename = state.filename || `${sanitizeFilename(state.frontmatter.title) || 'untitled'}.md`;
+        const blob = new Blob([toYAML(state)], { type: 'text/markdown;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+        showStatus(`Downloaded ${filename}. Drop it in src/content/articles/ (and any picked images in public/article-images/) and commit.`);
+      });
+
+      function toBase64(bytes: Uint8Array): string {
+        let binary = '';
+        const chunk = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunk) binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+        return btoa(binary);
+      }
+      function textToBase64(str: string): string {
+        return toBase64(new TextEncoder().encode(str));
+      }
+      async function fileToBase64(file: File): Promise<string> {
+        const buf = await file.arrayBuffer();
+        return toBase64(new Uint8Array(buf));
+      }
+
+      async function ghFetch(path: string, opts: RequestInit = {}) {
+        const { owner, repo, token } = getSettings();
+        if (!owner || !repo || !token) throw new Error('Set repo owner, repo name, and a token in Publish settings first.');
+        const cleanPath = path.split('/').map(encodeURIComponent).join('/');
+        return fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${cleanPath}`, {
+          ...opts,
+          headers: {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${token}`,
+            'X-GitHub-Api-Version': '2022-11-28',
+            ...(opts.headers || {}),
+          },
+        });
+      }
+      async function getFileSha(path: string, branch: string): Promise<string | undefined> {
+        const res = await ghFetch(`${path}?ref=${encodeURIComponent(branch)}`);
+        if (res.status === 200) return (await res.json()).sha;
+        return undefined;
+      }
+      async function putFile(path: string, contentBase64: string, message: string) {
+        const { branch } = getSettings();
+        const sha = await getFileSha(path, branch);
+        const res = await ghFetch(path, {
+          method: 'PUT',
+          body: JSON.stringify({ message, content: contentBase64, branch, ...(sha ? { sha } : {}) }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}) as any);
+          throw new Error(`${res.status} ${res.statusText}${err.message ? ' — ' + err.message : ''}`);
+        }
+        return res.json();
+      }
+
+      const publishBtn = document.getElementById('publishBtn') as HTMLButtonElement;
+      function setBusy(busy: boolean) {
+        publishBtn.disabled = busy;
+        publishBtn.textContent = busy ? 'Publishing…' : 'Publish →';
+      }
+      document.getElementById('publishBtn')!.addEventListener('click', async () => {
+        const errors = validate();
+        if (errors.length) { showStatus(errors.join(' '), 'error'); return; }
+        const { owner, repo, token } = getSettings();
+        if (!owner || !repo || !token) { showStatus('Open Publish settings and add a repo + token first.', 'error'); openDrawer(); return; }
+
+        setBusy(true);
+        try {
+          const filename = state.filename || `${sanitizeFilename(state.frontmatter.title)}.md`;
+
+          for (const b of state.blocks) {
+            if (b.type === 'image' && b._file && b.image) {
+              const name = b.image.replace(/^\/?article-images\//, '').replace(/^\//, '');
+              const path = `public/article-images/${name}`;
+              await putFile(path, await fileToBase64(b._file), `Add image for "${state.frontmatter.title}"`);
+              b.image = `/article-images/${name}`;
+              b._file = undefined;
+            }
+          }
+          for (const key of ['coverImage', 'socialImage'] as const) {
+            const fileKey = key === 'coverImage' ? '_coverImageFile' : '_socialImageFile';
+            const file = (state.frontmatter as any)[fileKey] as File | undefined;
+            const value = state.frontmatter[key];
+            if (file && value) {
+              const name = value.replace(/^\/?article-images\//, '').replace(/^\//, '');
+              const path = `public/article-images/${name}`;
+              await putFile(path, await fileToBase64(file), `Add image for "${state.frontmatter.title}"`);
+              state.frontmatter[key] = `/article-images/${name}`;
+              (state.frontmatter as any)[fileKey] = undefined;
+            }
+          }
+
+          const yaml = toYAML(state);
+          const articlePath = `src/content/articles/${filename}`;
+          await putFile(articlePath, textToBase64(yaml), `${state.filename ? 'Update' : 'Add'} article: ${state.frontmatter.title}`);
+          state.filename = filename;
+          renderFrontmatterRail();
+          try { localStorage.removeItem(AUTOSAVE_KEY); } catch { /* ignore */ }
+          showStatus(`Published to ${owner}/${repo}@${getSettings().branch}. Cloudflare Pages will rebuild and deploy automatically.`, 'success');
+        } catch (e: any) {
+          showStatus(`Publish failed: ${e.message || e}`, 'error');
+        } finally {
+          setBusy(false);
+        }
+      });
+
+      // ---------------------------------------------------------------
+      // Boot
+      // ---------------------------------------------------------------
+      renderFrontmatterRail();
+      renderBlocks();
+      loadArticlesIndex();
+    </script>
+
+    <style is:global>
+      .ce-body {
+        margin: 0;
+      }
+      .ce-app {
+        max-width: 100rem;
+        margin-inline: auto;
+        padding: var(--space-3);
+      }
+
+      .ce-toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
+        padding-block: var(--space-2);
+        margin-bottom: var(--space-2);
+        border-bottom: 3px solid var(--accent-1);
+        background: var(--color-bg);
+      }
+      .ce-toolbar__brand {
+        display: flex;
+        align-items: center;
+        gap: 0.7em;
+      }
+      .ce-toolbar__mark {
+        display: grid;
+        place-items: center;
+        width: 2.4rem;
+        height: 2.4rem;
+        border: 2px solid var(--accent-1);
+        border-radius: 50%;
+        font-family: var(--font-headline);
+        font-size: 0.85rem;
+        color: var(--accent-1);
+        flex-shrink: 0;
+      }
+      .ce-toolbar__eyebrow {
+        margin: 0;
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        opacity: 0.65;
+      }
+      .ce-toolbar h1 {
+        margin: 0;
+        font-size: var(--step-1);
+      }
+      .ce-toolbar__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .ce-toolbar__actions .btn,
+      .ce-toolbar__actions .btn--ghost {
+        font-size: 0.72rem;
+        padding: 0.6em 0.9em;
+      }
+      .ce-open {
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .ce-open select {
+        max-width: 16rem;
+      }
+
+      .ce-status {
+        margin: 0 0 var(--space-2);
+        padding: 0.6em 0.9em;
+        border-left: 4px solid var(--accent-3);
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+      }
+      .ce-status[data-kind='success'] { border-left-color: var(--accent-3); color: var(--accent-3); }
+      .ce-status[data-kind='error'] { border-left-color: var(--accent-1); color: var(--accent-1); }
+
+      .ce-restore-banner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-2);
+        margin-bottom: var(--space-2);
+        padding: var(--space-2);
+        border: 2px dashed var(--accent-3);
+      }
+
+      .ce-layout {
+        display: grid;
+        grid-template-columns: 19rem minmax(0, 1fr);
+        gap: var(--space-3);
+        align-items: start;
+      }
+
+      .ce-rail {
+        position: sticky;
+        top: 5.5rem;
+        display: grid;
+        gap: 0.6rem;
+        max-height: calc(100vh - 6.5rem);
+        overflow-y: auto;
+        padding-right: 0.5rem;
+      }
+      .ce-rail__heading {
+        margin: 0.4rem 0 0;
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--accent-1);
+        border-top: 1px solid var(--color-border);
+        padding-top: 0.6rem;
+      }
+      .ce-rail__heading--spaced { margin-top: 0.8rem; }
+      .ce-filename {
+        margin-top: 0.6rem;
+        padding-top: 0.6rem;
+        border-top: 1px solid var(--color-border);
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        opacity: 0.7;
+        word-break: break-all;
+      }
+
+      .ce-field { display: grid; gap: 0.3rem; }
+      .ce-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+      .ce-field label,
+      .ce-block__fields label { font-family: var(--font-label); font-weight: 700; text-transform: uppercase; font-size: 0.66rem; letter-spacing: 0.03em; opacity: 0.85; }
+      .ce-checkbox { display: flex; align-items: center; gap: 0.5em; font-family: var(--font-label); font-size: 0.85rem; }
+      .ce-hint { margin: 0.2rem 0 0; font-size: 0.72rem; opacity: 0.6; line-height: 1.4; }
+
+      .ce-input,
+      .ce-select,
+      .ce-textarea,
+      .ce-file {
+        width: 100%;
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        padding: 0.5em 0.6em;
+        border: 2px solid color-mix(in srgb, var(--paper) 22%, transparent);
+        border-radius: var(--radius);
+        background: color-mix(in srgb, var(--color-bg) 100%, white 6%);
+        color: var(--color-fg);
+      }
+      .ce-textarea { resize: vertical; font-family: var(--font-typewriter); }
+      .ce-input:focus,
+      .ce-select:focus,
+      .ce-textarea:focus { border-color: var(--accent-1); outline: none; }
+      .ce-file { padding: 0.35em; font-size: 0.75rem; }
+
+      .ce-canvas { min-width: 0; }
+
+      .ce-article-header {
+        padding: var(--space-3) 0 var(--space-2);
+        border-bottom: 1px dashed var(--color-border);
+        margin-bottom: var(--space-3);
+      }
+      .ce-preview-h1 { margin: 0.5rem 0 0.4rem; font-size: clamp(1.8rem, 4vw, 2.8rem); }
+      .ce-preview-h1 span { display: inline; padding: 0.04em 0.13em; background: var(--paper); color: var(--ink); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+      .ce-preview-deck { font-size: var(--step-0); }
+      .ce-preview-byline { opacity: 0.75; }
+
+      .ce-blocks { display: grid; gap: var(--space-2); }
+      .ce-block {
+        border: 2px solid color-mix(in srgb, var(--paper) 16%, transparent);
+        border-left: 5px solid var(--accent-1);
+        background: color-mix(in srgb, var(--color-bg) 100%, white 4%);
+      }
+      .ce-block.is-dragging { opacity: 0.35; }
+      .ce-block__head {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid color-mix(in srgb, var(--paper) 12%, transparent);
+        cursor: grab;
+      }
+      .ce-block__drag { opacity: 0.5; }
+      .ce-block__type { font-family: var(--font-label); font-weight: 700; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--accent-1); }
+      .ce-block__spacer { flex: 1; }
+      .ce-icon-btn {
+        display: grid;
+        place-items: center;
+        width: 1.8rem;
+        height: 1.8rem;
+        border: 1px solid color-mix(in srgb, var(--paper) 25%, transparent);
+        background: transparent;
+        color: var(--color-fg);
+        cursor: pointer;
+        border-radius: var(--radius);
+      }
+      .ce-icon-btn:hover:not(:disabled) { border-color: var(--accent-1); color: var(--accent-1); }
+      .ce-icon-btn:disabled { opacity: 0.3; cursor: default; }
+      .ce-icon-btn--danger:hover { border-color: #ff168c; color: #ff168c; }
+
+      .ce-block__body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; }
+      .ce-block__fields { display: grid; gap: 0.5rem; align-content: start; padding: var(--space-2); border-right: 1px dashed var(--color-border); }
+      .ce-block__preview-wrap { padding: var(--space-2); background: repeating-linear-gradient(45deg, transparent 0 12px, color-mix(in srgb, var(--paper) 3%, transparent) 12px 24px); }
+      .ce-block__preview-label { margin: 0 0 0.5rem; font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.5; }
+      .ce-empty { font-family: var(--font-mono); font-size: 0.75rem; opacity: 0.4; }
+
+      .ce-notes-editor { display: grid; gap: 0.6rem; }
+      .ce-note-editor { position: relative; display: grid; gap: 0.35rem; padding: 0.6rem; border: 1px dashed var(--color-border); }
+      .ce-note-remove { position: absolute; top: 0.3rem; right: 0.3rem; width: 1.4rem; height: 1.4rem; border: none; background: transparent; color: var(--color-fg); opacity: 0.6; cursor: pointer; }
+      .ce-note-remove:hover { opacity: 1; color: var(--accent-1); }
+
+      .ce-add-block {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.6rem;
+        margin-top: var(--space-2);
+        padding: var(--space-2);
+        border: 2px dashed color-mix(in srgb, var(--accent-1) 40%, transparent);
+      }
+      .ce-add-block p { margin: 0; font-family: var(--font-label); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; }
+      .ce-add-block__buttons { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+      .ce-add-btn { font-size: 0.72rem; padding: 0.5em 0.8em; }
+
+      /* --- ported preview styles (mirror the scoped Astro block styles) --- */
+      .ce-splat { display: block; width: 100%; height: 100%; overflow: visible; }
+      .ce-fig { position: relative; margin: 0.5rem 0; padding: 0.5rem; border: 2px solid var(--ink); background: var(--paper); box-shadow: 5px 6px 0 rgb(0 0 0 / 42%); max-width: 100%; }
+      .ce-fig--inline { width: min(100%, 28rem); }
+      .ce-fig--wide { width: min(100%, 34rem); }
+      .ce-fig--full { width: 100%; }
+      .ce-fig--tilt-left { transform: rotate(-0.6deg); }
+      .ce-fig--tilt-right { transform: rotate(0.6deg); }
+      .ce-fig--tilt-none { transform: none; }
+      .ce-fig__tape { position: absolute; top: -0.7rem; left: 1.4rem; width: 4rem; height: 1.3rem; background: color-mix(in srgb, var(--accent-3) 72%, transparent); border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent); box-shadow: 0 2px 4px rgb(0 0 0 / 30%); transform: rotate(-4deg); }
+      .ce-fig img { width: 100%; height: auto; max-height: 18rem; object-fit: contain; background: color-mix(in srgb, var(--accent-3) 14%, var(--paper)); }
+      .ce-fig figcaption { padding: 0.6rem 0.3rem 0.1rem; color: var(--ink); font-family: var(--font-mono); font-size: 0.72rem; }
+
+      .ce-chalk { position: relative; background: color-mix(in srgb, var(--color-bg) 100%, white 9%); color: var(--color-fg); border: 1px solid color-mix(in srgb, var(--accent-1) 35%, transparent); border-radius: var(--radius); padding: var(--space-2); box-shadow: 0 0 22px -6px color-mix(in srgb, var(--accent-1) 45%, transparent); }
+      .ce-chalk-eyebrow { display: flex; align-items: center; gap: 0.5em; font-family: var(--font-label); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.7rem; color: var(--accent-1); margin-bottom: 0.6em; }
+      .ce-chalk-eyebrow svg { width: 1em; height: 1em; }
+      .ce-chalk-title { font-family: var(--font-headline); font-size: var(--step-0); margin: 0 0 0.5em; }
+      .ce-chalk-body :is(p) { font-size: 0.8rem; line-height: 1.6; opacity: 0.9; }
+      .ce-chalk-trail { display: flex; align-items: center; gap: 0.4em; margin-top: 0.8em; flex-wrap: wrap; }
+      .ce-chalk-dot { width: 1.4em; height: 1.4em; border-radius: 50%; border: 1.5px solid var(--accent-1); display: grid; place-items: center; font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent-1); }
+      .ce-chalk-dash { width: 1.2rem; height: 0; border-top: 1.5px dashed color-mix(in srgb, var(--accent-1) 50%, transparent); }
+      .ce-chalk-source { font-family: var(--font-mono); font-size: 0.7rem; opacity: 0.55; margin-left: 0.3em; }
+
+      .ce-callout { position: relative; padding: var(--space-2); border-radius: var(--radius); background: color-mix(in srgb, var(--color-bg) 100%, white 6%); }
+      .ce-callout--warning { border: 2px solid var(--accent-3); border-left-width: 8px; }
+      .ce-callout--plain { border: 1px solid color-mix(in srgb, var(--accent-1) 35%, transparent); border-left: 4px solid var(--accent-1); }
+      .ce-callout-eyebrow { margin: 0 0 0.6em; font-family: var(--font-label); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.7rem; color: var(--accent-3); }
+      .ce-callout--plain .ce-callout-eyebrow { color: var(--accent-1); }
+      .ce-callout-title { font-family: var(--font-headline); font-size: var(--step-0); margin: 0 0 0.4em; }
+      .ce-callout-body :is(p) { font-size: 0.8rem; line-height: 1.6; opacity: 0.92; }
+
+      .ce-pq { position: relative; padding-left: var(--space-3); }
+      .ce-pq-blot { position: absolute; top: -1rem; left: -1rem; width: 4.5rem; height: 4.5rem; color: var(--accent-1); opacity: 0.22; z-index: 0; }
+      .ce-pq-text { position: relative; z-index: 1; margin: 0; border: 0; padding: 0; font-family: var(--font-headline); text-transform: uppercase; line-height: 1; font-size: var(--step-1); color: var(--color-fg); }
+      .ce-pq-attr { position: relative; z-index: 1; margin-top: 0.6rem; font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent-1); }
+
+      .ce-divider { max-width: 100%; }
+      .ce-divider--space { height: var(--space-4); }
+      .ce-divider--rule { height: 0; margin: var(--space-2) 0; border-top: 2px solid color-mix(in srgb, var(--accent-1) 55%, transparent); }
+      .ce-divider--splatter { display: flex; justify-content: center; margin: var(--space-2) 0; width: 6rem; height: 1.8rem; color: var(--accent-1); opacity: 0.75; }
+
+      .ce-pinboard { padding: var(--space-2); border: 3px solid var(--paper); background-color: #211f24; }
+      .ce-pinboard-header p { margin: 0 0 0.4rem; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-1); }
+      .ce-pinboard-notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: var(--space-2); }
+      .ce-pin-note { --note-bg: #ffe36e; position: relative; min-height: 6rem; padding: var(--space-2); background: var(--note-bg); color: var(--ink); box-shadow: 4px 5px 0 rgb(0 0 0 / 48%); transform: rotate(var(--note-tilt)); }
+      .ce-pin-note[data-color='pink'] { --note-bg: #ff8fe0; }
+      .ce-pin-note[data-color='cyan'] { --note-bg: #8feaf4; }
+      .ce-pin-note[data-color='lime'] { --note-bg: #c9ff73; }
+      .ce-pin-note[data-color='porcelain'] { --note-bg: var(--paper); }
+      .ce-pin-note__pin { position: absolute; top: 0.4rem; right: 0.5rem; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--ink); }
+      .ce-pin-note h3 { font-family: var(--font-annotation); font-size: var(--step-0); margin: 0 0 0.3em; padding-right: 0.8rem; }
+      .ce-pin-note div :is(p) { font-size: 0.78rem; }
+      .ce-pin-note a { font-family: var(--font-label); font-weight: 700; text-transform: uppercase; font-size: 0.72rem; }
+
+      /* --- settings drawer --- */
+      .ce-drawer-backdrop[hidden],
+      .ce-drawer[hidden] {
+        display: none;
+      }
+      .ce-drawer-backdrop { position: fixed; inset: 0; background: rgb(0 0 0 / 60%); z-index: 20; }
+      .ce-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 21;
+        width: min(26rem, 100vw);
+        overflow-y: auto;
+        padding: var(--space-3);
+        background: var(--color-bg);
+        border-left: 3px solid var(--accent-1);
+        display: grid;
+        gap: 0.6rem;
+        align-content: start;
+      }
+      .ce-drawer__head { display: flex; align-items: center; justify-content: space-between; }
+      .ce-drawer__head h2 { margin: 0; font-size: var(--step-1); }
+      .ce-drawer__close { width: 2rem; height: 2rem; border: 1px solid color-mix(in srgb, var(--paper) 25%, transparent); background: transparent; color: var(--color-fg); cursor: pointer; }
+      .ce-drawer__actions { display: flex; gap: 0.6rem; margin-top: 0.4rem; }
+      .ce-drawer code { font-family: var(--font-mono); font-size: 0.85em; color: var(--accent-3); }
+
+      @media (max-width: 68rem) {
+        .ce-block__body { grid-template-columns: 1fr; }
+        .ce-block__fields { border-right: none; border-bottom: 1px dashed var(--color-border); }
+      }
+      @media (max-width: 56rem) {
+        .ce-layout { grid-template-columns: 1fr; }
+        .ce-rail { position: static; max-height: none; }
+      }
+    </style>
+  </body>
+</html>

@@ -43,10 +43,28 @@ public/                 ← files copied as-is (favicon, robots.txt)
 
 ## Adding an article
 
-The easiest route is **Pages CMS → Blog Articles → New**. Fill in the basic
-fields, then build the article by adding and dragging content blocks. Text,
-images, pull quotes, callouts, dividers, and pinned-note boards are available.
-Keep **Keep as Draft** switched on until the piece is ready to appear publicly.
+Two ways to write one:
+
+- **Pages CMS → Blog Articles → New.** A plain form: fill in fields, add
+  content blocks one at a time. No visual preview as you go.
+- **The Canvas, at `/write/` on the live site.** A visual block editor — every
+  block (text, image, pull quote, callout, divider, pinned-note board) renders
+  live in the site's actual design as you fill it in, so what you see is what
+  publishes. Drag blocks to reorder them. It's not linked from the site's
+  navigation (direct URL only) — it's a writing tool, not a public page.
+
+  The Canvas can publish straight to GitHub: open **⚙ Publish settings**, add
+  this repo's owner/name and a GitHub personal access token scoped to just
+  this repo with *Contents: Read and write* (create one at
+  `github.com/settings/personal-access-tokens`), and hit **Publish**. The
+  token stays in that browser's local storage only. Without a token, **Download
+  .md** still gives you a ready-to-commit file — drop it in
+  `src/content/articles/` (and any picked images in `public/article-images/`)
+  and commit normally.
+
+Either way, keep **Keep as Draft** switched on until the piece is ready to
+appear publicly. Content blocks available: text, images, pull quotes,
+callouts, dividers, and pinned-note boards.
 
 For hand editing, use the exact examples in
 `src/content/articles/_README.md`. Article content belongs in the frontmatter
