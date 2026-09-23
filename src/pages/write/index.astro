@@ -108,6 +108,13 @@ import { SERIES } from '../../lib/series';
             <label for="f-coverCaption">Caption (optional)</label>
             <input id="f-coverCaption" class="ce-input" type="text" />
           </div>
+          <div class="ce-field">
+            <label for="f-coverStyle">Treatment</label>
+            <select id="f-coverStyle" class="ce-select">
+              <option value="framed">Framed (white paper mat + tape)</option>
+              <option value="bleed">Bleed (no frame — sits on the page)</option>
+            </select>
+          </div>
 
           <h2 class="ce-rail__heading ce-rail__heading--spaced">Social sharing graphic</h2>
           <div class="ce-field" id="socialImagePicker"></div>
@@ -224,6 +231,7 @@ import { SERIES } from '../../lib/series';
         coverImage: string;
         coverAlt: string;
         coverCaption: string;
+        coverStyle: 'framed' | 'bleed';
         draft: boolean;
         placeholder: boolean;
         _coverImageFile?: File;
@@ -252,6 +260,7 @@ import { SERIES } from '../../lib/series';
           coverImage: '',
           coverAlt: '',
           coverCaption: '',
+          coverStyle: 'framed',
           draft: true,
           placeholder: false,
         };
@@ -425,6 +434,7 @@ import { SERIES } from '../../lib/series';
         if (fm.coverImage) lines.push(`coverImage: ${yamlScalar(fm.coverImage)}`);
         pushScalarOrBlock(lines, 'coverAlt', fm.coverAlt, 0);
         pushScalarOrBlock(lines, 'coverCaption', fm.coverCaption, 0);
+        if (fm.coverImage && (fm.coverStyle || 'framed') !== 'framed') lines.push(`coverStyle: ${fm.coverStyle}`);
         lines.push(`draft: ${!!fm.draft}`);
         lines.push(`placeholder: ${!!fm.placeholder}`);
         lines.push('blocks:');
@@ -469,6 +479,7 @@ import { SERIES } from '../../lib/series';
         (document.getElementById('f-description') as HTMLTextAreaElement).value = fm.description;
         (document.getElementById('f-coverAlt') as HTMLInputElement).value = fm.coverAlt;
         (document.getElementById('f-coverCaption') as HTMLInputElement).value = fm.coverCaption;
+        (document.getElementById('f-coverStyle') as HTMLSelectElement).value = fm.coverStyle || 'framed';
         (document.getElementById('f-draft') as HTMLInputElement).checked = fm.draft;
 
         renderImagePicker(
@@ -506,7 +517,11 @@ import { SERIES } from '../../lib/series';
           <h1 class="ce-preview-h1"><span>${fm.title || 'Untitled article'}</span></h1>
           <p class="typewriter ce-preview-deck">${fm.deck || 'The deck goes here.'}</p>
           <p class="meta-mono ce-preview-byline">By ${fm.author || 'Mabbit'}${dateStr ? ' · ' + dateStr : ''}</p>
-          ${fm.coverImage ? `<figure class="ce-fig ce-fig--wide ce-fig--tilt-left"><span class="ce-fig__tape" aria-hidden="true"></span><img src="${fm.coverImage}" alt="" />${fm.coverCaption ? `<figcaption>${mdInline(fm.coverCaption)}</figcaption>` : ''}</figure>` : ''}
+          ${fm.coverImage ? (
+            fm.coverStyle === 'bleed'
+              ? `<figure class="ce-fig ce-fig--full ce-fig--tilt-none ce-fig--bleed"><img src="${fm.coverImage}" alt="" />${fm.coverCaption ? `<figcaption>${mdInline(fm.coverCaption)}</figcaption>` : ''}</figure>`
+              : `<figure class="ce-fig ce-fig--wide ce-fig--tilt-left"><span class="ce-fig__tape" aria-hidden="true"></span><img src="${fm.coverImage}" alt="" />${fm.coverCaption ? `<figcaption>${mdInline(fm.coverCaption)}</figcaption>` : ''}</figure>`
+          ) : ''}
         `;
         articleHeaderPreview.dataset.palette = series?.palette || '';
       }
@@ -532,6 +547,11 @@ import { SERIES } from '../../lib/series';
         });
       });
       seriesSelect.addEventListener('change', () => { state.frontmatter.series = seriesSelect.value; scheduleAutosave(); renderHeaderPreview(); });
+      (document.getElementById('f-coverStyle') as HTMLSelectElement).addEventListener('change', (e) => {
+        state.frontmatter.coverStyle = (e.target as HTMLSelectElement).value as 'framed' | 'bleed';
+        scheduleAutosave();
+        renderHeaderPreview();
+      });
       document.getElementById('f-topics')!.addEventListener('input', (e) => {
         state.frontmatter.topics = (e.target as HTMLInputElement).value.split(',').map((t) => t.trim()).filter(Boolean);
         scheduleAutosave();
@@ -914,6 +934,7 @@ import { SERIES } from '../../lib/series';
             coverImage: a.coverImage || '',
             coverAlt: a.coverAlt || '',
             coverCaption: a.coverCaption || '',
+            coverStyle: a.coverStyle === 'bleed' ? 'bleed' : 'framed',
             draft: !!a.draft,
             placeholder: !!a.placeholder,
           },
@@ -1396,6 +1417,9 @@ import { SERIES } from '../../lib/series';
       .ce-fig__tape { position: absolute; top: -0.7rem; left: 1.4rem; width: 4rem; height: 1.3rem; background: color-mix(in srgb, var(--accent-3) 72%, transparent); border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent); box-shadow: 0 2px 4px rgb(0 0 0 / 30%); transform: rotate(-4deg); }
       .ce-fig img { width: 100%; height: auto; max-height: 18rem; object-fit: contain; background: color-mix(in srgb, var(--accent-3) 14%, var(--paper)); }
       .ce-fig figcaption { padding: 0.6rem 0.3rem 0.1rem; color: var(--ink); font-family: var(--font-mono); font-size: 0.72rem; }
+      .ce-fig--bleed { padding: 0; border: none; background: none; box-shadow: none; }
+      .ce-fig--bleed img { max-height: none; background: none; }
+      .ce-fig--bleed figcaption { color: var(--color-fg); opacity: 0.7; }
 
       .ce-chalk { position: relative; background: color-mix(in srgb, var(--color-bg) 100%, white 9%); color: var(--color-fg); border: 1px solid color-mix(in srgb, var(--accent-1) 35%, transparent); border-radius: var(--radius); padding: var(--space-2); box-shadow: 0 0 22px -6px color-mix(in srgb, var(--accent-1) 45%, transparent); }
       .ce-chalk-eyebrow { display: flex; align-items: center; gap: 0.5em; font-family: var(--font-label); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.7rem; color: var(--accent-1); margin-bottom: 0.6em; }

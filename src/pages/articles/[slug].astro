@@ -87,8 +87,8 @@ const series = getSeries(entry.data.series);
       <div class="reading-desk__page">
     {
       entry.data.coverImage && (
-        <figure class="article-cover">
-          <span class="tape" aria-hidden="true" />
+        <figure class:list={['article-cover', { 'article-cover--bleed': entry.data.coverStyle === 'bleed' }]}>
+          {entry.data.coverStyle !== 'bleed' && <span class="tape" aria-hidden="true" />}
           <img
             src={entry.data.coverImage}
             alt={entry.data.coverAlt ?? `${entry.data.title} article graphic`}
@@ -264,6 +264,21 @@ const series = getSeries(entry.data.series);
     max-height: 38rem;
     object-fit: contain;
     background: color-mix(in srgb, var(--accent-3) 18%, var(--paper));
+  }
+
+  /* bleed: for a graphic already designed to sit directly on the page —
+     no paper mat, no border, no tape, no letterboxing fill color. */
+  .article-cover--bleed {
+    padding: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .article-cover--bleed img {
+    max-height: none;
+    background: none;
   }
 
   .article-cover figcaption {

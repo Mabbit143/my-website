@@ -111,6 +111,15 @@ content:
         type: text
         description: Optional caption or source credit shown below the featured graphic.
 
+      - name: coverStyle
+        label: Featured Graphic Treatment
+        type: select
+        default: framed
+        options:
+          values:
+            - { name: framed, label: "Framed (white paper mat + tape, the usual look)" }
+            - { name: bleed, label: "Bleed (no frame — for a graphic already designed to sit on the page)" }
+
       - name: socialImage
         label: Social Sharing Graphic
         type: image
