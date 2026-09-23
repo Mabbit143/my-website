@@ -9,7 +9,7 @@ description: A close read of the federal STATS rule, which cuts off loans to col
 coverImage: /article-images/who-decides-college-worth-it.png
 coverAlt: "Ransom-note style headline collage reading \"Who Gets to Decide Whether College Is Worth It,\" in hot pink, acid lime, and signal cyan on a black grunge-textured background."
 coverStyle: bleed
-draft: true
+draft: false
 placeholder: false
 blocks:
   - type: text
