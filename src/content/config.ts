@@ -78,6 +78,13 @@ const articles = defineCollection({
       .optional()
       .describe('Concise description of the featured graphic for screen readers.'),
     coverCaption: z.string().optional(),
+    coverStyle: z
+      .enum(['framed', 'bleed'])
+      .default('framed')
+      .optional()
+      .describe(
+        'framed = the usual white paper-mat print with tape (default). bleed = full-width, no border/mat/tape — for a graphic (like a headline collage) already designed to sit directly on the page background.',
+      ),
     draft: z.boolean().default(false),
     placeholder: z
       .boolean()

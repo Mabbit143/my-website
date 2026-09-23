@@ -6,6 +6,9 @@ topics: ["STATS rule", "Department of Education", "student loans", "earnings dat
 pubDate: 2026-09-21
 author: Mabbit Rountree
 description: A close read of the federal STATS rule, which cuts off loans to college programs based on graduate earnings — and what that one number can't tell you about why it's low.
+coverImage: /article-images/who-decides-college-worth-it.png
+coverAlt: "Ransom-note style headline collage reading \"Who Gets to Decide Whether College Is Worth It,\" in hot pink, acid lime, and signal cyan on a black grunge-textured background."
+coverStyle: bleed
 draft: true
 placeholder: false
 blocks:
