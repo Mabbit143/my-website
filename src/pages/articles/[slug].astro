@@ -5,6 +5,7 @@ import ArticleCard from '../../components/ArticleCard.astro';
 import SeriesPill from '../../components/SeriesPill.astro';
 import BlockRenderer from '../../components/blocks/BlockRenderer.astro';
 import Splatter from '../../components/Splatter.astro';
+import EmailSignup from '../../components/EmailSignup.astro';
 import { getSeries } from '../../lib/series';
 
 export async function getStaticPaths() {
@@ -117,6 +118,10 @@ const series = getSeries(entry.data.series);
       )
     }
 
+    <div class="article-signup">
+      <EmailSignup />
+    </div>
+
     {
       related.length > 0 && (
         <aside class="related" aria-labelledby="related-heading">
@@ -136,6 +141,10 @@ const series = getSeries(entry.data.series);
 </BaseLayout>
 
 <style>
+  .article-signup {
+    margin-top: var(--space-5);
+  }
+
   .article {
     position: relative;
     isolation: isolate;
