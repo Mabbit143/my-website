@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VAULT-TEC // Grade & GPA Impact Terminal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Chakra+Petch:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['Share Tech Mono', 'monospace'],
+            vt: ['VT323', 'monospace'],
+            display: ['Chakra Petch', 'sans-serif'],
+          },
+          colors: {
+            vault: {
+              black: '#040814',
+              abyss: '#070f26',
+              deep: '#0c1a3f',
+              card: '#102252',
+              surface: '#152c6e',
+              border: '#1e3d99',
+              lightBorder: '#2d55cc',
+              yellow: '#ffcc00',
+              gold: '#ffd836',
+              amber: '#ffaa00',
+              dimYellow: '#997a00',
+              radGreen: '#10b981',
+              alertRed: '#ef4444'
+            }
+          },
+          boxShadow: {
+            'vault-glow': '0 0 15px rgba(255, 204, 0, 0.45)',
+            'vault-glow-lg': '0 0 30px rgba(255, 204, 0, 0.65)',
+            'vault-panel': '0 8px 32px 0 rgba(4, 8, 20, 0.85), inset 0 0 0 1px rgba(255, 204, 0, 0.25)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Scanline CRT Overlay */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 100;
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+
+    /* Vignette frame */
+    body::after {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      box-shadow: inset 0 0 100px rgba(4, 8, 20, 0.85);
+      z-index: 99;
+      pointer-events: none;
+    }
+
+    /* Terminal Glowing Text */
+    .vault-glow-text {
+      text-shadow: 0 0 8px rgba(255, 204, 0, 0.65), 0 0 18px rgba(255, 204, 0, 0.3);
+    }
+    .vault-glow-blue {
+      text-shadow: 0 0 8px rgba(96, 165, 250, 0.7);
+    }
+
+    /* Vault-Tec Custom Range Sliders */
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 4px;
+      background: #08122d;
+      outline: none;
+      border: 1px solid #ffcc00;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background: #ffcc00;
+      cursor: pointer;
+      box-shadow: 0 0 12px #ffcc00, inset 0 0 4px #0c1a3f;
+      border: 2px solid #070f26;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 20px #ffcc00, 0 0 30px rgba(255, 204, 0, 0.8);
+    }
+    input[type=range]::-webkit-slider-thumb:active {
+      transform: scale(1.02);
+      background: #ffe600;
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background: #ffcc00;
+      cursor: pointer;
+      border: 2px solid #070f26;
+      box-shadow: 0 0 12px #ffcc00;
+    }
+
+    /* Strip spin arrows on numbers */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    /* Corner brackets for retro military HUD */
+    .vault-bracketed {
+      position: relative;
+    }
+    .vault-bracketed::before {
+      content: "[";
+      position: absolute;
+      left: -8px;
+      color: #ffcc00;
+      font-weight: bold;
+    }
+    .vault-bracketed::after {
+      content: "]";
+      position: absolute;
+      right: -8px;
+      color: #ffcc00;
+      font-weight: bold;
+    }
+
+    /* Beveled metal border */
+    .vault-beveled {
+      border: 2px solid #ffcc00;
+      box-shadow: inset 0 0 0 1px #070f26, 0 0 12px rgba(255, 204, 0, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-vault-black text-vault-yellow min-h-screen flex flex-col font-mono selection:bg-vault-yellow selection:text-vault-black">
+
+  <header class="border-b-2 border-vault-yellow bg-vault-abyss/95 backdrop-blur-md sticky top-0 z-40 shadow-vault-glow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+
+      <!-- Brand & Vault-Tec Logo -->
+      <div class="flex items-center space-x-3.5">
+        <!-- Vault-Tec Cog Emblem (Inline SVG) -->
+        <div class="w-12 h-12 rounded-full bg-vault-yellow p-1.5 flex items-center justify-center text-vault-abyss shadow-vault-glow flex-shrink-0">
+          <svg class="w-full h-full animate-[spin_20s_linear_infinite]" viewBox="0 0 100 100" fill="currentColor">
+            <path d="M50 0 L58 10 L70 5 L74 18 L86 17 L86 30 L98 33 L93 45 L100 50 L93 55 L98 67 L86 70 L86 83 L74 82 L70 95 L58 90 L50 100 L42 90 L30 95 L26 82 L14 83 L14 70 L2 67 L7 55 L0 50 L7 45 L2 33 L14 30 L14 17 L26 18 L30 5 L42 10 Z" />
+            <circle cx="50" cy="50" r="30" fill="#070f26" />
+            <circle cx="50" cy="50" r="22" fill="#ffcc00" />
+            <circle cx="50" cy="50" r="14" fill="#070f26" />
+          </svg>
+        </div>
+
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-black px-1.5 py-0.5 bg-vault-yellow text-vault-abyss rounded tracking-widest font-display">VAULT-TEC</span>
+            <span class="text-[11px] text-vault-yellow/70 tracking-widest uppercase font-vt text-sm">ROBCO IND. UNIFIED OPERATING SYSTEM v8.4.1</span>
+          </div>
+          <h1 class="text-base sm:text-xl font-black text-vault-yellow tracking-wider font-display uppercase vault-glow-text flex items-center gap-2">
+            S.P.E.C.I.A.L. ACADEMIC &amp; GPA IMPACT MONITOR
+          </h1>
+        </div>
+      </div>
+
+      <!-- Header Terminal Control Panel -->
+      <div class="flex items-center space-x-3">
+        <!-- Sound Effect Toggle -->
+        <button id="toggleAudioBtn" class="px-2.5 py-1.5 rounded text-xs font-bold border border-vault-yellow/50 bg-vault-deep text-vault-yellow hover:bg-vault-yellow hover:text-vault-black transition-all flex items-center gap-1.5 shadow-sm">
+          <span id="audioStatusDot" class="w-2 h-2 rounded-full bg-vault-radGreen inline-block"></span>
+          <span id="audioBtnText" class="tracking-wider">AUDIO [ON]</span>
+        </button>
+
+        <!-- Reset Button -->
+        <button id="resetDefaultsBtn" class="px-3 py-1.5 rounded text-xs font-bold border border-vault-yellow bg-vault-yellow/10 text-vault-yellow hover:bg-vault-yellow hover:text-vault-black transition-all flex items-center gap-1.5 shadow-vault-glow">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          <span class="tracking-widest">REBOOT</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full relative z-10">
+
+    <!-- Terminal Status Ticker Banner -->
+    <div class="mb-6 p-2.5 rounded border border-vault-yellow/40 bg-vault-abyss flex items-center justify-between text-xs tracking-wider text-vault-yellow/90">
+      <div class="flex items-center space-x-2">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-vault-yellow animate-ping"></span>
+        <span class="font-bold uppercase tracking-widest text-vault-yellow">VAULT 101 MAINFRAME:</span>
+        <span class="hidden sm:inline text-vault-yellow/80">OVERSEER DIRECTIVE 44-B ACTIVE &bull; LIVE SENSITIVITY TELEMETRY LOADED</span>
+      </div>
+      <div class="font-vt text-base tracking-widest text-vault-gold">
+        CLEARANCE: <span class="text-vault-radGreen font-bold">AUTHORIZED</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- LEFT COLUMN: Exam Sliders, Weights & Target Matrix -->
+      <section class="lg:col-span-7 space-y-6">
+
+        <!-- PRIMARY SLIDER CONTROLS PANEL -->
+        <div class="bg-vault-deep/90 rounded-lg p-6 border-2 border-vault-yellow shadow-vault-panel backdrop-blur-md relative overflow-hidden">
+
+          <div class="flex items-center justify-between border-b-2 border-vault-yellow/50 pb-3 mb-5">
+            <div>
+              <div class="text-[10px] tracking-widest uppercase font-bold text-vault-yellow/70">MODULE // EXAM_CALCULATOR.EXE</div>
+              <h2 class="text-lg font-black text-vault-yellow tracking-wider font-display uppercase vault-glow-text flex items-center gap-2">
+                &gt;&gt; EXAM PERFORMANCE DIALS
+              </h2>
+            </div>
+            <div class="flex items-center gap-2 bg-vault-black/80 px-3 py-1 rounded border border-vault-yellow/60 text-xs font-mono">
+              <span class="text-vault-yellow/70">WEIGHTS:</span>
+              <span class="text-vault-yellow font-bold" id="badgeMidtermWt">25%</span>
+              <span class="text-vault-yellow/40">/</span>
+              <span class="text-vault-gold font-bold" id="badgeFinalWt">35%</span>
+            </div>
+          </div>
+
+          <!-- COURSE CREDIT SELECTION BAR -->
+          <div class="mb-6 p-4 rounded bg-vault-abyss border border-vault-yellow/60">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <label class="text-xs font-black uppercase tracking-widest text-vault-yellow flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-vault-yellow" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a10.912 10.912 0 01.352 2.072A6.974 6.974 0 003 14a1 1 0 000 2 8.974 8.974 0 005.992-2.28 8.974 8.974 0 005.992 2.28 1 1 0 000-2 6.974 6.974 0 00-2.602-3.877 10.912 10.912 0 01.352-2.072l2.644-1.131a1 1 0 000-1.84l-7-3z"/>
+                  </svg>
+                  <span>COURSE CREDIT VALUE</span>
+                </label>
+                <p class="text-[11px] text-vault-yellow/70 tracking-wide mt-0.5">Select academic load units contributing to Vault Transcript</p>
+              </div>
+
+              <!-- Vault Styled Credit Buttons -->
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <button type="button" class="credit-btn px-2.5 py-1.5 rounded text-xs font-bold border-2 border-vault-yellow/40 bg-vault-deep text-vault-yellow hover:border-vault-yellow hover:bg-vault-yellow/20 transition-all font-display" data-credits="1">1 CR</button>
+                <button type="button" class="credit-btn px-2.5 py-1.5 rounded text-xs font-bold border-2 border-vault-yellow/40 bg-vault-deep text-vault-yellow hover:border-vault-yellow hover:bg-vault-yellow/20 transition-all font-display" data-credits="2">2 CR</button>
+                <button type="button" class="credit-btn px-2.5 py-1.5 rounded text-xs font-bold border-2 border-vault-yellow/40 bg-vault-deep text-vault-yellow hover:border-vault-yellow hover:bg-vault-yellow/20 transition-all font-display" data-credits="3">3 CR</button>
+                <button type="button" class="credit-btn px-2.5 py-1.5 rounded text-xs font-bold border-2 border-vault-yellow bg-vault-yellow text-vault-black shadow-vault-glow transition-all font-display" data-credits="4">4 CR</button>
+                <button type="button" class="credit-btn px-2.5 py-1.5 rounded text-xs font-bold border-2 border-vault-yellow/40 bg-vault-deep text-vault-yellow hover:border-vault-yellow hover:bg-vault-yellow/20 transition-all font-display" data-credits="5">5 CR</button>
+
+                <div class="flex items-center space-x-1 bg-vault-deep rounded px-2.5 py-1 border border-vault-yellow/70 focus-within:border-vault-yellow transition-all">
+                  <input type="number" id="quickCourseCredits" min="0.5" max="20" step="0.5" value="4" class="w-12 text-center text-xs font-bold font-mono bg-transparent text-vault-yellow focus:outline-none" title="Custom Course Credits" />
+                  <span class="text-[11px] text-vault-yellow/70 font-bold">CR</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MIDTERM SLIDER BOX -->
+          <div class="space-y-3 mb-6 bg-vault-abyss p-4 rounded border border-vault-yellow/60 relative">
+            <div class="flex items-center justify-between">
+              <label for="midtermSlider" class="flex items-center space-x-2 text-sm font-bold text-vault-yellow uppercase tracking-wider">
+                <span class="w-3 h-3 bg-vault-yellow inline-block rounded-xs shadow-vault-glow"></span>
+                <span>MIDTERM EXAM SCORE</span>
+                <span class="text-xs text-vault-gold font-normal font-mono">[WT: <span id="lblMidtermWeight">25%</span>]</span>
+              </label>
+              <div class="flex items-center space-x-1.5 bg-vault-deep rounded px-2.5 py-1 border-2 border-vault-yellow focus-within:ring-2 focus-within:ring-vault-yellow">
+                <input type="number" id="midtermNumber" min="0" max="100" value="84" class="w-14 text-center text-lg font-black font-vt tracking-widest bg-transparent text-vault-yellow focus:outline-none" />
+                <span class="text-xs font-bold text-vault-gold">%</span>
+              </div>
+            </div>
+
+            <div class="relative py-1">
+              <input type="range" id="midtermSlider" min="0" max="100" value="84" step="0.5">
+            </div>
+
+            <div class="flex justify-between text-[11px] font-vt tracking-widest text-vault-yellow/70 px-1">
+              <span class="text-vault-alertRed">0% [FAIL]</span>
+              <span>60% [D]</span>
+              <span>70% [C]</span>
+              <span>80% [B]</span>
+              <span class="text-vault-radGreen font-bold">90% [A]</span>
+              <span class="text-vault-yellow font-bold">100% [MAX]</span>
+            </div>
+          </div>
+
+          <!-- FINAL EXAM SLIDER BOX -->
+          <div class="space-y-3 bg-vault-abyss p-4 rounded border border-vault-yellow/60 relative">
+            <div class="flex items-center justify-between">
+              <label for="finalSlider" class="flex items-center space-x-2 text-sm font-bold text-vault-yellow uppercase tracking-wider">
+                <span class="w-3 h-3 bg-vault-gold inline-block rounded-xs shadow-vault-glow"></span>
+                <span>FINAL EXAM SCORE</span>
+                <span class="text-xs text-vault-gold font-normal font-mono">[WT: <span id="lblFinalWeight">35%</span>]</span>
+              </label>
+              <div class="flex items-center space-x-1.5 bg-vault-deep rounded px-2.5 py-1 border-2 border-vault-yellow focus-within:ring-2 focus-within:ring-vault-yellow">
+                <input type="number" id="finalNumber" min="0" max="100" value="88" class="w-14 text-center text-lg font-black font-vt tracking-widest bg-transparent text-vault-yellow focus:outline-none" />
+                <span class="text-xs font-bold text-vault-gold">%</span>
+              </div>
+            </div>
+
+            <div class="relative py-1">
+              <input type="range" id="finalSlider" min="0" max="100" value="88" step="0.5">
+            </div>
+
+            <div class="flex justify-between text-[11px] font-vt tracking-widest text-vault-yellow/70 px-1">
+              <span class="text-vault-alertRed">0% [FAIL]</span>
+              <span>60% [D]</span>
+              <span>70% [C]</span>
+              <span>80% [B]</span>
+              <span class="text-vault-radGreen font-bold">90% [A]</span>
+              <span class="text-vault-gold font-bold">100% [MAX]</span>
+            </div>
+          </div>
+
+          <!-- FAST SIMULATION SCENARIO PRESETS -->
+          <div class="mt-6 pt-5 border-t border-vault-yellow/40">
+            <span class="text-xs font-black uppercase tracking-widest text-vault-yellow/80 block mb-2.5">&gt;&gt; PIP-BOY RAPID SIMULATION PRESETS</span>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button onclick="applyPreset(96, 95)" class="p-2 rounded border border-vault-yellow/50 bg-vault-abyss hover:bg-vault-yellow hover:text-vault-black text-xs font-bold text-vault-yellow transition-all text-center">
+                <span class="block font-display tracking-wider">OVERACHIEVER</span>
+                <span class="text-[10px] opacity-80">96% &amp; 95%</span>
+              </button>
+              <button onclick="applyPreset(85, 90)" class="p-2 rounded border border-vault-yellow/50 bg-vault-abyss hover:bg-vault-yellow hover:text-vault-black text-xs font-bold text-vault-yellow transition-all text-center">
+                <span class="block font-display tracking-wider">VAULT ELITE</span>
+                <span class="text-[10px] opacity-80">85% &amp; 90%</span>
+              </button>
+              <button onclick="applyPreset(75, 75)" class="p-2 rounded border border-vault-yellow/50 bg-vault-abyss hover:bg-vault-yellow hover:text-vault-black text-xs font-bold text-vault-yellow transition-all text-center">
+                <span class="block font-display tracking-wider">WASTELAND B</span>
+                <span class="text-[10px] opacity-80">75% &amp; 75%</span>
+              </button>
+              <button onclick="applyPreset(62, 65)" class="p-2 rounded border border-vault-yellow/50 bg-vault-abyss hover:bg-vault-yellow hover:text-vault-black text-xs font-bold text-vault-yellow transition-all text-center">
+                <span class="block font-display tracking-wider">RADS CRUNCH</span>
+                <span class="text-[10px] opacity-80">62% &amp; 65%</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SYLLABUS WEIGHTING & PRIOR GPA ACCORDION -->
+        <div class="bg-vault-deep/90 rounded-lg p-6 border-2 border-vault-yellow shadow-vault-panel backdrop-blur-md">
+          <div class="flex items-center justify-between border-b border-vault-yellow/40 pb-3 mb-4">
+            <div>
+              <div class="text-[10px] tracking-widest uppercase font-bold text-vault-yellow/70">ARCHIVE // SYLLABUS_MATRIX.CFG</div>
+              <h2 class="text-base font-black text-vault-yellow tracking-wider font-display uppercase">Syllabus Component Weights &amp; Baseline</h2>
+            </div>
+            <button id="toggleParamsBtn" class="text-xs text-vault-yellow border border-vault-yellow/60 px-2 py-1 rounded bg-vault-abyss hover:bg-vault-yellow hover:text-vault-black font-bold uppercase transition flex items-center space-x-1">
+              <span id="toggleParamsText">COLLAPSE</span>
+              <svg id="chevronIcon" class="w-3.5 h-3.5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+
+          <div id="paramsContainer" class="space-y-5 transition-all">
+            <!-- Course Weights Row -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-vault-yellow/80">GRADING WEIGHT ALLOCATION</span>
+                <span id="weightTotalPill" class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-vault-yellow/20 text-vault-yellow border border-vault-yellow">TOTAL: 100%</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="bg-vault-abyss p-3 rounded border border-vault-yellow/50">
+                  <label class="block text-xs font-bold text-vault-yellow mb-1 uppercase tracking-wider">MIDTERM WEIGHT</label>
+                  <div class="relative">
+                    <input type="number" id="midtermWeightInput" min="0" max="100" value="25" class="w-full bg-vault-deep border border-vault-yellow rounded px-3 py-1.5 text-sm font-bold font-mono text-vault-yellow focus:outline-none focus:ring-1 focus:ring-vault-yellow">
+                    <span class="absolute right-3 top-1.5 text-xs font-bold text-vault-yellow/60">%</span>
+                  </div>
+                </div>
+                <div class="bg-vault-abyss p-3 rounded border border-vault-yellow/50">
+                  <label class="block text-xs font-bold text-vault-yellow mb-1 uppercase tracking-wider">FINAL EXAM WEIGHT</label>
+                  <div class="relative">
+                    <input type="number" id="finalWeightInput" min="0" max="100" value="35" class="w-full bg-vault-deep border border-vault-yellow rounded px-3 py-1.5 text-sm font-bold font-mono text-vault-yellow focus:outline-none focus:ring-1 focus:ring-vault-yellow">
+                    <span class="absolute right-3 top-1.5 text-xs font-bold text-vault-yellow/60">%</span>
+                  </div>
+                </div>
+                <div class="bg-vault-abyss p-3 rounded border border-vault-yellow/50">
+                  <label class="block text-xs font-bold text-vault-yellow mb-1 uppercase tracking-wider">COURSEWORK &amp; LABS</label>
+                  <div class="relative">
+                    <input type="number" id="courseworkWeightInput" min="0" max="100" value="40" class="w-full bg-vault-deep border border-vault-yellow rounded px-3 py-1.5 text-sm font-bold font-mono text-vault-yellow focus:outline-none focus:ring-1 focus:ring-vault-yellow">
+                    <span class="absolute right-3 top-1.5 text-xs font-bold text-vault-yellow/60">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Coursework Score input -->
+            <div class="flex items-center justify-between p-3 bg-vault-abyss rounded border border-vault-yellow/50">
+              <div class="flex flex-col">
+                <span class="text-xs font-bold uppercase tracking-wider text-vault-yellow">CURRENT COURSEWORK &amp; LABS SCORE</span>
+                <span class="text-[11px] text-vault-yellow/70">Vault training homework, weekly holotapes &amp; laboratory drills</span>
+              </div>
+              <div class="flex items-center space-x-1.5">
+                <input type="number" id="courseworkScoreInput" min="0" max="100" value="91" class="w-16 bg-vault-deep border border-vault-yellow rounded px-2.5 py-1 text-sm font-bold font-mono text-center text-vault-yellow focus:ring-1 focus:ring-vault-yellow focus:outline-none">
+                <span class="text-xs font-bold text-vault-yellow">%</span>
+              </div>
+            </div>
+
+            <!-- Weight Total Alert -->
+            <div id="weightWarning" class="hidden p-3 rounded bg-vault-amber/20 border border-vault-amber text-vault-amber text-xs flex items-center space-x-2">
+              <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+              <span id="weightWarningText">Weights currently do not add up to 100%. Auto-normalization applied.</span>
+            </div>
+
+            <!-- Prior Cumulative GPA Fields -->
+            <div class="pt-3 border-t border-vault-yellow/40">
+              <div class="flex justify-between items-center mb-2.5">
+                <span class="text-xs font-bold uppercase tracking-wider text-vault-yellow/80">OVERALL CUMULATIVE TRANSCRIPT BASELINE</span>
+                <span class="text-[11px] text-vault-gold font-mono">[4.00 HONORS SCALE]</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="bg-vault-abyss p-3 rounded border border-vault-yellow/50">
+                  <label class="block text-xs font-bold text-vault-yellow mb-1 uppercase tracking-wider">CURRENT CUMULATIVE GPA</label>
+                  <input type="number" id="currentGpaInput" step="0.01" min="0.00" max="4.00" value="3.45" class="w-full bg-vault-deep border border-vault-yellow rounded px-3 py-1.5 text-sm font-bold font-mono text-vault-yellow focus:outline-none focus:ring-1 focus:ring-vault-yellow">
+                  <span class="text-[10px] text-vault-yellow/60 mt-1 block">Scale: 0.00 - 4.00</span>
+                </div>
+                <div class="bg-vault-abyss p-3 rounded border border-vault-yellow/50">
+                  <label class="block text-xs font-bold text-vault-yellow mb-1 uppercase tracking-wider">COMPLETED CREDITS</label>
+                  <input type="number" id="completedCreditsInput" min="0" max="250" value="48" class="w-full bg-vault-deep border border-vault-yellow rounded px-3 py-1.5 text-sm font-bold font-mono text-vault-yellow focus:outline-none focus:ring-1 focus:ring-vault-yellow">
+                  <span class="text-[10px] text-vault-yellow/60 mt-1 block">Past graded units</span>
+                </div>
+                <div class="bg-vault-abyss p-3 rounded border border-vault-yellow/50">
+                  <label class="block text-xs font-bold text-vault-yellow mb-1 uppercase tracking-wider">THIS COURSE CREDITS</label>
+                  <input type="number" id="classCreditsInput" min="0.5" max="12" step="0.5" value="4" class="w-full bg-vault-deep border border-vault-yellow rounded px-3 py-1.5 text-sm font-bold font-mono text-vault-yellow focus:outline-none focus:ring-1 focus:ring-vault-yellow">
+                  <span class="text-[10px] text-vault-yellow/60 mt-1 block">Standard credit load</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TARGET MATRIX TABLE -->
+        <div class="bg-vault-deep/90 rounded-lg p-6 border-2 border-vault-yellow shadow-vault-panel backdrop-blur-md">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <div class="text-[10px] tracking-widest uppercase font-bold text-vault-yellow/70">TACTICAL FORECAST // EXAM_MATRIX.DAT</div>
+              <h2 class="text-base font-black text-vault-yellow tracking-wider font-display uppercase">Final Exam Target Matrix</h2>
+              <p class="text-xs text-vault-yellow/70">Final score required for each rank given Midterm: <span id="matrixMidtermScore" class="text-vault-gold font-bold font-vt text-lg">84%</span></p>
+            </div>
+            <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-vault-yellow/20 text-vault-yellow border border-vault-yellow">ROBCO MATRIX</span>
+          </div>
+
+          <div class="overflow-x-auto rounded border-2 border-vault-yellow/60 bg-vault-abyss">
+            <table class="min-w-full divide-y-2 divide-vault-yellow/40 text-xs">
+              <thead class="bg-vault-black text-vault-yellow">
+                <tr>
+                  <th class="px-4 py-2.5 text-left font-black tracking-wider uppercase font-display">GRADE TARGET</th>
+                  <th class="px-4 py-2.5 text-left font-black tracking-wider uppercase font-display">CUTOFF</th>
+                  <th class="px-4 py-2.5 text-left font-black tracking-wider uppercase font-display">FINAL SCORE REQUIRED</th>
+                  <th class="px-4 py-2.5 text-left font-black tracking-wider uppercase font-display">FEASIBILITY STATUS</th>
+                </tr>
+              </thead>
+              <tbody id="targetTableBody" class="divide-y divide-vault-yellow/20 text-vault-yellow font-mono">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT COLUMN: Real-Time Results, Vector Oscilloscope & Diagnostics -->
+      <section class="lg:col-span-5 space-y-6">
+
+        <!-- PRIMARY OUTCOME VAULT HUD CARD -->
+        <div class="bg-vault-deep rounded-xl p-6 shadow-vault-panel border-4 border-vault-yellow relative overflow-hidden">
+
+          <!-- Pip-Boy Header Stamp -->
+          <div class="flex items-center justify-between border-b-2 border-vault-yellow pb-3 mb-5">
+            <div class="flex items-center space-x-2">
+              <span class="inline-block w-3 h-3 bg-vault-yellow shadow-vault-glow rounded-full"></span>
+              <span class="text-xs font-black tracking-widest text-vault-yellow font-display uppercase">VAULT RESIDENT OUTCOME</span>
+            </div>
+            <span id="gpaImpactBadge" class="inline-flex items-center gap-1 px-3 py-1 rounded text-xs font-black bg-vault-yellow text-vault-black shadow-vault-glow tracking-wider uppercase font-display">
+              +0.02 GPA BOOST
+            </span>
+          </div>
+
+          <!-- Big Metric Grid -->
+          <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-5">
+
+            <!-- Class Final Grade -->
+            <div class="bg-vault-abyss rounded p-4 border-2 border-vault-yellow/80 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-vault-yellow/80 font-bold uppercase tracking-wider">PROJECTED GRADE</span>
+                  <span id="courseCreditsBadge" class="text-xs font-mono font-bold px-1.5 py-0.2 rounded bg-vault-yellow text-vault-black">4 CR</span>
+                </div>
+                <div class="flex items-baseline space-x-2 mt-2">
+                  <span id="classPercentDisplay" class="text-3xl sm:text-4xl font-black tracking-tight text-vault-yellow font-vt vault-glow-text">87.5%</span>
+                  <span id="classLetterDisplay" class="text-2xl sm:text-3xl font-black text-vault-gold font-display">B+</span>
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-vault-yellow/40 text-xs text-vault-yellow flex justify-between items-center">
+                <span class="text-vault-yellow/70">GRADE PTS:</span>
+                <span class="font-mono font-bold text-vault-yellow bg-vault-yellow/10 px-2 py-0.5 rounded border border-vault-yellow/60">
+                  <span id="classPointDisplay">3.30</span> / 4.0
+                </span>
+              </div>
+            </div>
+
+            <!-- Updated Cumulative GPA -->
+            <div class="bg-vault-abyss rounded p-4 border-2 border-vault-yellow/80 flex flex-col justify-between">
+              <div>
+                <span class="text-xs text-vault-yellow/80 font-bold uppercase tracking-wider block">UPDATED OVERALL GPA</span>
+                <div class="flex items-baseline space-x-2 mt-2">
+                  <span id="updatedGpaDisplay" class="text-3xl sm:text-4xl font-black tracking-tight text-vault-yellow font-vt vault-glow-text">3.44</span>
+                  <span id="gpaDeltaDisplay" class="text-xs font-bold font-mono text-vault-radGreen">▲ +0.02</span>
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-vault-yellow/40 text-xs text-vault-yellow flex justify-between items-center">
+                <span class="text-vault-yellow/70">PRIOR: <span id="priorGpaLabel" class="font-mono font-bold text-vault-yellow">3.45</span></span>
+                <span class="font-mono text-vault-yellow/70">(<span id="totalCreditsLabel">52</span> CR)</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Grade Standing Progress Gauge -->
+          <div class="space-y-1.5 pt-1">
+            <div class="flex justify-between text-xs font-bold text-vault-yellow uppercase tracking-wider">
+              <span>VAULT STANDING GAUGE</span>
+              <span id="meterPercentLabel" class="font-vt text-base tracking-widest text-vault-gold">87.5% [B+]</span>
+            </div>
+            <div class="h-4 w-full bg-vault-black rounded border-2 border-vault-yellow p-0.5 shadow-inner">
+              <div id="gradeProgressBar" class="h-full rounded-xs transition-all duration-300 bg-vault-yellow shadow-vault-glow" style="width: 87.5%;"></div>
+            </div>
+            <div class="flex justify-between text-[11px] text-vault-yellow/60 font-vt tracking-widest">
+              <span>0% [F]</span>
+              <span>60% [D]</span>
+              <span>70% [C]</span>
+              <span>80% [B]</span>
+              <span>90% [A]</span>
+              <span>100% [MAX]</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SENSITIVITY CURVE OSCILLOSCOPE -->
+        <div class="bg-vault-deep/90 rounded-lg p-6 border-2 border-vault-yellow shadow-vault-panel backdrop-blur-md space-y-3">
+          <div class="flex items-center justify-between border-b border-vault-yellow/40 pb-2">
+            <div>
+              <div class="text-[10px] tracking-widest uppercase font-bold text-vault-yellow/70">DIAGNOSTIC // VECTOR_OSCILLOSCOPE</div>
+              <h3 class="text-sm font-black text-vault-yellow tracking-wider font-display uppercase">Final Exam Sensitivity Trajectory</h3>
+            </div>
+            <div class="flex items-center space-x-2 text-[10px] font-mono text-vault-yellow/80">
+              <span class="flex items-center gap-1"><span class="w-2.5 h-0.5 bg-vault-yellow inline-block"></span> GPA</span>
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-vault-gold inline-block"></span> LIVE</span>
+            </div>
+          </div>
+
+          <div class="relative w-full h-44 bg-vault-black rounded border-2 border-vault-yellow/70 p-2 shadow-inner">
+            <canvas id="sensitivityCanvas" class="w-full h-full block"></canvas>
+          </div>
+          <div class="flex justify-between text-xs font-vt tracking-widest text-vault-yellow/70">
+            <span>FINAL: 0%</span>
+            <span>FINAL: 50%</span>
+            <span>FINAL: 100%</span>
+          </div>
+        </div>
+
+        <!-- DETAILED CONTRIBUTION BREAKDOWN -->
+        <div class="bg-vault-deep/90 rounded-lg p-6 border-2 border-vault-yellow shadow-vault-panel backdrop-blur-md space-y-4">
+          <h3 class="text-sm font-black text-vault-yellow tracking-wider font-display uppercase flex items-center justify-between border-b border-vault-yellow/40 pb-2">
+            <span>ACADEMIC POINT CONTRIBUTION</span>
+            <span id="totalPtsAccumulated" class="text-xs font-mono font-bold text-vault-yellow bg-vault-yellow/10 px-2 py-0.5 rounded border border-vault-yellow">87.50 / 100 PTS</span>
+          </h3>
+
+          <div class="space-y-3">
+            <!-- Midterm Bar -->
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="font-bold text-vault-yellow flex items-center space-x-1.5 uppercase">
+                  <span class="w-2 h-2 bg-vault-yellow inline-block"></span>
+                  <span>MIDTERM (<span id="pieMidtermScore" class="font-vt text-sm">84%</span> × <span id="pieMidtermWt">25%</span>)</span>
+                </span>
+                <span id="midtermContributionPts" class="font-bold font-mono text-vault-yellow">21.00 PTS</span>
+              </div>
+              <div class="w-full bg-vault-black rounded h-2.5 border border-vault-yellow/50 overflow-hidden">
+                <div id="barMidtermPts" class="bg-vault-yellow h-full transition-all duration-200" style="width: 21%;"></div>
+              </div>
+            </div>
+
+            <!-- Final Exam Bar -->
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="font-bold text-vault-yellow flex items-center space-x-1.5 uppercase">
+                  <span class="w-2 h-2 bg-vault-gold inline-block"></span>
+                  <span>FINAL EXAM (<span id="pieFinalScore" class="font-vt text-sm">88%</span> × <span id="pieFinalWt">35%</span>)</span>
+                </span>
+                <span id="finalContributionPts" class="font-bold font-mono text-vault-yellow">30.80 PTS</span>
+              </div>
+              <div class="w-full bg-vault-black rounded h-2.5 border border-vault-yellow/50 overflow-hidden">
+                <div id="barFinalPts" class="bg-vault-gold h-full transition-all duration-200" style="width: 30.8%;"></div>
+              </div>
+            </div>
+
+            <!-- Coursework Bar -->
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="font-bold text-vault-yellow flex items-center space-x-1.5 uppercase">
+                  <span class="w-2 h-2 bg-vault-radGreen inline-block"></span>
+                  <span>COURSEWORK (<span id="pieCourseworkScore" class="font-vt text-sm">91%</span> × <span id="pieCourseworkWt">40%</span>)</span>
+                </span>
+                <span id="courseworkContributionPts" class="font-bold font-mono text-vault-yellow">36.40 PTS</span>
+              </div>
+              <div class="w-full bg-vault-black rounded h-2.5 border border-vault-yellow/50 overflow-hidden">
+                <div id="barCourseworkPts" class="bg-vault-radGreen h-full transition-all duration-200" style="width: 36.4%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VAULT-TEC OPERATIONAL DIRECTIVE BOX -->
+        <div class="p-4 rounded border-2 border-vault-yellow bg-vault-abyss text-vault-yellow text-xs space-y-2">
+          <div class="font-black uppercase tracking-wider text-vault-yellow flex items-center space-x-1.5">
+            <svg class="w-4 h-4 text-vault-yellow" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+            </svg>
+            <span>VAULT FORMULA // CUMULATIVE AVERAGE</span>
+          </div>
+          <div class="font-mono text-xs text-vault-gold bg-vault-deep p-2 rounded border border-vault-yellow/40">
+            NEW_GPA = [(PRIOR_GPA × PRIOR_CR) + (COURSE_PTS × COURSE_CR)] ÷ TOTAL_CR
+          </div>
+          <p class="text-[11px] text-vault-yellow/70">
+            Vault Grade Standard: A (4.0), A- (3.7), B+ (3.3), B (3.0), B- (2.7), C+ (2.3), C (2.0), C- (1.7), D (1.0), F (0.0). Certified by Vault Overseer.
+          </p>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <script>
+    /* GRADE STANDARDS CONFIGURATION */
+    const GRADE_SCALE = [
+      { letter: 'A',  min: 93.0, point: 4.0 },
+      { letter: 'A-', min: 90.0, point: 3.7 },
+      { letter: 'B+', min: 87.0, point: 3.3 },
+      { letter: 'B',  min: 83.0, point: 3.0 },
+      { letter: 'B-', min: 80.0, point: 2.7 },
+      { letter: 'C+', min: 77.0, point: 2.3 },
+      { letter: 'C',  min: 73.0, point: 2.0 },
+      { letter: 'C-', min: 70.0, point: 1.7 },
+      { letter: 'D+', min: 67.0, point: 1.3 },
+      { letter: 'D',  min: 60.0, point: 1.0 },
+      { letter: 'F',  min: 0.0,  point: 0.0 }
+    ];
+
+    const TARGET_GOALS = [
+      { letter: 'A (4.0)',  cutoff: 93.0 },
+      { letter: 'A- (3.7)', cutoff: 90.0 },
+      { letter: 'B+ (3.3)', cutoff: 87.0 },
+      { letter: 'B (3.0)',  cutoff: 83.0 },
+      { letter: 'B- (2.7)', cutoff: 80.0 },
+      { letter: 'C+ (2.3)', cutoff: 77.0 },
+      { letter: 'C (2.0)',  cutoff: 73.0 },
+      { letter: 'Pass (D)', cutoff: 60.0 }
+    ];
+
+    // Pip-Boy Audio Synthesizer
+    let audioEnabled = true;
+    let audioCtx = null;
+
+    function playPipSound(frequency = 880, duration = 0.04, type = 'square') {
+      if (!audioEnabled) return;
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContextClass();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        // Audio policy or silent failure
+      }
+    }
+
+    const toggleAudioBtn = document.getElementById('toggleAudioBtn');
+    const audioStatusDot = document.getElementById('audioStatusDot');
+    const audioBtnText = document.getElementById('audioBtnText');
+
+    toggleAudioBtn.addEventListener('click', () => {
+      audioEnabled = !audioEnabled;
+      if (audioEnabled) {
+        audioStatusDot.className = "w-2 h-2 rounded-full bg-vault-radGreen inline-block";
+        audioBtnText.textContent = "AUDIO [ON]";
+        playPipSound(1200, 0.06);
+      } else {
+        audioStatusDot.className = "w-2 h-2 rounded-full bg-vault-alertRed inline-block";
+        audioBtnText.textContent = "AUDIO [MUTED]";
+      }
+    });
+
+    // Element References
+    const midtermSlider = document.getElementById('midtermSlider');
+    const midtermNumber = document.getElementById('midtermNumber');
+    const finalSlider = document.getElementById('finalSlider');
+    const finalNumber = document.getElementById('finalNumber');
+
+    const midtermWeightInput = document.getElementById('midtermWeightInput');
+    const finalWeightInput = document.getElementById('finalWeightInput');
+    const courseworkWeightInput = document.getElementById('courseworkWeightInput');
+    const courseworkScoreInput = document.getElementById('courseworkScoreInput');
+    const weightWarning = document.getElementById('weightWarning');
+    const weightWarningText = document.getElementById('weightWarningText');
+    const weightTotalPill = document.getElementById('weightTotalPill');
+
+    const currentGpaInput = document.getElementById('currentGpaInput');
+    const completedCreditsInput = document.getElementById('completedCreditsInput');
+    const classCreditsInput = document.getElementById('classCreditsInput');
+    const quickCourseCredits = document.getElementById('quickCourseCredits');
+    const creditButtons = document.querySelectorAll('.credit-btn');
+    const courseCreditsBadge = document.getElementById('courseCreditsBadge');
+
+    const badgeMidtermWt = document.getElementById('badgeMidtermWt');
+    const badgeFinalWt = document.getElementById('badgeFinalWt');
+    const lblMidtermWeight = document.getElementById('lblMidtermWeight');
+    const lblFinalWeight = document.getElementById('lblFinalWeight');
+    const matrixMidtermScore = document.getElementById('matrixMidtermScore');
+
+    const classPercentDisplay = document.getElementById('classPercentDisplay');
+    const classLetterDisplay = document.getElementById('classLetterDisplay');
+    const classPointDisplay = document.getElementById('classPointDisplay');
+    const updatedGpaDisplay = document.getElementById('updatedGpaDisplay');
+    const gpaDeltaDisplay = document.getElementById('gpaDeltaDisplay');
+    const gpaImpactBadge = document.getElementById('gpaImpactBadge');
+    const priorGpaLabel = document.getElementById('priorGpaLabel');
+    const totalCreditsLabel = document.getElementById('totalCreditsLabel');
+    const meterPercentLabel = document.getElementById('meterPercentLabel');
+    const gradeProgressBar = document.getElementById('gradeProgressBar');
+
+    const pieMidtermScore = document.getElementById('pieMidtermScore');
+    const pieMidtermWt = document.getElementById('pieMidtermWt');
+    const midtermContributionPts = document.getElementById('midtermContributionPts');
+    const barMidtermPts = document.getElementById('barMidtermPts');
+
+    const pieFinalScore = document.getElementById('pieFinalScore');
+    const pieFinalWt = document.getElementById('pieFinalWt');
+    const finalContributionPts = document.getElementById('finalContributionPts');
+    const barFinalPts = document.getElementById('barFinalPts');
+
+    const pieCourseworkScore = document.getElementById('pieCourseworkScore');
+    const pieCourseworkWt = document.getElementById('pieCourseworkWt');
+    const courseworkContributionPts = document.getElementById('courseworkContributionPts');
+    const barCourseworkPts = document.getElementById('barCourseworkPts');
+    const totalPtsAccumulated = document.getElementById('totalPtsAccumulated');
+
+    const targetTableBody = document.getElementById('targetTableBody');
+    const sensitivityCanvas = document.getElementById('sensitivityCanvas');
+
+    function getLetterGrade(percent) {
+      for (const grade of GRADE_SCALE) {
+        if (percent >= grade.min - 0.0001) {
+          return grade;
+        }
+      }
+      return GRADE_SCALE[GRADE_SCALE.length - 1];
+    }
+
+    function clamp(val, min, max) {
+      return Math.min(Math.max(val, min), max);
+    }
+
+    function recalculate() {
+      const midtermScore = parseFloat(midtermSlider.value) || 0;
+      const finalScore = parseFloat(finalSlider.value) || 0;
+      const courseworkScore = parseFloat(courseworkScoreInput.value) || 0;
+
+      let midtermWt = parseFloat(midtermWeightInput.value) || 0;
+      let finalWt = parseFloat(finalWeightInput.value) || 0;
+      let courseworkWt = parseFloat(courseworkWeightInput.value) || 0;
+
+      const currentGpa = parseFloat(currentGpaInput.value) || 0;
+      const completedCredits = Math.max(0, parseFloat(completedCreditsInput.value) || 0);
+      const classCredits = Math.max(0.5, parseFloat(classCreditsInput.value) || 1);
+
+      // Check sum of weights
+      const totalWeight = midtermWt + finalWt + courseworkWt;
+      weightTotalPill.textContent = `TOTAL: ${totalWeight.toFixed(1)}%`;
+      if (Math.abs(totalWeight - 100) > 0.1) {
+        weightWarning.classList.remove('hidden');
+        weightTotalPill.className = "text-xs font-mono font-bold px-2 py-0.5 rounded bg-vault-amber/20 text-vault-amber border border-vault-amber";
+        weightWarningText.textContent = `Weights add up to ${totalWeight.toFixed(1)}% (normalized to 100% for calculation).`;
+      } else {
+        weightWarning.classList.add('hidden');
+        weightTotalPill.className = "text-xs font-mono font-bold px-2 py-0.5 rounded bg-vault-yellow/20 text-vault-yellow border border-vault-yellow";
+      }
+
+      // Normalization factor
+      const normFactor = totalWeight > 0 ? (100 / totalWeight) : 1;
+      const normMidtermWt = (midtermWt * normFactor) / 100;
+      const normFinalWt = (finalWt * normFactor) / 100;
+      const normCourseworkWt = (courseworkWt * normFactor) / 100;
+
+      // Class grade computation
+      const midtermEarned = midtermScore * normMidtermWt;
+      const finalEarned = finalScore * normFinalWt;
+      const courseworkEarned = courseworkScore * normCourseworkWt;
+
+      const finalCourseScore = midtermEarned + finalEarned + courseworkEarned;
+      const gradeInfo = getLetterGrade(finalCourseScore);
+
+      // Cumulative GPA recalculation
+      const totalCreditsAfter = completedCredits + classCredits;
+      const priorHonorPoints = currentGpa * completedCredits;
+      const courseHonorPoints = gradeInfo.point * classCredits;
+      const updatedGpa = totalCreditsAfter > 0 ? (priorHonorPoints + courseHonorPoints) / totalCreditsAfter : gradeInfo.point;
+      const gpaDiff = updatedGpa - currentGpa;
+
+      // Header Labels
+      badgeMidtermWt.textContent = `${midtermWt}%`;
+      badgeFinalWt.textContent = `${finalWt}%`;
+      lblMidtermWeight.textContent = `${midtermWt}%`;
+      lblFinalWeight.textContent = `${finalWt}%`;
+      matrixMidtermScore.textContent = `${midtermScore.toFixed(0)}%`;
+      if (courseCreditsBadge) {
+        courseCreditsBadge.textContent = `${classCredits} CR`;
+      }
+
+      // Metric Outputs
+      classPercentDisplay.textContent = `${finalCourseScore.toFixed(1)}%`;
+      classLetterDisplay.textContent = gradeInfo.letter;
+      classPointDisplay.textContent = gradeInfo.point.toFixed(2);
+
+      updatedGpaDisplay.textContent = updatedGpa.toFixed(2);
+      priorGpaLabel.textContent = currentGpa.toFixed(2);
+      totalCreditsLabel.textContent = totalCreditsAfter.toFixed(0);
+
+      // Delta Impact Badge
+      if (Math.abs(gpaDiff) < 0.005) {
+        gpaDeltaDisplay.textContent = `▶ ±0.00`;
+        gpaDeltaDisplay.className = `text-xs font-bold font-mono text-vault-yellow/60`;
+        gpaImpactBadge.textContent = `GPA STABLE`;
+        gpaImpactBadge.className = `inline-flex items-center gap-1 px-3 py-1 rounded text-xs font-black bg-vault-deep text-vault-yellow border border-vault-yellow/50 uppercase font-display`;
+      } else if (gpaDiff > 0) {
+        gpaDeltaDisplay.textContent = `▲ +${gpaDiff.toFixed(2)}`;
+        gpaDeltaDisplay.className = `text-xs font-bold font-mono text-vault-radGreen font-bold`;
+        gpaImpactBadge.textContent = `+${gpaDiff.toFixed(2)} GPA BOOST`;
+        gpaImpactBadge.className = `inline-flex items-center gap-1 px-3 py-1 rounded text-xs font-black bg-vault-yellow text-vault-black shadow-vault-glow tracking-wider uppercase font-display`;
+      } else {
+        gpaDeltaDisplay.textContent = `▼ ${gpaDiff.toFixed(2)}`;
+        gpaDeltaDisplay.className = `text-xs font-bold font-mono text-vault-alertRed font-bold`;
+        gpaImpactBadge.textContent = `${gpaDiff.toFixed(2)} GPA DROP`;
+        gpaImpactBadge.className = `inline-flex items-center gap-1 px-3 py-1 rounded text-xs font-black bg-vault-alertRed text-vault-black shadow-sm tracking-wider uppercase font-display`;
+      }
+
+      // Standing Meter
+      meterPercentLabel.textContent = `${finalCourseScore.toFixed(1)}% [${gradeInfo.letter}]`;
+      gradeProgressBar.style.width = `${Math.min(Math.max(finalCourseScore, 2), 100)}%`;
+
+      // Breakdown Bars
+      pieMidtermScore.textContent = `${midtermScore.toFixed(0)}%`;
+      pieMidtermWt.textContent = `${midtermWt}%`;
+      midtermContributionPts.textContent = `${midtermEarned.toFixed(2)} PTS`;
+      barMidtermPts.style.width = `${Math.min(midtermEarned, 100)}%`;
+
+      pieFinalScore.textContent = `${finalScore.toFixed(0)}%`;
+      pieFinalWt.textContent = `${finalWt}%`;
+      finalContributionPts.textContent = `${finalEarned.toFixed(2)} PTS`;
+      barFinalPts.style.width = `${Math.min(finalEarned, 100)}%`;
+
+      pieCourseworkScore.textContent = `${courseworkScore.toFixed(0)}%`;
+      pieCourseworkWt.textContent = `${courseworkWt}%`;
+      courseworkContributionPts.textContent = `${courseworkEarned.toFixed(2)} PTS`;
+      barCourseworkPts.style.width = `${Math.min(courseworkEarned, 100)}%`;
+
+      totalPtsAccumulated.textContent = `${finalCourseScore.toFixed(2)} / 100 PTS`;
+
+      renderTargetMatrix(midtermEarned, courseworkEarned, normFinalWt);
+      drawSensitivityCurve(midtermEarned, courseworkEarned, normFinalWt, currentGpa, completedCredits, classCredits, finalScore);
+    }
+
+    function renderTargetMatrix(currentMidtermEarned, currentCourseworkEarned, normFinalWt) {
+      targetTableBody.innerHTML = '';
+      const fixedEarned = currentMidtermEarned + currentCourseworkEarned;
+
+      TARGET_GOALS.forEach(target => {
+        let scoreNeeded = normFinalWt > 0 ? (target.cutoff - fixedEarned) / normFinalWt : 0;
+        scoreNeeded = Math.round(scoreNeeded * 10) / 10;
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-vault-deep/70 transition-colors";
+
+        let statusBadge = '';
+        let scoreText = '';
+
+        if (scoreNeeded <= 0) {
+          scoreText = '0.0%';
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-vault-yellow text-vault-black">GUARANTEED ✓</span>';
+        } else if (scoreNeeded > 100) {
+          scoreText = `${scoreNeeded}%`;
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-vault-alertRed/30 text-vault-alertRed border border-vault-alertRed">BEYOND REACH</span>';
+        } else if (scoreNeeded > 90) {
+          scoreText = `${scoreNeeded}%`;
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-vault-amber/20 text-vault-amber border border-vault-amber">HIGH EFFORT</span>';
+        } else {
+          scoreText = `${scoreNeeded}%`;
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-vault-radGreen/20 text-vault-radGreen border border-vault-radGreen">ACHIEVABLE</span>';
+        }
+
+        tr.innerHTML = `
+          <td class="px-4 py-2 font-bold font-display text-vault-yellow">${target.letter}</td>
+          <td class="px-4 py-2 text-vault-yellow/70 font-mono">${target.cutoff}%</td>
+          <td class="px-4 py-2 font-bold font-vt text-base ${scoreNeeded > 100 ? 'text-vault-yellow/30 line-through' : 'text-vault-yellow'}">${scoreText}</td>
+          <td class="px-4 py-2">${statusBadge}</td>
+        `;
+        targetTableBody.appendChild(tr);
+      });
+    }
+
+    function drawSensitivityCurve(midtermEarned, courseworkEarned, normFinalWt, currentGpa, completedCredits, classCredits, currentFinalScore) {
+      if (!sensitivityCanvas) return;
+      const ctx = sensitivityCanvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const rect = sensitivityCanvas.getBoundingClientRect();
+
+      sensitivityCanvas.width = rect.width * dpr;
+      sensitivityCanvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const w = rect.width;
+      const h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // Oscilloscope background grid
+      ctx.strokeStyle = 'rgba(255, 204, 0, 0.12)';
+      ctx.lineWidth = 1;
+
+      // Horizontal grid
+      for (let i = 1; i <= 4; i++) {
+        const y = (h / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(8, y);
+        ctx.lineTo(w - 8, y);
+        ctx.stroke();
+      }
+      // Vertical grid
+      for (let i = 1; i <= 5; i++) {
+        const x = (w / 6) * i;
+        ctx.beginPath();
+        ctx.moveTo(x, 8);
+        ctx.lineTo(x, h - 8);
+        ctx.stroke();
+      }
+
+      // Compute GPA points for final exam range 0 to 100
+      const totalCreditsAfter = completedCredits + classCredits;
+      const priorHonorPoints = currentGpa * completedCredits;
+      const samplePoints = [];
+
+      for (let f = 0; f <= 100; f += 2) {
+        const courseScore = midtermEarned + courseworkEarned + (f * normFinalWt);
+        const gradePoint = getLetterGrade(courseScore).point;
+        const gpa = totalCreditsAfter > 0 ? (priorHonorPoints + (gradePoint * classCredits)) / totalCreditsAfter : gradePoint;
+        samplePoints.push({ finalScore: f, gpa: gpa });
+      }
+
+      // Find min and max GPA for scale
+      const gpas = samplePoints.map(p => p.gpa);
+      const minGpa = Math.max(0, Math.min(...gpas, currentGpa - 0.2));
+      const maxGpa = Math.min(4.0, Math.max(...gpas, currentGpa + 0.2));
+      const range = (maxGpa - minGpa) || 1;
+
+      // Draw Curve
+      ctx.beginPath();
+      samplePoints.forEach((p, idx) => {
+        const x = 12 + (p.finalScore / 100) * (w - 24);
+        const y = h - 16 - ((p.gpa - minGpa) / range) * (h - 32);
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = '#ffcc00';
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = '#ffcc00';
+      ctx.shadowBlur = 8;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Highlight Current Final Exam Position
+      const currentX = 12 + (currentFinalScore / 100) * (w - 24);
+      const currentCourseScore = midtermEarned + courseworkEarned + (currentFinalScore * normFinalWt);
+      const currentGradePoint = getLetterGrade(currentCourseScore).point;
+      const liveGpa = totalCreditsAfter > 0 ? (priorHonorPoints + (currentGradePoint * classCredits)) / totalCreditsAfter : currentGradePoint;
+      const currentY = h - 16 - ((liveGpa - minGpa) / range) * (h - 32);
+
+      // Crosshair vector lines
+      ctx.beginPath();
+      ctx.setLineDash([2, 3]);
+      ctx.strokeStyle = '#ffd836';
+      ctx.moveTo(currentX, 6);
+      ctx.lineTo(currentX, h - 6);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Tactical marker circle
+      ctx.beginPath();
+      ctx.arc(currentX, currentY, 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffcc00';
+      ctx.shadowColor = '#ffcc00';
+      ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#070f26';
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Reticle Box Callout
+      ctx.fillStyle = '#ffd836';
+      ctx.font = 'bold 12px "Share Tech Mono", monospace';
+      const labelText = `GPA: ${liveGpa.toFixed(2)}`;
+      const labelWidth = ctx.measureText(labelText).width;
+      const tooltipX = clamp(currentX - labelWidth / 2, 8, w - labelWidth - 8);
+      const tooltipY = currentY < 32 ? currentY + 22 : currentY - 12;
+
+      ctx.fillStyle = '#070f26';
+      ctx.fillRect(tooltipX - 4, tooltipY - 12, labelWidth + 8, 16);
+      ctx.strokeStyle = '#ffcc00';
+      ctx.strokeRect(tooltipX - 4, tooltipY - 12, labelWidth + 8, 16);
+      ctx.fillStyle = '#ffcc00';
+      ctx.fillText(labelText, tooltipX, tooltipY);
+    }
+
+    function bindSliderAndInput(slider, numberInput) {
+      slider.addEventListener('input', () => {
+        numberInput.value = slider.value;
+        playPipSound(600 + parseFloat(slider.value) * 6, 0.02);
+        recalculate();
+      });
+      numberInput.addEventListener('input', () => {
+        let val = parseFloat(numberInput.value) || 0;
+        val = clamp(val, 0, 100);
+        slider.value = val;
+        recalculate();
+      });
+    }
+
+    bindSliderAndInput(midtermSlider, midtermNumber);
+    bindSliderAndInput(finalSlider, finalNumber);
+
+    function setCourseCredits(credits) {
+      const parsedCredits = Math.max(0.5, parseFloat(credits) || 1);
+      classCreditsInput.value = parsedCredits;
+      quickCourseCredits.value = parsedCredits;
+
+      creditButtons.forEach(btn => {
+        const btnVal = parseFloat(btn.dataset.credits);
+        if (btnVal === parsedCredits) {
+          btn.className = "credit-btn px-2.5 py-1.5 rounded text-xs font-bold border-2 border-vault-yellow bg-vault-yellow text-vault-black shadow-vault-glow transition-all font-display";
+        } else {
+          btn.className = "credit-btn px-2.5 py-1.5 rounded text-xs font-bold border-2 border-vault-yellow/40 bg-vault-deep text-vault-yellow hover:border-vault-yellow hover:bg-vault-yellow/20 transition-all font-display";
+        }
+      });
+
+      playPipSound(950, 0.04);
+      recalculate();
+    }
+
+    creditButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setCourseCredits(btn.dataset.credits);
+      });
+    });
+
+    quickCourseCredits.addEventListener('input', () => {
+      setCourseCredits(quickCourseCredits.value);
+    });
+
+    classCreditsInput.addEventListener('input', () => {
+      setCourseCredits(classCreditsInput.value);
+    });
+
+    [
+      midtermWeightInput,
+      finalWeightInput,
+      courseworkWeightInput,
+      courseworkScoreInput,
+      currentGpaInput,
+      completedCreditsInput
+    ].forEach(input => {
+      input.addEventListener('input', () => {
+        recalculate();
+      });
+    });
+
+    window.applyPreset = function(midterm, final) {
+      midtermSlider.value = midterm;
+      midtermNumber.value = midterm;
+      finalSlider.value = final;
+      finalNumber.value = final;
+      playPipSound(1100, 0.06);
+      recalculate();
+    };
+
+    // Toggle baseline accordion
+    const toggleParamsBtn = document.getElementById('toggleParamsBtn');
+    const toggleParamsText = document.getElementById('toggleParamsText');
+    const paramsContainer = document.getElementById('paramsContainer');
+    const chevronIcon = document.getElementById('chevronIcon');
+    let paramsOpen = true;
+
+    toggleParamsBtn.addEventListener('click', () => {
+      paramsOpen = !paramsOpen;
+      if (paramsOpen) {
+        paramsContainer.classList.remove('hidden');
+        chevronIcon.classList.remove('rotate-180');
+        toggleParamsText.textContent = "COLLAPSE";
+      } else {
+        paramsContainer.classList.add('hidden');
+        chevronIcon.classList.add('rotate-180');
+        toggleParamsText.textContent = "EXPAND";
+      }
+      playPipSound(750, 0.03);
+    });
+
+    // Reset Defaults Button
+    document.getElementById('resetDefaultsBtn').addEventListener('click', () => {
+      midtermSlider.value = 84;
+      midtermNumber.value = 84;
+      finalSlider.value = 88;
+      finalNumber.value = 88;
+      midtermWeightInput.value = 25;
+      finalWeightInput.value = 35;
+      courseworkWeightInput.value = 40;
+      courseworkScoreInput.value = 91;
+      currentGpaInput.value = 3.45;
+      completedCreditsInput.value = 48;
+      setCourseCredits(4);
+      playPipSound(440, 0.12, 'sawtooth');
+    });
+
+    window.addEventListener('resize', () => {
+      recalculate();
+    });
+
+    window.onload = function() {
+      recalculate();
+    };
+  </script>
+</body>
+</html>
