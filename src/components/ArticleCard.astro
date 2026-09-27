@@ -18,6 +18,7 @@ interface Props {
 const { entry } = Astro.props;
 const series = getSeries(entry.data.series);
 const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
+  timeZone: 'UTC',
   year: 'numeric',
   month: 'long',
   day: 'numeric',
