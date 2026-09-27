@@ -31,6 +31,7 @@ const related = allArticles
   .slice(0, 2);
 
 const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
+  timeZone: 'UTC',
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -54,6 +55,7 @@ const series = getSeries(entry.data.series);
               · updated{' '}
               <time datetime={entry.data.updatedDate.toISOString()}>
                 {entry.data.updatedDate.toLocaleDateString('en-US', {
+                  timeZone: 'UTC',
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
