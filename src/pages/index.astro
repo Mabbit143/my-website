@@ -6,6 +6,7 @@ import CharacterPanel from '../components/CharacterPanel.astro';
 import EmailSignup from '../components/EmailSignup.astro';
 import ProductCard from '../components/ProductCard.astro';
 import Splatter from '../components/Splatter.astro';
+import PageMarkFeature from '../components/PageMarkFeature.astro';
 import { SERIES } from '../lib/series';
 
 const allArticles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
@@ -80,6 +81,8 @@ const latest = allArticles.slice(1, 4);
       <small>Downloadable worksheets and trackers →</small>
     </a>
   </nav>
+
+  <PageMarkFeature articleHref="/articles/i-built-an-app-that-types-up-my-handwritten-notes/" />
 
   {
     featured && (

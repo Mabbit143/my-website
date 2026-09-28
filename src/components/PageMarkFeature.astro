@@ -1,0 +1,210 @@
+---
+// Home-page feature for PageMark, the note-scanning app that lives at
+// notes.deconstructingacademia.com (a separate app, not part of this site).
+// The "photo → Markdown" visual is plain HTML/CSS so it needs no screenshot
+// asset and stays sharp at any size.
+const APP_URL = 'https://notes.deconstructingacademia.com';
+
+interface Props {
+  articleHref?: string;
+}
+const { articleHref } = Astro.props;
+---
+
+<section class="pagemark wrap" data-palette="field-notes" aria-labelledby="pagemark-heading">
+  <div class="pagemark__copy">
+    <p class="pagemark__kicker">New tool · free open beta</p>
+    <h2 id="pagemark-heading">
+      <span class="pagemark__strip">Your handwritten notes,</span>
+      <span class="pagemark__strip pagemark__strip--lime">typed up.</span>
+    </h2>
+    <p class="pagemark__deck">
+      Snap a photo of a notebook page. PageMark reads your handwriting into clean Markdown —
+      headings, to-dos, flashcards, tables — ready for Obsidian, Notion, or anywhere else you keep
+      notes.
+    </p>
+    <ul class="pagemark__points">
+      <li>Keeps your wording. It transcribes; it doesn't summarize.</li>
+      <li>Flags the words it isn't sure about so you can check them.</li>
+      <li>Free during the beta: 10 pages a month. No card.</li>
+    </ul>
+    <div class="pagemark__actions">
+      <a class="btn" href={APP_URL}>Try PageMark free →</a>
+      {articleHref && <a class="btn btn--ghost" href={articleHref}>Why I built it →</a>}
+    </div>
+  </div>
+
+  <div class="pagemark__demo" aria-hidden="true">
+    <div class="pagemark__page">
+      <span class="tape"></span>
+      <p class="hw hw--code">[A145 · 1]</p>
+      <p class="hw hw--title">Kinship systems</p>
+      <p class="hw">● descent traced through father</p>
+      <p class="hw hw--indent">● patrilineal = father's line</p>
+      <p class="hw">□ read ch. 4 by Fri</p>
+      <p class="hw">▲ clan = shared ancestor</p>
+      <p class="hw">★ kinship is <em>made</em>, not found</p>
+    </div>
+    <span class="pagemark__arrow">→</span>
+    <pre class="pagemark__md"><code><span class="md-dim">---</span>
+title: "Kinship systems"
+course: "ANTH 145"
+<span class="md-dim">---</span>
+
+<span class="md-h">## Kinship systems</span>
+- descent traced through father
+  - patrilineal = father's line
+- [ ] read ch. 4 📅 2026-10-02
+- **clan**: shared ancestor
+<span class="md-call">&gt; [!important]</span> kinship is
+  <span class="md-mark">==made==</span>, not found</code></pre>
+  </div>
+</section>
+
+<style>
+  .pagemark {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+    margin-block: var(--space-4);
+    padding-block: var(--space-5);
+    border-top: 6px solid var(--accent-1);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .pagemark__kicker {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-1);
+  }
+
+  .pagemark h2 {
+    display: grid;
+    justify-items: start;
+    gap: 0.12em;
+    margin-block: var(--space-2) var(--space-3);
+    font-size: var(--step-4);
+  }
+
+  .pagemark__strip {
+    display: inline-block;
+    padding: 0.08em 0.15em;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 0.95;
+    box-shadow: 6px 6px 0 rgb(0 0 0 / 48%);
+    transform: rotate(-0.8deg);
+  }
+  .pagemark__strip--lime {
+    background: var(--accent-1);
+    transform: rotate(0.6deg);
+  }
+
+  .pagemark__deck {
+    font-family: var(--font-typewriter);
+    font-size: var(--step-1);
+    max-width: 38rem;
+  }
+
+  .pagemark__points {
+    display: grid;
+    gap: 0.45rem;
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pagemark__points li {
+    padding-left: 1.4rem;
+    position: relative;
+  }
+  .pagemark__points li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--accent-1);
+    font-weight: 700;
+  }
+
+  .pagemark__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-top: var(--space-3);
+  }
+
+  .pagemark__demo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: var(--space-1);
+    align-items: center;
+  }
+
+  .pagemark__page {
+    position: relative;
+    padding: 1.4rem 1rem 1.2rem 1.6rem;
+    background:
+      linear-gradient(90deg, transparent 1.1rem, rgb(255 22 140 / 45%) 1.1rem, rgb(255 22 140 / 45%) calc(1.1rem + 1px), transparent calc(1.1rem + 1px)),
+      repeating-linear-gradient(to bottom, var(--paper) 0 1.55rem, #c9d6e8 1.55rem calc(1.55rem + 1px));
+    color: #1d2a5c;
+    font-family: var(--font-annotation);
+    font-size: 1.05rem;
+    line-height: 1.55rem;
+    transform: rotate(-2deg);
+    box-shadow: 6px 7px 0 rgb(0 0 0 / 50%);
+  }
+  .pagemark__page .tape { left: 40%; }
+  .hw { margin: 0; max-width: none; }
+  .hw--code {
+    text-align: right;
+    font-size: 0.95rem;
+  }
+  .hw--code::before { content: ''; }
+  .hw--title {
+    text-decoration: underline double;
+    text-underline-offset: 3px;
+    font-size: 1.3rem;
+  }
+  .hw--indent { padding-left: 1.2rem; }
+
+  .pagemark__arrow {
+    font-family: var(--font-headline);
+    font-size: var(--step-3);
+    color: var(--accent-1);
+  }
+
+  .pagemark__md {
+    margin: 0;
+    padding: 1rem;
+    overflow-x: auto;
+    background: color-mix(in srgb, var(--ink) 88%, var(--accent-1));
+    border: 2px solid var(--accent-1);
+    border-radius: var(--radius);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    transform: rotate(1deg);
+    box-shadow: 6px 7px 0 rgb(0 0 0 / 50%);
+  }
+  .md-dim { opacity: 0.55; }
+  .md-h { color: var(--accent-1); font-weight: 500; }
+  .md-call { color: var(--accent-3); }
+  .md-mark { background: var(--accent-2); color: var(--ink); padding: 0 0.15em; }
+
+  @media (max-width: 55rem) {
+    .pagemark { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 40rem) {
+    .pagemark h2 { font-size: 2.3rem; }
+    .pagemark__demo { grid-template-columns: 1fr; }
+    .pagemark__arrow { justify-self: center; transform: rotate(90deg); }
+    .pagemark__page,
+    .pagemark__md { transform: none; }
+  }
+</style>
