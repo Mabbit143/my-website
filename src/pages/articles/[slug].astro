@@ -38,6 +38,9 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
   day: 'numeric',
 });
 const series = getSeries(entry.data.series);
+// Matches the name ArticleCard.astro puts on the card's cover image, so the
+// image morphs from the card into this page's cover (src/styles/motion.css).
+const coverTransitionName = `da-cover-${entry.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.description} ogImage={entry.data.socialImage}>
@@ -99,6 +102,7 @@ const series = getSeries(entry.data.series);
             height="675"
             loading="eager"
             decoding="async"
+            style={`view-transition-name: ${coverTransitionName}`}
           />
           {entry.data.coverCaption && <figcaption>{entry.data.coverCaption}</figcaption>}
         </figure>

@@ -17,6 +17,9 @@ interface Props {
 }
 const { entry } = Astro.props;
 const series = getSeries(entry.data.series);
+// Unique name so this cover image can morph into the article page's cover
+// during the page transition (see src/styles/motion.css).
+const coverTransitionName = `da-cover-${entry.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
 const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
   timeZone: 'UTC',
   year: 'numeric',
@@ -31,7 +34,7 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
   {
     entry.data.coverImage && (
       <a class="card-graphic" href={`/articles/${entry.slug}/`} aria-hidden="true" tabindex="-1">
-        <img src={entry.data.coverImage} alt="" loading="lazy" decoding="async" />
+        <img src={entry.data.coverImage} alt="" loading="lazy" decoding="async" style={`view-transition-name: ${coverTransitionName}`} />
       </a>
     )
   }
