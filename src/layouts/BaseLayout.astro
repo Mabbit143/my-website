@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+import '../styles/motion.css';
 
 interface Props {
   title: string;
@@ -44,6 +45,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title="Deconstructing Academia" href="/rss.xml" />
+
+    <!-- Motion: turn on scroll reveals + the hero entrance before the page
+         paints (so nothing flashes), but only for people who haven't asked
+         their device for reduced motion. See src/styles/motion.css. -->
+    <script is:inline>
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('motion-ready');
+      }
+    </script>
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
@@ -52,5 +62,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <Footer />
+    <script>
+      import '../scripts/motion.js';
+    </script>
   </body>
 </html>

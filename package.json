@@ -11,14 +11,14 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^3.1.8",
-    "@astrojs/rss": "^4.0.11",
-    "@astrojs/sitemap": "3.2.1",
-    "astro": "^4.16.0",
+    "@astrojs/mdx": "^8.0.2",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.5",
     "marked": "^18.0.11"
   },
   "allowScripts": {
-    "sharp@0.33.5": true,
-    "esbuild@0.21.5": true
+    "sharp@0.35.5": true,
+    "esbuild@0.28.2": true
   }
 }

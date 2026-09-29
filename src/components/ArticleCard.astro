@@ -4,7 +4,7 @@ import Splatter from './Splatter.astro';
 
 interface Props {
   entry: {
-    slug: string;
+    id: string;
     data: {
       title: string;
       deck: string;
@@ -17,6 +17,9 @@ interface Props {
 }
 const { entry } = Astro.props;
 const series = getSeries(entry.data.series);
+// Unique name so this cover image can morph into the article page's cover
+// during the page transition (see src/styles/motion.css).
+const coverTransitionName = `da-cover-${entry.id.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
 const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
   timeZone: 'UTC',
   year: 'numeric',
@@ -30,13 +33,13 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
   <span class="card-splat" aria-hidden="true"><Splatter variant="corner" /></span>
   {
     entry.data.coverImage && (
-      <a class="card-graphic" href={`/articles/${entry.slug}/`} aria-hidden="true" tabindex="-1">
-        <img src={entry.data.coverImage} alt="" loading="lazy" decoding="async" />
+      <a class="card-graphic" href={`/articles/${entry.id}/`} aria-hidden="true" tabindex="-1">
+        <img src={entry.data.coverImage} alt="" loading="lazy" decoding="async" style={`view-transition-name: ${coverTransitionName}`} />
       </a>
     )
   }
   {series && <span class="pill">{series.name}</span>}
-  <h3><a href={`/articles/${entry.slug}/`}>{entry.data.title}</a></h3>
+  <h3><a href={`/articles/${entry.id}/`}>{entry.data.title}</a></h3>
   <p class="typewriter">{entry.data.deck}</p>
   <p class="meta meta-mono">
     <time datetime={entry.data.pubDate.toISOString()}>{dateStr}</time>
