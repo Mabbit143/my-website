@@ -1,0 +1,76 @@
+--- before/src/layouts/BaseLayout.astro
++++ after/src/layouts/BaseLayout.astro
+@@ -2,6 +2,7 @@
+ import Header from '../components/Header.astro';
+ import Footer from '../components/Footer.astro';
+ import '../styles/global.css';
++import '../styles/motion.css';
+ 
+ interface Props {
+   title: string;
+@@ -44,6 +45,15 @@
+ 
+     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+     <link rel="alternate" type="application/rss+xml" title="Deconstructing Academia" href="/rss.xml" />
++
++    <!-- Motion: turn on scroll reveals + the hero entrance before the page
++         paints (so nothing flashes), but only for people who haven't asked
++         their device for reduced motion. See src/styles/motion.css. -->
++    <script is:inline>
++      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
++        document.documentElement.classList.add('motion-ready');
++      }
++    </script>
+   </head>
+   <body>
+     <a href="#main" class="skip-link">Skip to content</a>
+@@ -52,5 +62,8 @@
+       <slot />
+     </main>
+     <Footer />
++    <script>
++      import '../scripts/motion.js';
++    </script>
+   </body>
+ </html>
+--- before/src/components/ArticleCard.astro
++++ after/src/components/ArticleCard.astro
+@@ -17,6 +17,9 @@
+ }
+ const { entry } = Astro.props;
+ const series = getSeries(entry.data.series);
++// Unique name so this cover image can morph into the article page's cover
++// during the page transition (see src/styles/motion.css).
++const coverTransitionName = `da-cover-${entry.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
+ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
+   year: 'numeric',
+   month: 'long',
+@@ -30,7 +33,7 @@
+   {
+     entry.data.coverImage && (
+       <a class="card-graphic" href={`/articles/${entry.slug}/`} aria-hidden="true" tabindex="-1">
+-        <img src={entry.data.coverImage} alt="" loading="lazy" decoding="async" />
++        <img src={entry.data.coverImage} alt="" loading="lazy" decoding="async" style={`view-transition-name: ${coverTransitionName}`} />
+       </a>
+     )
+   }
+--- before/src/pages/articles/[slug].astro
++++ after/src/pages/articles/[slug].astro
+@@ -36,6 +36,9 @@
+   day: 'numeric',
+ });
+ const series = getSeries(entry.data.series);
++// Matches the name ArticleCard.astro puts on the card's cover image, so the
++// image morphs from the card into this page's cover (src/styles/motion.css).
++const coverTransitionName = `da-cover-${entry.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
+ ---
+ 
+ <BaseLayout title={entry.data.title} description={entry.data.description} ogImage={entry.data.socialImage}>
+@@ -96,6 +99,7 @@
+             height="675"
+             loading="eager"
+             decoding="async"
++            style={`view-transition-name: ${coverTransitionName}`}
+           />
+           {entry.data.coverCaption && <figcaption>{entry.data.coverCaption}</figcaption>}
+         </figure>
