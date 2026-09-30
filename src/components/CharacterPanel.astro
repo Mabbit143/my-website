@@ -20,9 +20,9 @@ const {
 
 <aside class:list={['character-panel', { 'character-panel--compact': compact }]}>
   <div class="character-panel__art" aria-hidden="true">
-    <span class="character-panel__halo"></span>
+    <span class="splat splat--lime character-panel__halo"></span>
     <span class="character-panel__mabbit-frame">
-      <img class="character-panel__mabbit" src="/images/characters/Mabbit-front-arms-crossed.png" alt="" width="1376" height="768" loading="lazy" decoding="async" />
+      <img class="character-panel__mabbit" src="/images/characters/Mabbit-front-arms-crossed-cropped.png" alt="" width="235" height="745" loading="lazy" decoding="async" />
     </span>
     <img class="character-panel__whonah" src="/images/characters/Whonah-sitting-forward.png" alt="" width="256" height="470" loading="lazy" decoding="async" />
   </div>
@@ -43,11 +43,10 @@ const {
     grid-template-columns: minmax(12rem, 0.7fr) minmax(18rem, 1.3fr);
     align-items: end;
     gap: clamp(1rem, 4vw, 3.5rem);
-    border: 2px solid var(--paper);
-    border-right: 8px solid var(--accent-1);
-    padding: clamp(1rem, 3vw, 2.5rem);
-    background: color-mix(in srgb, var(--ink) 91%, var(--accent-1));
-    box-shadow: 8px 9px 0 color-mix(in srgb, var(--accent-1) 70%, transparent);
+    padding: clamp(1.5rem, 3vw, 2.8rem);
+    background: var(--violet);
+    color: var(--paper);
+    box-shadow: var(--shadow-card);
   }
 
   .character-panel__art {
@@ -60,7 +59,7 @@ const {
     position: absolute;
     inset: auto auto -2.5rem 0;
     overflow: hidden;
-    width: 13rem;
+    width: 7.5rem;
     height: 23rem;
   }
 
@@ -70,28 +69,24 @@ const {
     width: auto;
     max-width: none;
     height: 23rem;
-    filter: drop-shadow(7px 7px 0 rgb(0 0 0 / 55%));
   }
 
   .character-panel__whonah {
     position: absolute;
     z-index: 2;
-    left: 7.5rem;
+    left: 6rem;
     bottom: -2.5rem;
     width: auto;
     height: 10rem;
-    filter: drop-shadow(6px 6px 0 rgb(0 0 0 / 55%));
   }
 
   .character-panel__halo {
     position: absolute;
-    inset: 8% 0 auto 10%;
-    width: 82%;
+    inset: -10% auto auto -20%;
+    width: 140%;
     aspect-ratio: 1;
-    border: 3px dashed var(--accent-3);
-    border-radius: 50%;
-    transform: rotate(-7deg);
-    opacity: 0.75;
+    height: auto;
+    opacity: 0.9;
   }
 
   .character-panel__copy {
@@ -107,7 +102,7 @@ const {
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--accent-3);
+    color: var(--paper);
   }
 
   .character-panel h2 {
@@ -115,8 +110,22 @@ const {
   }
 
   .character-panel p:not(.character-panel__eyebrow) {
-    font-family: var(--font-typewriter);
-    font-size: var(--step-1);
+    font-size: 1.1rem;
+    line-height: 1.55;
+  }
+
+  .character-panel .btn--ghost {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    background: var(--paper);
+    border-color: var(--paper);
+    color: var(--ink);
+  }
+
+  .character-panel .btn--ghost:hover {
+    background: transparent;
+    color: var(--paper);
   }
 
   .character-panel--compact {
@@ -124,8 +133,13 @@ const {
   }
 
   .character-panel--compact .character-panel__art {
-    min-height: 13rem;
+    min-height: 16rem;
   }
+
+  .character-panel--compact .character-panel__mabbit-frame,
+  .character-panel--compact .character-panel__mabbit { height: 19rem; }
+  .character-panel--compact .character-panel__mabbit-frame { width: 6.2rem; }
+  .character-panel--compact .character-panel__whonah { left: 4.8rem; height: 8rem; }
 
   @media (max-width: 42rem) {
     .character-panel,
@@ -140,7 +154,7 @@ const {
     }
 
     .character-panel__mabbit-frame {
-      width: 11rem;
+      width: 6.2rem;
       height: 19rem;
     }
 
@@ -149,7 +163,7 @@ const {
     }
 
     .character-panel__whonah {
-      left: 6.5rem;
+      left: 5rem;
       height: 8rem;
     }
   }

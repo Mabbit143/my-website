@@ -174,11 +174,14 @@ html {
 body {
   margin: 0;
   background-color: var(--color-bg);
-  /* spray/grain texture — was dark speckle on light paper, now flipped
-     to a light speckle on the dark page (same feTurbulence trick as
-     .chalk-texture above, just applied sitewide and kept very subtle
-     so it never fights legibility). */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* V2 Cut-&-Paste (30 Sep 2026): a dark, crumpled/concrete photographic
+     grit instead of the old feTurbulence speckle. The texture stays in a
+     narrow luminance band next to Void Black so Paper White body copy keeps
+     its full 17.5:1 contrast. */
+  background-image: url('/images/texture/grit-dark.jpg');
+  background-size: 1024px 1024px;
+  /* splatter bleeds off the edge on purpose; never let it cause sideways scroll */
+  overflow-x: clip;
   color: var(--color-fg);
   font-family: var(--font-body);
   font-size: var(--step-0);
@@ -371,11 +374,11 @@ svg {
   left: 1.5rem;
   width: 3.5rem;
   height: 1.3rem;
-  background: color-mix(in srgb, var(--accent-3) 70%, transparent);
-  border: 1px solid color-mix(in srgb, var(--paper) 15%, transparent);
-  box-shadow: 0 2px 3px rgb(0 0 0 / 35%);
+  background: rgb(245 242 234 / 55%);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 30%);
   transform: rotate(-4deg);
   pointer-events: none;
+  z-index: 3;
 }
 
 .tape--right {
@@ -696,3 +699,204 @@ svg {
     opacity: 0.22;
   }
 }
+
+
+/* ============================================================
+   V2 CUT-&-PASTE KIT — 30 Sep 2026 redesign
+   Torn paper strips, taped scraps, real paint splatter, the
+   "every file has a drawer" ledger. Palette is the locked six;
+   nothing here introduces a new color.
+   ============================================================ */
+
+:root {
+  --void: #0d0b12;
+  --violet: #5b16d9;
+  --lime: #b7ff18;
+  --pink: #ff168c;
+  --cyan: #10d9d0;
+  --pink-light: #f797c7;
+  --pink-dark: #d6006b;
+  --cyan-light: #9ef0ec;
+  --cyan-dark: #097771;
+  --violet-light: #bba0ee;
+  --shadow-card: 0 18px 40px -14px rgb(0 0 0 / 55%);
+  --shadow-strip: 0 3px 0 rgb(0 0 0 / 25%);
+  --shadow-tape: 0 2px 6px rgb(0 0 0 / 30%);
+  /* accent that is always safe as TEXT on Void Black */
+  --accent-text: var(--accent-1);
+}
+[data-palette] { --accent-text: var(--accent-1); }
+[data-palette='electric'] { --accent-text: var(--violet-light); }
+
+/* real paper surface: grain, never clean white; ink text on top */
+.paper-surface {
+  background-color: #eeeadf;
+  background-image: url('/images/texture/paper.jpg');
+  background-size: 768px 768px;
+  color: var(--ink);
+}
+
+/* torn left/right edges for headline strips */
+.torn-lr {
+  clip-path: polygon(0.9% 0%, 7% 0%, 14% 0%, 21% 0%, 29% 0%, 36% 0%, 43% 0%, 50% 0%, 57% 0%, 64% 0%, 71% 0%, 79% 0%, 86% 0%, 93% 0%, 99.2% 0%, 98.4% 14%, 100% 29%, 98.9% 43%, 99.6% 57%, 98.2% 71%, 99.8% 86%, 98.8% 100%, 93% 100%, 86% 100%, 79% 100%, 71% 100%, 64% 100%, 57% 100%, 50% 100%, 43% 100%, 36% 100%, 29% 100%, 21% 100%, 14% 100%, 7% 100%, 1.4% 100%, 0% 86%, 1.6% 71%, 0.3% 57%, 1.8% 43%, 0.2% 29%, 1.2% 14%);
+}
+/* irregular torn bottom edge for scraps and cards */
+.torn-b {
+  /* extends above and beside the box so tape and side shadow survive the clip */
+  clip-path: polygon(-2rem -2rem, calc(100% + 2rem) -2rem, calc(100% + 2rem) 98.2%, 100% 98.2%, 97% 99.6%, 94% 98.4%, 91% 100%, 88% 98.8%, 84% 99.7%, 81% 98.3%, 77% 99.9%, 74% 98.6%, 70% 99.5%, 66% 98.1%, 63% 99.8%, 59% 98.7%, 56% 100%, 52% 98.4%, 48% 99.6%, 45% 98.2%, 41% 99.9%, 38% 98.5%, 34% 99.4%, 30% 98%, 27% 99.8%, 23% 98.6%, 19% 99.7%, 16% 98.3%, 12% 100%, 9% 98.7%, 5% 99.5%, 2% 98.3%, 0% 99.6%, -2rem 99.6%);
+}
+
+/* headline strips — Anton on torn paper / lime / pink */
+.strip-stack {
+  display: grid;
+  justify-items: start;
+  gap: 0.18em;
+  margin: 0;
+  font-size: clamp(2.6rem, 1.4rem + 4.6vw, 4.4rem);
+}
+.strip {
+  display: inline-block;
+  padding: 0.14em 0.36em 0.08em;
+  font-family: var(--font-headline);
+  font-weight: 400;
+  line-height: 0.98;
+  text-transform: uppercase;
+  color: var(--ink);
+  box-shadow: var(--shadow-strip);
+  transform: rotate(-1.6deg);
+}
+.strip:nth-child(2) { transform: rotate(1.2deg); margin-left: 0.8em; }
+.strip:nth-child(3) { transform: rotate(-0.8deg); margin-left: 0.3em; }
+.strip--paper {
+  background-color: #eeeadf;
+  background-image: url('/images/texture/paper.jpg');
+  background-size: 768px 768px;
+}
+.strip--lime { background: var(--lime); }
+.strip--pink { background: var(--pink); }
+
+.scribble {
+  display: inline-block;
+  font-family: var(--font-annotation);
+  font-weight: 600;
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+  line-height: 1.15;
+  color: var(--pink);
+  transform: rotate(-3deg);
+}
+
+.eyebrow {
+  font-family: var(--font-label);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin: 0 0 var(--space-1);
+}
+
+/* painted splatter image, positioned by the caller */
+.splat {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.splat--lime { background-image: url('/images/splatter/lime.webp'); }
+.splat--pink { background-image: url('/images/splatter/pink.webp'); }
+.splat--cyan { background-image: url('/images/splatter/cyan.webp'); }
+.splat--violet { background-image: url('/images/splatter/violet.webp'); }
+
+/* the drawer ledger — "every file has a drawer" */
+.ledger {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid var(--cyan);
+}
+.ledger a,
+.ledger > li > .ledger__row {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 20rem) minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  min-height: 4rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgb(245 242 234 / 16%);
+  color: var(--paper);
+  text-decoration: none;
+}
+.ledger a:hover { background: rgb(245 242 234 / 4%); }
+.ledger a:hover .ledger__name { color: var(--lime); }
+.ledger__num {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--accent-text);
+}
+.ledger__name {
+  font-family: var(--font-headline);
+  font-size: 1.5rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+.ledger__desc { font-size: 1rem; line-height: 1.5; }
+.ledger__go {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--cyan-light);
+  white-space: nowrap;
+}
+@media (max-width: 52rem) {
+  .ledger a,
+  .ledger > li > .ledger__row {
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: 0.35rem var(--space-2);
+    align-items: start;
+  }
+  .ledger__desc,
+  .ledger__go { grid-column: 2; }
+}
+
+/* V2 series chip: a solid fill, never a dashed pale sticker */
+.pill {
+  border: 0;
+  background: var(--accent-1);
+  color: var(--ink);
+  font-family: var(--font-label);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  transform: none;
+  box-shadow: var(--shadow-strip);
+}
+[data-palette='electric'] .pill,
+.pill[data-palette='electric'] { color: var(--paper); }
+
+/* big violet band (manifesto / about teaser) */
+.band-violet {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--violet);
+  color: var(--paper);
+}
+.band-violet .btn { background: var(--paper); border-color: var(--paper); color: var(--ink); }
+.band-violet .btn:hover { background: transparent; color: var(--paper); }
+.band-violet .btn--ghost { background: transparent; color: var(--paper); }
+
+.section-title {
+  font-size: clamp(1.9rem, 1.4rem + 1.6vw, 2.4rem);
+  line-height: 0.98;
+  margin: 0;
+}
+
+@media (max-width: 40rem) {
+  .strip:nth-child(2) { margin-left: 0.3em; }
+  .strip:nth-child(3) { margin-left: 0.1em; }
+}
+
+/* any section that hosts bleeding splatter clips it sideways */
+:where(section, header, footer, aside):has(> .splat) { overflow-x: clip; }

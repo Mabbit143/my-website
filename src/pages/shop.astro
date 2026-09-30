@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import CharacterPanel from '../components/CharacterPanel.astro';
-import Splatter from '../components/Splatter.astro';
 ---
 
 <BaseLayout
@@ -10,9 +9,14 @@ import Splatter from '../components/Splatter.astro';
   description="Practical Deconstructing Academia tools for finding the rules before the rules find your grade."
 >
   <section class="wrap shop-hero" data-palette="field-notes">
-    <span class="shop-hero__splat" aria-hidden="true"><Splatter variant="burst" seed={22} /></span>
-    <p class="stamp-label">Tools, not motivational wallpaper</p>
-    <h1>Find the rule.<br /><span class="mark">Keep the receipt.</span></h1>
+    <span class="splat splat--violet shop-hero__s1" aria-hidden="true"></span>
+    <span class="splat splat--lime shop-hero__s2" aria-hidden="true"></span>
+    <p class="eyebrow">Tools, not motivational wallpaper</p>
+    <h1 class="strip-stack">
+      <span class="strip strip--paper torn-lr">Find the rule.</span>
+      <span class="strip strip--lime torn-lr">Keep the receipt.</span>
+    </h1>
+    <p class="scribble shop-hero__scribble">fillable, too</p>
     <p class="shop-hero__deck">
       Downloadable tools for students who need the actual policy, the actual math, and the actual
       next move—not another lecture about trying harder.
@@ -69,35 +73,30 @@ import Splatter from '../components/Splatter.astro';
     padding-block: var(--space-5) var(--space-4);
   }
 
-  .shop-hero > :not(.shop-hero__splat) {
+  .shop-hero > :not(.splat) {
     position: relative;
     z-index: 1;
   }
 
-  .shop-hero__splat {
-    position: absolute;
-    right: -4rem;
-    top: -5rem;
-    width: 25rem;
-    height: 25rem;
-    color: var(--accent-1);
-    opacity: 0.22;
-  }
-
-  .shop-hero h1 {
-    margin-top: var(--space-2);
-    font-size: var(--step-5);
-  }
+  .shop-hero__s1 { right: -14rem; top: -12rem; width: 40rem; height: 40rem; }
+  .shop-hero__s2 { right: 12rem; top: 6rem; width: 16rem; height: 16rem; }
+  .shop-hero__scribble { margin: 0.4rem 0 0 clamp(3rem, 20vw, 18rem); }
 
   .shop-hero__deck {
-    max-width: 48rem;
-    font-family: var(--font-typewriter);
-    font-size: var(--step-1);
+    max-width: 40rem;
+    margin-top: var(--space-2);
+    font-size: 1.15rem;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 40rem) {
+    .shop-hero__s1 { right: -22rem; top: -4rem; width: 30rem; height: 30rem; }
+    .shop-hero__s2 { display: none; }
   }
 
   .products {
     display: grid;
-    gap: var(--space-3);
+    gap: var(--space-5);
   }
 
   .products,

@@ -2,157 +2,163 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
-import CharacterPanel from '../components/CharacterPanel.astro';
 import EmailSignup from '../components/EmailSignup.astro';
-import ProductCard from '../components/ProductCard.astro';
-import Splatter from '../components/Splatter.astro';
 import { SERIES } from '../lib/series';
 
 const allArticles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 const featured = allArticles[0];
-const latest = allArticles.slice(1, 4);
+const latest = allArticles.slice(1, 3);
+const countBySeries = (slug: string) => allArticles.filter((a) => a.data.series === slug).length;
+
+// Same two kits and prices as src/pages/shop.astro — keep them in sync.
+const kits = [
+  {
+    no: 'No. 01',
+    title: 'The Syllabus Audit Kit + Grade Tracker',
+    body: 'Decode the fine print, surface the unanswered questions, and calculate where your grade actually stands.',
+    price: '$7',
+    href: 'https://www.etsy.com/listing/4568126568/syllabus-audit-kit-grade-tracker',
+  },
+  {
+    no: 'No. 02',
+    title: 'The Curriculum Bias Audit Kit',
+    body: "Read a reading list the way you'd read a source: whose names show up, whose don't, and what that pattern teaches.",
+    price: '$9',
+    href: 'https://deconstructacademia.etsy.com',
+  },
+];
 ---
 
 <BaseLayout
   title="Deconstructing Academia"
   description="A critical academic-literacy publication. Learn the rules. Question who wrote them."
 >
-  <section class="hero wrap" data-palette="red-pen">
-    <span class="hero-splat hero-splat--1" aria-hidden="true"><Splatter variant="burst" /></span>
-    <span class="hero-splat hero-splat--2" aria-hidden="true"><Splatter variant="drip" seed={12} /></span>
-    <div class="hero__copy">
-      <p class="hero__kicker">Academic literacy for people academia expected to figure it out alone</p>
-      <h1>
-        <span class="headline-strip headline-strip--paper">Make knowledge</span>
-        <span class="headline-strip headline-strip--pink">harder to hoard.</span>
-      </h1>
-      <p class="hero__deck">
-        We take apart hidden rules, trace the evidence, and build tools you can actually use.
-        Prestige does not get to grade its own homework here.
-      </p>
-      <div class="hero__actions">
-        <a href="#start-here" class="btn">Start with the evidence →</a>
-        <a href="/shop/" class="btn btn--ghost">Use a field tool →</a>
+  <section class="hero">
+    <span class="splat splat--violet hero__s1" aria-hidden="true"></span>
+    <span class="splat splat--lime hero__s2" aria-hidden="true"></span>
+    <span class="splat splat--pink hero__s3" aria-hidden="true"></span>
+    <span class="splat splat--cyan hero__s4" aria-hidden="true"></span>
+    <div class="wrap hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow">Academic literacy for people academia expected to figure it out alone</p>
+        <h1 class="strip-stack">
+          <span class="strip strip--paper torn-lr">Learn the rules.</span>
+          <span class="strip strip--paper torn-lr">Question who</span>
+          <span class="strip strip--lime torn-lr">wrote them.</span>
+        </h1>
+        <p class="scribble hero__scribble">yes, all of them.</p>
+        <p class="hero__deck">
+          We take apart hidden rules, trace the evidence, and build tools you can actually use.
+          Prestige does not get to grade its own homework here.
+        </p>
+        <div class="hero__actions">
+          <a href="#start-here" class="btn hero__btn">Start reading</a>
+          <a href="/shop/" class="btn btn--ghost">Grab a toolkit</a>
+        </div>
       </div>
-      <p class="hero__note">Mabbit takes it apart.<br />Whonah follows the receipts.</p>
-    </div>
-    <div class="hero__characters">
-      <span class="hero__circle" aria-hidden="true"></span>
-      <div class="hero__mabbit-frame">
+      <div class="hero__characters">
         <img
           class="hero__mabbit"
-          src="/images/characters/Mabbit-front-arms-crossed.png"
+          src="/images/characters/Mabbit-front-arms-crossed-cropped.png"
           alt="Mabbit, the tattooed rabbit character with purple hair, standing with arms crossed"
-          width="1376"
-          height="768"
+          width="235"
+          height="745"
+          loading="eager"
+          decoding="async"
+        />
+        <img
+          class="hero__whonah"
+          src="/images/characters/Whonah-sitting-forward.png"
+          alt="Whonah, a German Shepherd in a green harness, sitting beside Mabbit"
+          width="256"
+          height="470"
           loading="eager"
           decoding="async"
         />
       </div>
-      <img
-        class="hero__whonah"
-        src="/images/characters/Whonah-sitting-forward.png"
-        alt="Whonah, a German Shepherd in a green harness, sitting beside Mabbit"
-        width="256"
-        height="470"
-        loading="eager"
-        decoding="async"
-      />
     </div>
   </section>
-
-  <nav class="route-strip wrap" aria-label="Choose where to start">
-    <a href="/articles/" data-palette="archive">
-      <span>01 · Read</span>
-      <strong>Follow an argument</strong>
-      <small>Articles, evidence, and the missing comparison →</small>
-    </a>
-    <a href="/articles/?series=use-the-damn-tool" data-palette="public-record">
-      <span>02 · Use</span>
-      <strong>Learn the damn tool</strong>
-      <small>Practical research moves without the institutional fog →</small>
-    </a>
-    <a href="/shop/" data-palette="field-notes">
-      <span>03 · Take it with you</span>
-      <strong>Get the field kit</strong>
-      <small>Downloadable worksheets and trackers →</small>
-    </a>
-  </nav>
 
   {
     featured && (
-      <section id="start-here" class="wrap lead-story" aria-labelledby="featured-heading">
-        <div class="lead-story__label">
-          <span>Read this first</span>
-          <p>The newest field note from inside the machine.</p>
-        </div>
-        <div class="lead-story__card">
-          <h2 id="featured-heading" class="visually-hidden">Start here</h2>
-          <ArticleCard entry={featured} />
-        </div>
-      </section>
-    )
-  }
-
-  {
-    latest.length > 0 && (
-      <section class="wrap latest" aria-labelledby="latest-heading">
-        <header class="section-heading">
-          <div>
-            <p class="section-heading__label">Fresh evidence</p>
-            <h2 id="latest-heading">Latest dispatches</h2>
-          </div>
-          <a href="/articles/">Open the full archive →</a>
+      <section id="start-here" class="wrap fresh" aria-labelledby="fresh-heading">
+        <header class="fresh__head">
+          <h2 id="fresh-heading" class="section-title">Fresh off the photocopier</h2>
+          <span class="scribble">still warm</span>
         </header>
-        <div class="latest__grid">
-          {latest.map((entry) => <ArticleCard entry={entry} />)}
+        <div class="fresh__grid">
+          <div class="fresh__lead">
+            <ArticleCard entry={featured} featured />
+          </div>
+          <div class="fresh__side">
+            {latest.map((entry) => <ArticleCard entry={entry} />)}
+            <a class="fresh__all" href="/articles/">Open the full archive →</a>
+          </div>
         </div>
       </section>
     )
   }
 
-  <section class="series-band" aria-labelledby="series-heading">
-    <div class="wrap">
-      <header class="section-heading">
-        <div>
-          <p class="section-heading__label">Eight ways in</p>
-          <h2 id="series-heading">Pick the question, not a content bucket</h2>
-        </div>
-      </header>
-      <div class="series-grid">
-        {SERIES.map((series, index) => (
-          <a href={`/articles/?series=${series.slug}`} class="series-card" data-palette={series.palette}>
-            <span>{String(index + 1).padStart(2, '0')}</span>
-            <h3>{series.name}</h3>
-            <p>{series.description}</p>
+  <section class="wrap drawers" aria-labelledby="drawers-heading">
+    <span class="splat splat--cyan drawers__splat" aria-hidden="true"></span>
+    <div class="drawers__intro">
+      <p class="eyebrow">The series index</p>
+      <h2 id="drawers-heading" class="section-title">Every file has a drawer</h2>
+      <p>Each article lives in one series, so you can follow a thread instead of a feed.</p>
+    </div>
+    <ul class="ledger">
+      {SERIES.map((series, index) => (
+        <li data-palette={series.palette}>
+          <a href={`/articles/?series=${series.slug}`}>
+            <span class="ledger__num">§ {String(index + 1).padStart(2, '0')}</span>
+            <span class="ledger__name">{series.name}</span>
+            <span class="ledger__desc">{series.description}</span>
+            <span class="ledger__go">
+              {countBySeries(series.slug)} {countBySeries(series.slug) === 1 ? 'file' : 'files'} →
+            </span>
           </a>
-        ))}
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="wrap kits" aria-labelledby="kits-heading">
+    <header class="fresh__head">
+      <h2 id="kits-heading" class="section-title">Tools you can print tonight</h2>
+      <span class="scribble">fillable, too</span>
+    </header>
+    <div class="kits__grid">
+      {kits.map((kit) => (
+        <article class="kit paper-surface torn-b">
+          <span class="tape" aria-hidden="true"></span>
+          <p class="kit__meta"><span>Toolkit {kit.no}</span><span class="kit__price">{kit.price}</span></p>
+          <h3>{kit.title}</h3>
+          <p>{kit.body}</p>
+          <a href={kit.href}>Get the kit →</a>
+        </article>
+      ))}
+    </div>
+    <p class="kits__fine">Checkout happens on Etsy. <a href="/shop/">See everything in the shop →</a></p>
+  </section>
+
+  <section class="band-violet manifesto">
+    <span class="splat splat--pink manifesto__splat" aria-hidden="true"></span>
+    <div class="wrap manifesto__inner">
+      <h2 class="manifesto__line">Not here to make the gate prettier.</h2>
+      <div class="manifesto__copy">
+        <p>
+          Mabbit Rountree is a nontraditional student and freelance researcher who learned
+          academia's hidden rules the expensive way, then started writing them down. Whonah is here
+          because every evidence trail deserves a German Shepherd.
+        </p>
+        <div class="hero__actions">
+          <a href="/about/" class="btn">About Mabbit</a>
+          <a href="/contact/" class="btn btn--ghost">Say hi</a>
+        </div>
       </div>
     </div>
-  </section>
-
-  <section id="shop" class="wrap shop-section" aria-labelledby="shop-heading">
-    <h2 id="shop-heading" class="visually-hidden">Shop practical tools</h2>
-    <ProductCard
-      eyebrow="Now on Etsy · instant download"
-      title="The Syllabus Audit Kit + Grade Tracker"
-      description="Decode the fine print, surface the unanswered questions, and calculate where your grade actually stands before the syllabus gets the last word."
-      price="$7"
-      href="/shop/"
-      cta="See what is inside"
-    />
-  </section>
-
-  <section class="wrap character-section">
-    <CharacterPanel
-      eyebrow="Who is making this mess useful"
-      title="Inside academia. Taking notes."
-      body="Mabbit Rountree is a nontraditional student and freelance researcher who learned academia's hidden rules the expensive way, then started writing them down. Whonah is here because every evidence trail deserves a German Shepherd."
-      linkHref="/about/"
-      linkLabel="Meet the project →"
-    />
   </section>
 
   <div class="wrap signup-wrap">
@@ -165,120 +171,231 @@ const latest = allArticles.slice(1, 4);
     position: relative;
     isolation: isolate;
     overflow: hidden;
+  }
+
+  .hero__s1 { width: 62rem; height: 62rem; right: -18rem; top: -8rem; }
+  .hero__s2 { width: 32rem; height: 32rem; right: -4rem; top: 20rem; }
+  .hero__s3 { width: 24rem; height: 24rem; right: 20rem; top: 28rem; }
+  .hero__s4 { width: 20rem; height: 20rem; right: 2rem; top: -2rem; }
+
+  .hero__inner {
+    position: relative;
+    z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1.45fr) minmax(16rem, 0.55fr);
-    gap: clamp(1rem, 4vw, 4rem);
+    grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+    gap: var(--space-3);
     align-items: end;
-    min-height: 42rem;
-    padding-block: var(--space-5) 0;
-    border-bottom: 1px solid var(--color-border);
+    min-height: 46rem;
+    padding-top: var(--space-5);
   }
 
-  .hero > :not(.hero-splat) { position: relative; z-index: 1; }
-  .hero-splat { position: absolute; z-index: 0; pointer-events: none; }
-  .hero-splat--1 { width: 32rem; height: 32rem; left: -10rem; top: -8rem; color: var(--accent-1); opacity: 0.28; }
-  .hero-splat--2 { width: 18rem; height: 18rem; right: -2rem; bottom: 2rem; color: var(--accent-3); opacity: 0.2; }
+  .hero__copy {
+    align-self: center;
+    padding-bottom: var(--space-5);
+  }
 
-  .hero__copy { align-self: center; padding-bottom: var(--space-5); }
-  .hero__kicker,
-  .section-heading__label {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
+  .hero__scribble { margin: 0.4rem 0 0 clamp(4rem, 22vw, 20rem); }
+
+  .hero__deck {
+    margin-top: var(--space-2);
+    max-width: 34rem;
+    font-size: 1.15rem;
+    line-height: 1.55;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: var(--space-3);
+  }
+
+  .hero__btn {
+    background: var(--lime);
+    border-color: var(--lime);
+  }
+
+  .hero__btn:hover { color: var(--lime); }
+
+  .btn { min-height: 48px; display: inline-flex; align-items: center; }
+
+  .hero__characters {
+    position: relative;
+    height: 44rem;
+  }
+
+  .hero__mabbit {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: auto;
+    max-width: none;
+    height: 42rem;
+  }
+
+  .hero__whonah {
+    position: absolute;
+    left: 10rem;
+    bottom: 0;
+    width: auto;
+    height: 23rem;
+  }
+
+  .fresh { padding-block: var(--space-5) var(--space-4); }
+
+  .fresh__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.4rem 1.4rem;
+    margin-bottom: var(--space-4);
+  }
+
+  .fresh__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .fresh__side {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .fresh__all,
+  .kits__fine a {
+    font-family: var(--font-label);
     font-weight: 700;
-    letter-spacing: 0.09em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent-3);
+    color: var(--cyan);
+    text-decoration: none;
   }
 
-  .hero h1 {
+  .drawers {
+    position: relative;
+    isolation: isolate;
     display: grid;
-    justify-items: start;
-    gap: 0.12em;
-    margin-block: var(--space-2) var(--space-3);
-    font-size: var(--step-5);
+    grid-template-columns: minmax(14rem, 0.32fr) minmax(0, 1fr);
+    gap: var(--space-5);
+    padding-block: var(--space-5);
   }
 
-  .headline-strip {
-    display: inline-block;
-    padding: 0.08em 0.15em;
-    color: var(--ink);
-    line-height: 0.9;
-    box-shadow: 7px 7px 0 rgb(0 0 0 / 48%);
-  }
-  .headline-strip--paper { background: var(--paper); transform: rotate(-1deg); }
-  .headline-strip--pink { background: var(--accent-1); transform: rotate(0.6deg); }
+  .drawers > :not(.splat) { position: relative; z-index: 1; }
+  .drawers__splat { left: -24rem; top: -3rem; width: 30rem; height: 30rem; opacity: 0.75; }
+  .drawers__intro .section-title { margin-bottom: var(--space-2); }
+  .drawers__intro p:last-child { font-size: 1.05rem; }
 
-  .hero__deck { max-width: 46rem; font-family: var(--font-typewriter); font-size: var(--step-1); }
-  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-3); }
+  .kits { padding-block: var(--space-4) var(--space-5); }
 
-  .hero__characters { min-height: 36rem; }
-  .hero__mabbit-frame { position: absolute; inset: auto auto 0 0; width: 18rem; height: 36rem; overflow: hidden; }
-  .hero__mabbit { position: absolute; inset: auto auto 0 0; width: auto; max-width: none; height: 36rem; filter: drop-shadow(8px 6px 0 rgb(0 0 0 / 55%)); }
-  .hero__whonah { position: absolute; z-index: 2; left: 8.75rem; bottom: 0; width: auto; height: 14.5rem; filter: drop-shadow(8px 6px 0 rgb(0 0 0 / 55%)); }
-  .hero__circle { position: absolute; width: 120%; aspect-ratio: 1; left: -10%; top: 8%; border: 4px dashed var(--accent-3); border-radius: 50%; transform: rotate(-8deg); }
-  .hero__note { display: inline-block; width: min(100%, 19rem); margin: var(--space-3) 0 0 clamp(0rem, 8vw, 5rem); padding: 0.8rem 1rem; background: var(--accent-3); color: var(--ink); font-family: var(--font-annotation); font-size: var(--step-1); line-height: 1.1; transform: rotate(-2deg); box-shadow: 4px 5px 0 rgb(0 0 0 / 40%); }
-
-  .route-strip {
+  .kits__grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    padding-block: var(--space-3);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
   }
-  .route-strip a { display: grid; gap: 0.35rem; min-height: 10rem; padding: var(--space-3); border-top: 6px solid var(--accent-1); background: color-mix(in srgb, var(--ink) 92%, var(--accent-1)); text-decoration: none; }
-  .route-strip a:hover { background: color-mix(in srgb, var(--ink) 82%, var(--accent-1)); }
-  .route-strip span { font-family: var(--font-mono); font-size: var(--step--1); color: var(--accent-1); text-transform: uppercase; }
-  .route-strip strong { font-family: var(--font-headline); font-size: var(--step-2); text-transform: uppercase; line-height: 1; }
-  .route-strip small { align-self: end; font-family: var(--font-typewriter); }
 
-  .lead-story { display: grid; grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1fr); gap: var(--space-3); padding-block: var(--space-5); align-items: center; }
-  .lead-story__label { border: 2px dashed var(--accent-1); padding: var(--space-3); transform: rotate(-2deg); }
-  .lead-story__label span { font-family: var(--font-headline); font-size: var(--step-3); text-transform: uppercase; color: var(--accent-1); }
-  .lead-story__label p { margin: var(--space-1) 0 0; font-family: var(--font-annotation); font-size: var(--step-1); }
+  .kit {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 2rem 1.9rem 2.2rem;
+    box-shadow: var(--shadow-card);
+    transform: rotate(-1deg);
+  }
 
-  .latest,
-  .shop-section,
-  .character-section,
-  .signup-wrap { padding-block: var(--space-5); }
+  .kit:nth-child(2) { transform: rotate(0.8deg); }
+  .kit h3 {
+    margin: 0;
+    font-family: var(--font-headline);
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.02;
+    text-transform: uppercase;
+  }
+  .kit p { margin: 0; }
 
-  .section-heading { display: flex; justify-content: space-between; gap: var(--space-3); align-items: end; margin-bottom: var(--space-3); border-bottom: 2px solid var(--paper); }
-  .section-heading h2 { max-width: 48rem; font-size: var(--step-3); }
-  .section-heading > a { margin-bottom: var(--space-2); font-family: var(--font-label); font-weight: 700; text-transform: uppercase; }
-  .latest__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+  .kit__meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
 
-  .series-band { padding-block: var(--space-5); background: var(--paper); color: var(--ink); transform: skewY(-0.5deg); }
-  .series-band > .wrap { transform: skewY(0.5deg); }
-  .series-band .section-heading { border-color: var(--ink); }
-  .series-band .section-heading__label { color: #7b245f; }
-  .series-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); }
-  .series-card { position: relative; min-height: 13rem; padding: var(--space-2); border: 2px solid var(--ink); border-top: 8px solid var(--accent-1); background: var(--paper); color: var(--ink); text-decoration: none; box-shadow: 5px 5px 0 var(--ink); }
-  .series-card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--accent-1); }
-  .series-card > span { font-family: var(--font-mono); color: color-mix(in srgb, var(--accent-1) 70%, var(--ink)); }
-  .series-card h3 { margin-top: var(--space-2); }
-  .series-card p { font-size: var(--step--1); line-height: 1.45; }
+  .kit__price { font-weight: 700; font-size: 1rem; }
 
-  @media (max-width: 55rem) {
-    .hero { grid-template-columns: minmax(0, 1.2fr) minmax(13rem, 0.8fr); }
-    .route-strip { grid-template-columns: 1fr; }
-    .route-strip a { min-height: auto; }
-    .latest__grid { grid-template-columns: repeat(2, 1fr); }
-    .series-grid { grid-template-columns: repeat(2, 1fr); }
+  .kit a {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pink-dark);
+    text-decoration: none;
+  }
+
+  .kits__fine {
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .manifesto { margin-top: var(--space-4); }
+  .manifesto__splat { right: -10rem; top: -10rem; width: 28rem; height: 28rem; }
+
+  .manifesto__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: var(--space-5);
+    align-items: center;
+    padding-block: var(--space-5);
+  }
+
+  .manifesto__line {
+    margin: 0;
+    font-size: clamp(2.6rem, 1.4rem + 4.6vw, 4.4rem);
+    line-height: 0.98;
+  }
+
+  .manifesto__copy p { font-size: 1.05rem; }
+
+  .signup-wrap { padding-block: var(--space-5) 0; }
+
+  @media (max-width: 60rem) {
+    .hero__inner { grid-template-columns: minmax(0, 1fr) 15rem; min-height: 38rem; }
+    .hero__characters { height: 34rem; }
+    .hero__mabbit { height: 32rem; left: 0; }
+    .hero__whonah { left: 6.5rem; height: 17rem; }
+    .fresh__grid,
+    .drawers,
+    .manifesto__inner { grid-template-columns: 1fr; }
+    .drawers { gap: var(--space-3); }
   }
 
   @media (max-width: 40rem) {
-    .hero { grid-template-columns: 1fr; min-height: 0; }
+    .hero__s1 { width: 34rem; height: 34rem; right: -12rem; top: 40rem; }
+    .hero__s2 { width: 18rem; height: 18rem; right: -3rem; top: 46rem; }
+    .hero__s3 { width: 14rem; height: 14rem; right: 13rem; top: 52rem; }
+    .hero__s4 { display: none; }
+    .hero__inner { grid-template-columns: 1fr; padding-top: var(--space-4); min-height: 0; }
     .hero__copy { padding-bottom: 0; }
-    .hero h1 { font-size: 2.55rem; }
-    .headline-strip { max-width: 100%; }
-    .hero__actions { display: grid; justify-items: start; }
-    .hero__characters { min-height: 27rem; }
-    .hero__mabbit-frame { width: 14rem; height: 27rem; }
-    .hero__mabbit { height: 27rem; }
-    .hero__whonah { left: 7.5rem; height: 11.5rem; }
-    .hero__note { width: min(100%, 17rem); margin-left: 0; font-size: var(--step-0); }
-    .lead-story { grid-template-columns: 1fr; }
-    .lead-story__label { transform: none; }
-    .latest__grid,
-    .series-grid { grid-template-columns: 1fr; }
-    .section-heading { align-items: flex-start; flex-direction: column; }
+    .hero__scribble { margin-left: 8rem; }
+    .hero__actions { display: grid; }
+    .hero__actions .btn { justify-content: center; }
+    .hero__characters { height: 27rem; }
+    .hero__mabbit { height: 26rem; left: 1rem; }
+    .hero__whonah { left: 9rem; height: 14rem; }
+    .kits__grid { grid-template-columns: 1fr; }
+    .manifesto__splat { right: -17rem; top: -15rem; }
   }
 </style>

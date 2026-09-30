@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
-import Splatter from '../../components/Splatter.astro';
 import { SERIES } from '../../lib/series';
 
 const allArticles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
@@ -15,10 +14,15 @@ const allArticles = (await getCollection('articles', ({ data }) => !data.draft))
   description="Browse everything Deconstructing Academia has published, filterable by series."
 >
   <section class="wrap archive-hero" data-palette="archive">
-    <span class="archive-hero__splat" aria-hidden="true"><Splatter variant="burst" /></span>
+    <span class="splat splat--violet archive-hero__s1" aria-hidden="true"></span>
+    <span class="splat splat--lime archive-hero__s2" aria-hidden="true"></span>
     <div class="archive-hero__copy">
-      <p class="archive-hero__eyebrow">The evidence wall · {allArticles.length} dispatches filed</p>
-      <h1><span>Open the</span><strong>archive.</strong></h1>
+      <p class="eyebrow">The evidence wall · {allArticles.length} dispatches filed</p>
+      <h1 class="strip-stack">
+        <span class="strip strip--paper torn-lr">Every file</span>
+        <span class="strip strip--lime torn-lr">has a drawer.</span>
+      </h1>
+      <p class="scribble archive-hero__scribble">pick one. pull.</p>
       <p class="archive-hero__deck">
         Eight questions, multiple ways into the machinery. Filter by the argument you need—or start
         pulling threads and see what comes loose.
@@ -74,37 +78,23 @@ const allArticles = (await getCollection('articles', ({ data }) => !data.draft))
   .archive-hero {
     position: relative;
     isolation: isolate;
-    overflow: hidden;
     display: grid;
     grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 0.75fr);
     align-items: end;
     min-height: 31rem;
     padding-block: var(--space-5) 0;
-    border-bottom: 1px solid var(--color-border);
   }
 
-  .archive-hero__splat {
-    position: absolute;
-    z-index: -1;
-    left: -7rem;
-    top: -9rem;
-    width: 28rem;
-    color: var(--accent-1);
-    opacity: 0.22;
-  }
+  .archive-hero > :not(.splat) { position: relative; z-index: 1; }
+  .archive-hero__s1 { right: -16rem; top: -12rem; width: 46rem; height: 46rem; }
+  .archive-hero__s2 { right: 4rem; top: 10rem; width: 20rem; height: 20rem; }
 
   .archive-hero__copy { align-self: center; padding-bottom: var(--space-5); }
-  .archive-hero__eyebrow,
-  .filter-desk__label span { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-1); }
-  .archive-hero h1 { display: grid; justify-items: start; gap: 0.1em; margin-block: var(--space-2); font-size: var(--step-5); }
-  .archive-hero h1 span,
-  .archive-hero h1 strong { padding: 0.05em 0.16em; color: var(--ink); line-height: 0.92; box-shadow: 6px 7px 0 rgb(0 0 0 / 48%); }
-  .archive-hero h1 span { background: var(--paper); transform: rotate(-1deg); }
-  .archive-hero h1 strong { background: var(--accent-1); font-weight: 400; transform: rotate(0.8deg); }
-  .archive-hero__deck { font-family: var(--font-typewriter); font-size: var(--step-1); }
-  .archive-hero__annotation { margin: var(--space-3) 0 0 10%; font-family: var(--font-annotation); font-size: var(--step-1); color: var(--accent-3); transform: rotate(-2deg); }
-  .archive-hero__character { position: relative; min-height: 20rem; overflow: hidden; }
-  .archive-hero__character img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%; object-fit: contain; object-position: center bottom; filter: drop-shadow(8px 7px 0 rgb(0 0 0 / 55%)); }
+  .archive-hero__scribble { margin: 0.4rem 0 0 clamp(3rem, 18vw, 16rem); }
+  .archive-hero__deck { max-width: 34rem; margin-top: var(--space-2); font-size: 1.15rem; line-height: 1.55; }
+  .archive-hero__annotation { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--cyan-light); }
+  .archive-hero__character { position: relative; min-height: 20rem; }
+  .archive-hero__character img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%; object-fit: contain; object-position: center bottom; }
 
   .filter-desk {
     display: grid;
@@ -113,48 +103,56 @@ const allArticles = (await getCollection('articles', ({ data }) => !data.draft))
     align-items: start;
     padding-block: var(--space-4) var(--space-3);
   }
-  .filter-desk__label { padding-top: 0.45rem; border-top: 5px solid var(--accent-1); }
-  .filter-desk__label h2 { margin-top: 0.35rem; font-size: var(--step-2); }
+  .filter-desk__label span { font-family: var(--font-label); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan); }
+  .filter-desk__label h2 { margin-top: 0.35rem; font-size: 2rem; }
 
   .archive-results { padding-bottom: var(--space-5); }
 
   .filters {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-1);
+    gap: 0.7rem;
   }
 
   .filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
     font-family: var(--font-label);
     font-weight: 700;
     text-transform: uppercase;
-    font-size: var(--step--1);
-    letter-spacing: 0.02em;
-    /* ink border + --color-bg background were both invisible on the dark
-       page. Lifted panel + paper-tinted border, accent stays on the left. */
-    border: 2px solid color-mix(in srgb, var(--paper) 22%, transparent);
-    border-left-width: 4px;
-    border-left-color: var(--accent-1);
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    border: 2px solid var(--accent-text);
     border-radius: var(--radius);
-    background: color-mix(in srgb, var(--color-bg) 100%, white 6%);
-    color: var(--color-fg);
-    padding: 0.4em 0.8em;
+    background: transparent;
+    color: var(--paper);
+    padding: 0 1rem;
     cursor: pointer;
   }
 
-  .filter-btn.is-active {
-    /* was --ink on the ink page — the active state was invisible. Flip to
-       a solid accent chip with dark ink text. */
+  .filter-btn[data-palette]::before {
+    content: '';
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 2px;
     background: var(--accent-1);
+  }
+
+  .filter-btn:hover { background: rgb(245 242 234 / 6%); }
+
+  .filter-btn.is-active {
+    background: var(--paper);
     color: var(--ink);
-    border-color: var(--accent-1);
+    border-color: var(--paper);
   }
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    gap: var(--space-2);
-    padding-bottom: var(--space-5);
+    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+    gap: var(--space-5) var(--space-4);
+    padding-block: var(--space-3) var(--space-5);
   }
 
   @media (max-width: 52rem) {
@@ -164,10 +162,11 @@ const allArticles = (await getCollection('articles', ({ data }) => !data.draft))
 
   @media (max-width: 40rem) {
     .archive-hero { grid-template-columns: 1fr; padding-top: var(--space-4); }
+    .archive-hero__s1 { right: -20rem; top: 16rem; width: 34rem; height: 34rem; }
+    .archive-hero__s2 { display: none; }
     .archive-hero__copy { padding-bottom: var(--space-2); }
-    .archive-hero h1 { font-size: 3.2rem; }
+    .archive-hero__scribble { margin-left: 7rem; }
     .archive-hero__character { min-height: 13rem; }
-    .archive-hero__annotation { margin-left: 0; }
   }
 </style>
 
