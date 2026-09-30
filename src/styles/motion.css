@@ -1,0 +1,316 @@
+/* ============================================================
+   DECONSTRUCTING ACADEMIA — MOTION LAYER
+   Page transitions, scroll reveals, hover physics, marker draws,
+   and the homepage hero entrance.
+
+   How it stays safe:
+   - Everything that HIDES content first is gated behind the
+     .motion-ready class on <html>. That class is only added by a
+     tiny script in BaseLayout, and only when the visitor has NOT
+     asked their device for reduced motion. No JS, or reduced
+     motion on → nothing is ever hidden, the page just shows up.
+   - Page transitions are native browser view transitions. Chrome,
+     Edge and Safari animate them; Firefox just loads the page
+     normally. Nothing breaks either way.
+
+   Kill switch: delete the `import '../styles/motion.css'` line in
+   src/layouts/BaseLayout.astro and every effect in here is gone.
+
+   The JS half lives in src/scripts/motion.js — it decides WHICH
+   elements reveal on scroll (the list at the top of that file).
+   ============================================================ */
+
+:root {
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* slight overshoot — reads as "slapped onto the wall" */
+  --ease-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --reveal-dur: 0.7s;
+}
+
+/* ------------------------------------------------------------
+   1. PAGE TRANSITIONS
+   The old page lifts away, the new one settles in. The header is
+   pinned (it has its own transition name) so it stays put instead
+   of flashing. Article cover images morph from the card into the
+   article page — see view-transition-name in ArticleCard.astro
+   and articles/[slug].astro.
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+.site-header {
+  view-transition-name: da-header;
+}
+
+::view-transition-old(root) {
+  animation: 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) both da-page-out;
+}
+
+::view-transition-new(root) {
+  animation: 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) 0.05s both da-page-in;
+}
+
+::view-transition-group(*) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes da-page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-14px) rotate(-0.3deg);
+  }
+}
+
+@keyframes da-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px) rotate(0.3deg);
+  }
+}
+
+/* ------------------------------------------------------------
+   2. SCROLL REVEALS
+   motion.js tags elements with data-reveal="up|slap|splat" and
+   adds .is-revealed when they scroll into view. Animations use
+   the individual translate / scale / rotate properties so they
+   stack on top of the tilts (transform: rotate) the collage
+   pieces already have, instead of wiping them out.
+   fill-mode "backwards" = hold the start frame during the delay,
+   then hand control back to the element's normal styles when
+   done (so hover effects still work afterwards).
+   ------------------------------------------------------------ */
+.motion-ready [data-reveal]:not(.is-revealed) {
+  opacity: 0;
+}
+
+.motion-ready [data-reveal].is-revealed {
+  animation: da-reveal-up var(--reveal-dur) var(--ease-out) var(--reveal-delay, 0ms) backwards;
+}
+
+.motion-ready [data-reveal='slap'].is-revealed {
+  animation: da-slap 0.55s var(--ease-snap) var(--reveal-delay, 0ms) backwards;
+}
+
+.motion-ready [data-reveal='splat'].is-revealed {
+  animation: da-splat 0.6s var(--ease-snap) var(--reveal-delay, 0ms) backwards;
+}
+
+@keyframes da-reveal-up {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+  }
+}
+
+/* a sticker/stamp being slapped down: big, crooked, then lands */
+@keyframes da-slap {
+  from {
+    opacity: 0;
+    scale: 1.35;
+    rotate: -7deg;
+  }
+}
+
+/* paint hitting the wall: tiny, then bursts past full size */
+@keyframes da-splat {
+  from {
+    opacity: 0;
+    scale: 0.35;
+  }
+}
+
+/* ------------------------------------------------------------
+   3. MARKERS THAT DRAW THEMSELVES
+   .mark  → the neon ellipse draws around the phrase left-to-right
+   .hl    → the highlighter swipes across behind the text
+   motion.js adds .is-revealed to these when they scroll into view.
+   ------------------------------------------------------------ */
+.motion-ready .mark::after {
+  clip-path: inset(-40% 100% -40% -40%);
+}
+
+.motion-ready .mark.is-revealed::after {
+  animation: da-draw 0.9s var(--ease-out) 0.25s forwards;
+}
+
+@keyframes da-draw {
+  to {
+    clip-path: inset(-40% -40% -40% -40%);
+  }
+}
+
+.motion-ready .hl {
+  background-size: 0% 100%;
+  transition:
+    background-size 0.8s var(--ease-out) 0.15s,
+    color 0.3s ease 0.3s;
+}
+
+.motion-ready .hl:not(.is-revealed) {
+  color: var(--paper);
+}
+
+.motion-ready .hl.is-revealed {
+  background-size: 100% 100%;
+}
+
+/* ------------------------------------------------------------
+   4. HOVER PHYSICS
+   Only on devices with a real mouse — phones don't get stuck
+   "hovered" cards after a tap.
+   `html` in front of each selector just gives these rules enough
+   weight to beat the component-scoped styles.
+   ------------------------------------------------------------ */
+html .btn {
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    translate 0.12s ease,
+    box-shadow 0.18s ease;
+}
+
+html .btn:active {
+  translate: 2px 2px;
+}
+
+html .card,
+html .series-card,
+html .product-card {
+  transition:
+    translate 0.28s var(--ease-snap),
+    scale 0.28s var(--ease-snap),
+    transform 0.28s var(--ease-snap),
+    background-color 0.28s ease,
+    box-shadow 0.28s var(--ease-out);
+}
+
+html .card-graphic {
+  overflow: hidden;
+}
+
+html .card-graphic img {
+  transition: scale 0.6s var(--ease-out);
+}
+
+html .route-strip a {
+  transition:
+    background-color 0.25s ease,
+    border-top-width 0.2s var(--ease-snap);
+}
+
+html .route-strip small {
+  transition: translate 0.25s var(--ease-snap);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* article cards: lift off the wall, catch the light, cover zooms.
+     (No hover shadow here on purpose — the torn-edge clip-path on the
+     card cuts off anything drawn outside it, shadows included.) */
+  html .card:hover,
+  html .card:focus-within {
+    translate: 0 -6px;
+    scale: 1.015;
+    background: color-mix(in srgb, var(--color-bg) 100%, white 11%);
+  }
+
+  html .card:hover .card-graphic img {
+    scale: 1.06;
+  }
+
+  html .btn:hover {
+    box-shadow: 4px 4px 0 var(--paper);
+  }
+
+  html .btn:active {
+    box-shadow: none;
+  }
+
+  html .route-strip a:hover {
+    border-top-width: 12px;
+  }
+
+  html .route-strip a:hover small {
+    translate: 6px 0;
+  }
+
+  html .product-card:hover {
+    translate: 0 -4px;
+  }
+}
+
+/* ------------------------------------------------------------
+   5. HOMEPAGE HERO ENTRANCE (plays once on load)
+   Headline strips get slapped on, the copy fades up in order,
+   Mabbit rises into frame, Whonah hops in after, the dashed circle
+   swings into place, and the sticky note lands last.
+   ------------------------------------------------------------ */
+.motion-ready .hero .headline-strip--paper {
+  animation: da-slap 0.6s var(--ease-snap) 0.1s backwards;
+}
+
+.motion-ready .hero .headline-strip--pink {
+  animation: da-slap 0.6s var(--ease-snap) 0.32s backwards;
+}
+
+.motion-ready .hero__kicker {
+  animation: da-reveal-up 0.6s var(--ease-out) 0s backwards;
+}
+
+.motion-ready .hero__deck {
+  animation: da-reveal-up 0.6s var(--ease-out) 0.55s backwards;
+}
+
+.motion-ready .hero__actions {
+  animation: da-reveal-up 0.6s var(--ease-out) 0.7s backwards;
+}
+
+.motion-ready .hero__mabbit-frame {
+  animation: da-rise 0.8s var(--ease-out) 0.25s backwards;
+}
+
+.motion-ready .hero__whonah {
+  animation: da-hop 0.7s var(--ease-snap) 0.6s backwards;
+}
+
+.motion-ready .hero__circle {
+  animation: da-swing 1s var(--ease-out) 0.15s backwards;
+}
+
+.motion-ready .hero__note {
+  animation: da-slap 0.55s var(--ease-snap) 1s backwards;
+}
+
+.motion-ready .hero-splat {
+  animation: da-splat 0.7s var(--ease-snap) backwards;
+}
+
+.motion-ready .hero-splat--2 {
+  animation-delay: 0.45s;
+}
+
+@keyframes da-rise {
+  from {
+    opacity: 0;
+    translate: 0 60px;
+  }
+}
+
+@keyframes da-hop {
+  from {
+    opacity: 0;
+    translate: 0 40px;
+    scale: 0.9;
+  }
+}
+
+@keyframes da-swing {
+  from {
+    opacity: 0;
+    rotate: -45deg;
+    scale: 0.85;
+  }
+}
