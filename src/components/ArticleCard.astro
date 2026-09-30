@@ -1,6 +1,5 @@
 ---
 import { getSeries } from '../lib/series';
-import Splatter from './Splatter.astro';
 
 interface Props {
   entry: {
@@ -14,8 +13,12 @@ interface Props {
       coverImage?: string;
     };
   };
+  /** The lead story: a big Electric Violet scrap instead of a paper one. */
+  featured?: boolean;
 }
-const { entry } = Astro.props;
+const { entry, featured = false } = Astro.props;
+const tilts = ['-1.1deg', '0.9deg', '-0.4deg', '1.3deg', '-0.8deg'];
+const tilt = tilts[[...entry.id].reduce((n, c) => n + c.charCodeAt(0), 0) % tilts.length];
 const series = getSeries(entry.data.series);
 // Unique name so this cover image can morph into the article page's cover
 // during the page transition (see src/styles/motion.css).
@@ -28,9 +31,8 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
 });
 ---
 
-<article class="card torn-edge" data-palette={series?.palette}>
+<article class:list={['card', featured ? 'card--featured' : 'paper-surface torn-b']} data-palette={series?.palette} style={`--tilt: ${tilt}`}>
   <span class="tape" aria-hidden="true"></span>
-  <span class="card-splat" aria-hidden="true"><Splatter variant="corner" /></span>
   {
     entry.data.coverImage && (
       <a class="card-graphic" href={`/articles/${entry.id}/`} aria-hidden="true" tabindex="-1">
@@ -40,68 +42,41 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
   }
   {series && <span class="pill">{series.name}</span>}
   <h3><a href={`/articles/${entry.id}/`}>{entry.data.title}</a></h3>
-  <p class="typewriter">{entry.data.deck}</p>
-  <p class="meta meta-mono">
+  <p class="deck">{entry.data.deck}</p>
+  <p class="meta">
     <time datetime={entry.data.pubDate.toISOString()}>{dateStr}</time>
     {entry.data.placeholder && <span class="tag-placeholder">sample content</span>}
+    <a class="read" href={`/articles/${entry.id}/`} aria-hidden="true" tabindex="-1">Read it →</a>
   </p>
 </article>
 
 <style>
   .card {
     position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    /* was: border: 2px solid var(--ink) — same color as the page
-       background now, so it had gone invisible. A soft paper-tinted
-       border plus a slightly lightened panel background is what makes
-       the card read as its own clipping sitting on the black page. */
-    border: 2px solid color-mix(in srgb, var(--paper) 18%, transparent);
-    border-left: 6px solid var(--accent-1);
-    border-radius: var(--radius);
-    padding: var(--space-3);
-    padding-bottom: calc(var(--space-3) + 0.6rem);
-    background: color-mix(in srgb, var(--color-bg) 100%, white 6%);
-    color: var(--color-fg);
-    box-shadow: 4px 5px 0 rgb(0 0 0 / 45%);
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: 0.8rem;
+    height: 100%;
+    padding: 2rem 1.8rem 2.2rem;
+    box-shadow: var(--shadow-card);
   }
 
-  .card-splat {
-    position: absolute;
-    right: -2.2rem;
-    top: -2.2rem;
-    width: 8rem;
-    height: 8rem;
-    color: var(--accent-1);
-    opacity: 0.2;
-    z-index: 0;
-    pointer-events: none;
-  }
+  /* a desk full of clippings, not a spreadsheet — tilt set per slug */
+  .card:not(.card--featured) { transform: rotate(var(--tilt, -0.6deg)); }
 
-  /* keep real content above the splatter */
-  .card > :not(.card-splat):not(.tape) {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* alternate a slight tilt on every other card so the grid reads as a
-     desk full of clippings, not a spreadsheet */
-  .card:nth-child(even) {
-    transform: rotate(0.6deg);
-  }
-  .card:nth-child(odd) {
-    transform: rotate(-0.5deg);
+  .card--featured {
+    background: var(--violet);
+    color: var(--paper);
+    padding: clamp(2rem, 4vw, 3.2rem);
+    transform: rotate(-0.8deg);
   }
 
   .card-graphic {
     display: block;
-    margin: calc(var(--space-3) * -1) calc(var(--space-3) * -1) var(--space-2);
-    border-bottom: 2px solid color-mix(in srgb, var(--paper) 18%, transparent);
-    background: color-mix(in srgb, var(--accent-3) 18%, var(--paper));
+    margin: -0.6rem -0.6rem 0.4rem;
+    border: 2px solid var(--ink);
     text-decoration: none;
+    background: var(--ink);
   }
 
   .card-graphic img {
@@ -110,36 +85,78 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
     object-fit: cover;
   }
 
+  /* chip: the palette's accent, readable ink text; violet gets paper text */
+  .card .pill { align-self: flex-start; }
+  .card:not(.card--featured)[data-palette='electric'] .pill { color: var(--paper); }
+  .card--featured .pill { background: var(--lime); color: var(--ink); }
+
   .card h3 {
-    margin: var(--space-1) 0 0;
-    font-size: var(--step-1);
+    margin: 0;
+    font-family: var(--font-headline);
+    font-weight: 400;
+    font-size: clamp(1.6rem, 1.3rem + 0.8vw, 2rem);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .card--featured h3 {
+    font-size: clamp(2.4rem, 1.6rem + 3vw, 4.4rem);
+    line-height: 0.98;
+    max-width: 18ch;
   }
 
   .card h3 a {
+    color: inherit;
     text-decoration: none;
   }
 
   .card h3 a:hover {
     text-decoration: underline;
-    text-decoration-color: var(--da-chartreuse);
+    text-decoration-color: var(--pink-dark);
+    text-decoration-thickness: 3px;
   }
 
-  .card p {
-    max-width: none;
+  .card--featured h3 a:hover { text-decoration-color: var(--lime); }
+
+  .deck {
+    margin: 0;
+    max-width: 38rem;
+    font-size: 1rem;
+    line-height: 1.55;
   }
+
+  .card--featured .deck { font-size: 1.15rem; }
 
   .meta {
-    font-size: var(--step--1);
-    opacity: 0.75;
+    margin: auto 0 0;
+    padding-top: 0.6rem;
     display: flex;
-    gap: var(--space-2);
+    flex-wrap: wrap;
+    gap: 0.4rem var(--space-2);
     align-items: center;
+    justify-content: space-between;
+    max-width: none;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
   }
+
+  .read {
+    font-family: var(--font-label);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: var(--cyan-dark);
+    text-decoration: none;
+  }
+
+  .card--featured .read { color: var(--paper); }
 
   .tag-placeholder {
     font-family: var(--font-headline);
-    text-transform: uppercase;
-    font-weight: 700;
-    color: var(--da-ultraviolet);
+    color: var(--pink-dark);
   }
+
+  .card--featured .tag-placeholder { color: var(--lime); }
 </style>

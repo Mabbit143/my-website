@@ -30,6 +30,10 @@ const REVEAL = [
   ['.latest__grid > *', 'up'],
   ['.series-grid > *', 'up'],
   ['#article-grid > *', 'up'],
+  ['.fresh__grid > *, .fresh__side > *', 'up'],
+  ['.ledger > li', 'up'],
+  ['.kits__grid > *', 'up'],
+  ['.manifesto__inner > *', 'up'],
   ['.related .grid > *', 'up'],
 
   // collage pieces

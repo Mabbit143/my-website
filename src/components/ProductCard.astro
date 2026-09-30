@@ -20,8 +20,9 @@ const {
 } = Astro.props;
 ---
 
-<article class="product-card concrete" data-palette="field-notes">
-  <span class="product-card__tape" aria-hidden="true"></span>
+<article class="product-card paper-surface torn-b" data-palette="field-notes">
+  <span class="tape" aria-hidden="true"></span>
+  <span class="tape tape--right" aria-hidden="true"></span>
   <div class="product-card__copy">
     <p class="product-card__eyebrow">{eyebrow}</p>
     <h2>{title}</h2>
@@ -46,38 +47,29 @@ const {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: var(--space-4);
     align-items: center;
-    padding: clamp(1.5rem, 4vw, 3rem);
-    border: 2px solid var(--paper);
-    border-left: 10px solid var(--accent-1);
-    background-color: color-mix(in srgb, var(--ink) 92%, var(--accent-1));
-    box-shadow: 8px 8px 0 var(--accent-3);
+    padding: clamp(1.8rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3rem) clamp(2.2rem, 5vw, 3.4rem);
+    box-shadow: var(--shadow-card);
+    transform: rotate(-0.6deg);
   }
 
-  .product-card__tape {
-    position: absolute;
-    top: -0.8rem;
-    right: 15%;
-    width: 5rem;
-    height: 1.5rem;
-    background: color-mix(in srgb, var(--accent-3) 76%, transparent);
-    transform: rotate(4deg);
-  }
+  :global(.product-card + .product-card) { transform: rotate(0.5deg); }
 
   .product-card__eyebrow,
   .product-card__fine {
     font-family: var(--font-mono);
-    font-size: var(--step--1);
+    font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
   .product-card__eyebrow {
-    color: var(--accent-1);
+    color: var(--cyan-dark);
     font-weight: 700;
   }
 
   .product-card h2 {
-    font-size: var(--step-3);
+    font-size: clamp(1.8rem, 1.3rem + 1.6vw, 2.6rem);
+    color: var(--ink);
   }
 
   .product-card ul {
@@ -86,7 +78,7 @@ const {
   }
 
   .product-card li::marker {
-    color: var(--accent-1);
+    color: var(--pink-dark);
   }
 
   .product-card__action {
@@ -97,18 +89,33 @@ const {
   .product-card__price {
     margin-bottom: var(--space-1);
     font-family: var(--font-headline);
-    font-size: var(--step-2);
-    color: var(--accent-3);
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .product-card .btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--lime);
+  }
+
+  .product-card .btn:hover {
+    background: transparent;
+    color: var(--ink);
   }
 
   .product-card__fine {
     margin: 0.7rem 0 0;
-    opacity: 0.72;
   }
 
   @media (max-width: 42rem) {
     .product-card {
       grid-template-columns: 1fr;
+      transform: none;
     }
 
     .product-card__action {
