@@ -1,0 +1,333 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import SeriesPill from '../../components/SeriesPill.astro';
+import BlockRenderer from '../../components/blocks/BlockRenderer.astro';
+import Splatter from '../../components/Splatter.astro';
+import { getSeries } from '../../lib/series';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', ({ data }) => !data.draft);
+  return articles.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'articles'>;
+}
+
+const { entry } = Astro.props;
+const blocks = entry.data.blocks ?? [];
+// Fallback for any article not yet migrated to blocks: render its Markdown body.
+const { Content } = await entry.render();
+const hasBlocks = blocks.length > 0;
+
+const allArticles = await getCollection('articles', ({ data }) => !data.draft);
+const related = allArticles
+  .filter((a) => a.slug !== entry.slug && a.data.series === entry.data.series)
+  .slice(0, 2);
+
+const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const series = getSeries(entry.data.series);
+// Matches the name ArticleCard.astro puts on the card's cover image, so the
+// image morphs from the card into this page's cover (src/styles/motion.css).
+const coverTransitionName = `da-cover-${entry.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description} ogImage={entry.data.socialImage}>
+  <article class="wrap article" data-palette={getSeries(entry.data.series)?.palette}>
+    <span class="article-splat" aria-hidden="true"><Splatter variant="burst" /></span>
+    <header class="article-header">
+      <SeriesPill slug={entry.data.series} />
+      <h1><span>{entry.data.title}</span></h1>
+      <p class="deck typewriter">{entry.data.deck}</p>
+      <p class="byline meta-mono">
+        By {entry.data.author} · <time datetime={entry.data.pubDate.toISOString()}>{dateStr}</time>
+        {
+          entry.data.updatedDate && (
+            <>
+              {' '}
+              · updated{' '}
+              <time datetime={entry.data.updatedDate.toISOString()}>
+                {entry.data.updatedDate.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </time>
+            </>
+          )
+        }
+      </p>
+      {
+        entry.data.placeholder && (
+          <p class="placeholder-note">
+            <strong>Sample content.</strong> This article exists to demonstrate the template — swap
+            it for a real piece before launch. See <code>src/content/articles/_README.md</code>.
+          </p>
+        )
+      }
+    </header>
+
+    <div class="reading-desk">
+      <aside class="reading-desk__rail" aria-label="Article file information">
+        <p class="reading-desk__label">Evidence file</p>
+        <dl>
+          <div><dt>Series</dt><dd>{series?.name ?? entry.data.series}</dd></div>
+          <div><dt>Filed</dt><dd>{dateStr}</dd></div>
+          <div><dt>Method</dt><dd>The Second Look</dd></div>
+        </dl>
+        <p class="reading-desk__note">Read the source. Check the denominator. Ask what disappeared.</p>
+        <a href="/articles/">← Back to the evidence wall</a>
+      </aside>
+      <div class="reading-desk__page">
+    {
+      entry.data.coverImage && (
+        <figure class:list={['article-cover', { 'article-cover--bleed': entry.data.coverStyle === 'bleed' }]}>
+          {entry.data.coverStyle !== 'bleed' && <span class="tape" aria-hidden="true" />}
+          <img
+            src={entry.data.coverImage}
+            alt={entry.data.coverAlt ?? `${entry.data.title} article graphic`}
+            width="1200"
+            height="675"
+            loading="eager"
+            decoding="async"
+            style={`view-transition-name: ${coverTransitionName}`}
+          />
+          {entry.data.coverCaption && <figcaption>{entry.data.coverCaption}</figcaption>}
+        </figure>
+      )
+    }
+
+      </div>
+    </div>
+
+    {
+      hasBlocks ? (
+        <BlockRenderer blocks={blocks} />
+      ) : (
+        <div class="prose">
+          <Content />
+        </div>
+      )
+    }
+
+    {
+      related.length > 0 && (
+        <aside class="related" aria-labelledby="related-heading">
+          <h2 id="related-heading" class="splat-head">
+            <span class="splat-head__art" aria-hidden="true"><Splatter variant="blob" seed={9} /></span>
+            More from this series
+          </h2>
+          <div class="grid">
+            {related.map((r) => (
+              <ArticleCard entry={r} />
+            ))}
+          </div>
+        </aside>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .article {
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+    padding-block: var(--space-4) var(--space-6);
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  .article-splat {
+    position: absolute;
+    top: -1rem;
+    right: -3rem;
+    width: 20rem;
+    height: 20rem;
+    color: var(--accent-1);
+    opacity: 0.16;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .article > :not(.article-splat) {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* chalkboard series only: the article reads as one big slab sitting on
+     the page, matching how ArticleCard/series-card already treat a "clipping"
+     — not a full-bleed reskin of the header/footer/rest of the site. */
+  .article[data-palette='chalkboard'] {
+    border-radius: var(--radius);
+    padding-top: var(--space-3);
+  }
+
+  .article-header {
+    max-width: 58rem;
+    margin-bottom: var(--space-5);
+  }
+
+  .article-header h1 {
+    margin-top: var(--space-2);
+    max-width: 100%;
+    font-size: clamp(2.5rem, 6.5vw, 4.8rem);
+    overflow-wrap: anywhere;
+  }
+
+  .article-header h1 span {
+    display: inline;
+    padding: 0.04em 0.13em;
+    background: var(--paper);
+    color: var(--ink);
+    /* Each wrapped line is its own paper strip. Reserve enough line-box
+       height for the cloned padding and cyan shadow so the strips do not
+       collide when a long article title wraps. */
+    line-height: 1.66;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    box-shadow: 7px 8px 0 color-mix(in srgb, var(--accent-1) 70%, transparent);
+  }
+
+  .deck {
+    font-size: var(--step-1);
+    width: min(100%, var(--content-max));
+    overflow-wrap: anywhere;
+  }
+
+  .byline {
+    font-size: var(--step--1);
+    opacity: 0.75;
+  }
+
+  .article-header .placeholder-note {
+    margin-top: var(--space-2);
+    max-width: var(--content-max);
+  }
+
+  .reading-desk {
+    display: grid;
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: clamp(1.5rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .reading-desk__rail {
+    position: sticky;
+    top: var(--space-3);
+    padding-top: var(--space-2);
+    border-top: 7px solid var(--accent-1);
+    font-size: var(--step--1);
+  }
+
+  .reading-desk__label,
+  .reading-desk dt {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-1);
+  }
+
+  .reading-desk dl { margin: var(--space-2) 0; }
+  .reading-desk dl div { padding-block: 0.7rem; border-bottom: 1px dashed var(--color-border); }
+  .reading-desk dt,
+  .reading-desk dd { margin: 0; }
+  .reading-desk dd { font-family: var(--font-label); font-weight: 700; line-height: 1.25; }
+  .reading-desk__note { padding: var(--space-2); background: var(--accent-3); color: var(--ink); font-family: var(--font-annotation); font-size: var(--step-1); line-height: 1.15; transform: rotate(-2deg); box-shadow: 4px 4px 0 rgb(0 0 0 / 40%); }
+  .reading-desk__rail > a { display: inline-block; margin-top: var(--space-2); font-family: var(--font-label); font-weight: 700; text-transform: uppercase; }
+  .reading-desk__page { min-width: 0; }
+
+  .article-cover {
+    position: relative;
+    width: min(100%, 58rem);
+    margin: 0 0 var(--space-4);
+    padding: 0.55rem;
+    /* a paper-colored print taped to the wall — the ink border reads fine
+       against its own paper mat. Shadow bumped to a real black so the
+       print lifts off the dark page. */
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    box-shadow: 6px 7px 0 rgb(0 0 0 / 45%);
+    transform: rotate(-0.35deg);
+  }
+
+  .article-cover img {
+    width: 100%;
+    height: auto;
+    max-height: 38rem;
+    object-fit: contain;
+    background: color-mix(in srgb, var(--accent-3) 18%, var(--paper));
+  }
+
+  /* bleed: for a graphic already designed to sit directly on the page —
+     no paper mat, no border, no tape, no letterboxing fill color. */
+  .article-cover--bleed {
+    padding: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .article-cover--bleed img {
+    max-height: none;
+    background: none;
+  }
+
+  .article-cover figcaption {
+    padding: 0.7rem 0.4rem 0.2rem;
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
+  /* article prose (Markdown text blocks + the legacy full-body fallback)
+     is styled globally in src/styles/global.css under "article prose", so
+     the rules reach TextBlock's output too. */
+
+  .related {
+    /* was 3px solid var(--ink) — invisible on the dark page */
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-5);
+    padding-top: var(--space-3);
+    max-width: var(--page-max);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--space-2);
+  }
+
+  @media (max-width: 56rem) {
+    .reading-desk { grid-template-columns: 1fr; }
+    .reading-desk__rail { position: static; display: grid; grid-template-columns: 1fr; }
+    .reading-desk__rail dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-1); }
+    .reading-desk__note { max-width: 17rem; }
+  }
+
+  @media (max-width: 40rem) {
+    .article-header h1 { font-size: clamp(2.25rem, 12vw, 3.15rem); }
+    .article-header h1 span {
+      line-height: 1.7;
+      box-shadow: 4px 5px 0 color-mix(in srgb, var(--accent-1) 70%, transparent);
+    }
+    .reading-desk__rail dl { grid-template-columns: 1fr; }
+    .article-cover {
+      transform: none;
+      box-shadow: 3px 4px 0 rgb(0 0 0 / 40%);
+    }
+  }
+</style>
