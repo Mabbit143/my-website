@@ -12,8 +12,11 @@ export const GET: APIRoute = async () => {
   const articles = await getCollection('articles');
   const payload = articles
     .map((entry) => ({
-      id: entry.id, // real filename in src/content/articles/, e.g. "Testing.md"
-      slug: entry.slug,
+      // real filename in src/content/articles/, e.g. "Testing.md" — the editor
+      // uses this to open/save the right file. (Since Astro 5, entry.id is the
+      // URL slug and the filename lives in entry.filePath.)
+      id: (entry.filePath ?? '').replace(/^(\.\/)?src\/content\/articles\//, ''),
+      slug: entry.id,
       ...entry.data,
       pubDate: entry.data.pubDate.toISOString().slice(0, 10),
       updatedDate: entry.data.updatedDate ? entry.data.updatedDate.toISOString().slice(0, 10) : '',

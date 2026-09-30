@@ -3,7 +3,7 @@ import { getSeries } from '../lib/series';
 
 interface Props {
   entry: {
-    slug: string;
+    id: string;
     data: {
       title: string;
       deck: string;
@@ -18,9 +18,11 @@ interface Props {
 }
 const { entry, featured = false } = Astro.props;
 const tilts = ['-1.1deg', '0.9deg', '-0.4deg', '1.3deg', '-0.8deg'];
-const tilt = tilts[[...entry.slug].reduce((n, c) => n + c.charCodeAt(0), 0) % tilts.length];
+const tilt = tilts[[...entry.id].reduce((n, c) => n + c.charCodeAt(0), 0) % tilts.length];
 const series = getSeries(entry.data.series);
+const coverTransitionName = `da-cover-${entry.id.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
 const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
+  timeZone: 'UTC',
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -31,18 +33,18 @@ const dateStr = entry.data.pubDate.toLocaleDateString('en-US', {
   <span class="tape" aria-hidden="true"></span>
   {
     entry.data.coverImage && (
-      <a class="card-graphic" href={`/articles/${entry.slug}/`} aria-hidden="true" tabindex="-1">
-        <img src={entry.data.coverImage} alt="" loading="lazy" decoding="async" />
+      <a class="card-graphic" href={`/articles/${entry.id}/`} aria-hidden="true" tabindex="-1">
+        <img src={entry.data.coverImage} alt="" loading="lazy" decoding="async" style={`view-transition-name: ${coverTransitionName}`} />
       </a>
     )
   }
   {series && <span class="pill">{series.name}</span>}
-  <h3><a href={`/articles/${entry.slug}/`}>{entry.data.title}</a></h3>
+  <h3><a href={`/articles/${entry.id}/`}>{entry.data.title}</a></h3>
   <p class="deck">{entry.data.deck}</p>
   <p class="meta">
     <time datetime={entry.data.pubDate.toISOString()}>{dateStr}</time>
     {entry.data.placeholder && <span class="tag-placeholder">sample content</span>}
-    <a class="read" href={`/articles/${entry.slug}/`} aria-hidden="true" tabindex="-1">Read it →</a>
+    <a class="read" href={`/articles/${entry.id}/`} aria-hidden="true" tabindex="-1">Read it →</a>
   </p>
 </article>
 
