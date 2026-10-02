@@ -1,5 +1,5 @@
 ---
-title: I Built an App That Types Up My Handwritten Notes
+title: I Refuse to Stop Writing by Hand, So I Built PageMark
 deck: PageMark turns a photo of a notebook page into clean Markdown. It keeps your words, admits what it can't read, and exists because I refuse to stop writing by hand.
 series: use-the-damn-tool
 topics:
