@@ -198,15 +198,14 @@ const coverTransitionName = `da-cover-${entry.id.toLowerCase().replace(/[^a-z0-9
   .article-header h1 span {
     display: inline;
     padding: 0.04em 0.13em;
-    background: var(--paper);
+    background: #eeeadf url('/images/texture/paper.jpg');
+    background-size: 768px 768px;
     color: var(--ink);
-    /* Each wrapped line is its own paper strip. Reserve enough line-box
-       height for the cloned padding and cyan shadow so the strips do not
-       collide when a long article title wraps. */
+    /* Each wrapped line is its own torn paper strip (V2 Cut-&-Paste). */
     line-height: 1.66;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
-    box-shadow: 7px 8px 0 color-mix(in srgb, var(--accent-1) 70%, transparent);
+    box-shadow: 0 3px 0 rgb(0 0 0 / 25%);
   }
 
   .deck {
@@ -333,7 +332,7 @@ const coverTransitionName = `da-cover-${entry.id.toLowerCase().replace(/[^a-z0-9
     .article-header h1 { font-size: clamp(2.25rem, 12vw, 3.15rem); }
     .article-header h1 span {
       line-height: 1.7;
-      box-shadow: 4px 5px 0 color-mix(in srgb, var(--accent-1) 70%, transparent);
+      box-shadow: 0 3px 0 rgb(0 0 0 / 25%);
     }
     .reading-desk__rail dl { grid-template-columns: 1fr; }
     .article-cover {

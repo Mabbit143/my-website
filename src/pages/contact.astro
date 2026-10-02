@@ -1,14 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Splatter from '../components/Splatter.astro';
 ---
 
 <BaseLayout title="Contact" description="Get in touch with Deconstructing Academia.">
   <section class="wrap contact-hero" data-palette="field-notes">
-    <span class="contact-hero__splat" aria-hidden="true"><Splatter variant="burst" /></span>
+    <span class="splat splat--violet contact-hero__s1" aria-hidden="true"></span>
+    <span class="splat splat--pink contact-hero__s2" aria-hidden="true"></span>
     <div>
-      <p class="contact-hero__eyebrow">Corrections · tips · collaboration</p>
-      <h1><span>Put it</span><strong>on the record.</strong></h1>
+      <p class="eyebrow">Corrections · tips · collaboration</p>
+      <h1 class="strip-stack">
+        <span class="strip strip--paper torn-lr">Put it</span>
+        <span class="strip strip--lime torn-lr">on the record.</span>
+      </h1>
       <p class="contact-hero__deck">Reach out about corrections, tips, pitches, speaking, or just to say the argument landed—or didn't.</p>
     </div>
     <div class="contact-hero__art" aria-hidden="true">
@@ -35,7 +38,9 @@ import Splatter from '../components/Splatter.astro';
         <p class="contact-grid__note">Whonah accepts evidence. He does not accept institutional fog.</p>
       </aside>
 
-      <form action="https://formspree.io/f/xbgjalyg" method="POST">
+      <form class="paper-surface torn-b" action="https://formspree.io/f/xbgjalyg" method="POST">
+        <span class="tape" aria-hidden="true"></span>
+        <span class="tape tape--right" aria-hidden="true"></span>
         <div class="form-heading">
           <span>Message form</span>
           <h2>Send the receipt.</h2>
@@ -74,34 +79,38 @@ import Splatter from '../components/Splatter.astro';
 </BaseLayout>
 
 <style>
-  .contact-hero { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 0.75fr); align-items: end; min-height: 31rem; padding-block: var(--space-5) 0; }
-  .contact-hero__splat { position: absolute; z-index: -1; left: -8rem; top: -10rem; width: 30rem; color: var(--accent-1); opacity: 0.2; }
+  .contact-hero { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 0.75fr); align-items: end; min-height: 31rem; padding-block: var(--space-5) 0; }
+  .contact-hero > :not(.splat) { position: relative; z-index: 1; }
+  .contact-hero__s1 { right: -16rem; top: -10rem; width: 44rem; height: 44rem; }
+  .contact-hero__s2 { right: 10rem; top: 14rem; width: 18rem; height: 18rem; }
   .contact-hero > div:first-of-type { align-self: center; padding-bottom: var(--space-5); }
-  .contact-hero__eyebrow,.contact-grid__label,.form-heading span { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent-1); }
-  .contact-hero h1 { display: grid; justify-items: start; gap: 0.12em; margin-block: var(--space-2); font-size: var(--step-5); }
-  .contact-hero h1 span,.contact-hero h1 strong { padding: 0.05em 0.14em; color: var(--ink); font-weight: 400; line-height: 0.94; box-shadow: 7px 7px 0 rgb(0 0 0 / 48%); }
-  .contact-hero h1 span { background: var(--paper); transform: rotate(-1deg); }
-  .contact-hero h1 strong { background: var(--accent-1); transform: rotate(0.7deg); }
-  .contact-hero__deck { font-family: var(--font-typewriter); font-size: var(--step-1); }
-  .contact-hero__art { position: relative; min-height: 23rem; overflow: hidden; }
-  .contact-hero__art img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%; object-fit: contain; object-position: center bottom; filter: drop-shadow(8px 7px 0 rgb(0 0 0 / 55%)); }
-  .contact-routing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding-block: var(--space-4); }
-  .contact-routing article { min-height: 12rem; padding: var(--space-3); border-top: 7px solid var(--accent-1); background: color-mix(in srgb, var(--ink) 94%, white); }
-  .contact-routing span { font-family: var(--font-mono); color: var(--accent-1); }
-  .contact-routing h2 { margin-top: var(--space-2); font-size: var(--step-2); }
-  .contact-routing p { font-family: var(--font-typewriter); font-size: var(--step--1); }
-  .contact-desk { padding-block: var(--space-5) var(--space-6); background: var(--paper); color: var(--ink); }
+  .contact-grid__label,.form-heading span { font-family: var(--font-label); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan); }
+  .contact-hero__deck { max-width: 34rem; margin-top: var(--space-3); font-size: 1.15rem; line-height: 1.55; }
+  .contact-hero__art { position: relative; min-height: 23rem; }
+  .contact-hero__art img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%; object-fit: contain; object-position: center bottom; }
+  .contact-routing { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); padding-block: var(--space-5) var(--space-4); }
+  .contact-routing article { min-height: 12rem; padding: var(--space-3); border-top: 6px solid var(--accent-1); background: rgb(13 11 18 / 78%); box-shadow: var(--shadow-card); }
+  .contact-routing span { font-family: var(--font-headline); font-size: 3rem; line-height: 0.9; color: var(--accent-text); }
+  .contact-routing h2 { margin-top: var(--space-2); font-size: 1.8rem; }
+  .contact-routing p { font-size: 1rem; }
+  .contact-desk { padding-block: var(--space-4) var(--space-6); }
   .contact-grid { display: grid; grid-template-columns: minmax(14rem, 0.6fr) minmax(0, 1.4fr); gap: clamp(2rem, 7vw, 6rem); align-items: start; }
   .contact-grid aside { position: sticky; top: var(--space-3); }
   .contact-grid aside ul { padding-left: 1.2em; }
-  .contact-grid__note { margin-top: var(--space-3); padding: var(--space-2); background: var(--accent-3); font-family: var(--font-annotation); font-size: var(--step-1); line-height: 1.15; transform: rotate(-2deg); box-shadow: 5px 5px 0 rgb(0 0 0 / 20%); }
-  form { display: grid; gap: var(--space-2); padding: clamp(1rem, 4vw, 2.5rem); border: 3px solid var(--ink); border-top: 10px solid var(--accent-1); background: #fff; box-shadow: 9px 10px 0 var(--ink); }
+  .contact-grid__note { margin-top: var(--space-3); font-family: var(--font-annotation); font-weight: 600; font-size: 1.7rem; line-height: 1.15; color: var(--pink); transform: rotate(-3deg); }
+  form { position: relative; display: grid; gap: var(--space-2); padding: clamp(1.5rem, 4vw, 2.8rem) clamp(1.2rem, 4vw, 2.8rem) clamp(2rem, 5vw, 3.2rem); box-shadow: var(--shadow-card); transform: rotate(0.6deg); }
+  form h2 { color: var(--ink); }
+  .form-heading span { color: var(--cyan-dark); }
   .form-heading { border-bottom: 2px dashed color-mix(in srgb, var(--ink) 25%, transparent); }
   .field-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
   .field { display: grid; gap: 0.35em; }
   label { font-family: var(--font-label); font-weight: 700; text-transform: uppercase; font-size: var(--step--1); letter-spacing: 0.03em; }
-  input,select,textarea { width: 100%; font-family: var(--font-body); font-size: var(--step-0); padding: 0.75em 0.85em; border: 2px solid var(--ink); border-radius: 0; background: var(--paper); color: var(--ink); }
-  input:focus,select:focus,textarea:focus { border-color: var(--accent-1); }
+  label { color: var(--ink); }
+  input,select,textarea { width: 100%; min-height: 48px; font-family: var(--font-body); font-size: var(--step-0); padding: 0.75em 0.85em; border: 2px solid var(--ink); border-radius: 2px; background: rgb(255 255 255 / 40%); color: var(--ink); }
+  form .btn { background: var(--ink); border-color: var(--ink); color: var(--lime); min-height: 48px; }
+  form .btn:hover { background: transparent; color: var(--ink); }
+  input:focus,select:focus,textarea:focus { border-color: var(--pink-dark); }
+  form :focus-visible { outline-color: var(--ink) !important; }
   textarea { resize: vertical; }
   button { justify-self: start; }
   @media (max-width: 48rem) {
@@ -116,6 +125,8 @@ import Splatter from '../components/Splatter.astro';
     .contact-hero__art { min-height: 14rem; }
     .contact-routing,.field-row { grid-template-columns: 1fr; }
     .contact-routing article { min-height: auto; }
-    form { box-shadow: 5px 6px 0 var(--ink); }
+    form { transform: none; }
+    .contact-hero__s1 { right: -20rem; top: 12rem; width: 32rem; height: 32rem; }
+    .contact-hero__s2 { display: none; }
   }
 </style>

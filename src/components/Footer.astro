@@ -1,12 +1,14 @@
 ---
-import Splatter from './Splatter.astro';
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer concrete">
-  <span class="site-footer__splat" aria-hidden="true"><Splatter variant="burst" /></span>
+<footer class="site-footer">
+  <span class="splat splat--lime site-footer__splat" aria-hidden="true"></span>
   <div class="wrap site-footer__inner">
-    <p class="line">Learn the rules. Question who wrote them.</p>
+    <div class="site-footer__lead">
+      <p class="line">Make knowledge harder to hoard.</p>
+      <p class="tagline">Learn the rules. Question who wrote them.</p>
+    </div>
     <nav aria-label="Footer">
       <ul>
         <li><a href="/articles/">Articles</a></li>
@@ -17,6 +19,10 @@ const year = new Date().getFullYear();
         <li><a href="/rss.xml">RSS</a></li>
       </ul>
     </nav>
+    <div class="site-footer__contact">
+      <p class="label">Contact</p>
+      <a href="mailto:mabbitrountree@deconstructingacademia.com">mabbitrountree@deconstructingacademia.com</a>
+    </div>
     <p class="fine-print">&copy; {year} Deconstructing Academia. All rights reserved.</p>
   </div>
 </footer>
@@ -26,62 +32,96 @@ const year = new Date().getFullYear();
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    /* was: border-top: 3px solid var(--da-black) — that worked as a
-       visible seam when the page above was light paper. Now the page
-       above is also ink-colored, so the footer needs its own accent
-       line to still read as a distinct section instead of just
-       fading into the page. */
-    border-top: 3px solid var(--accent-1);
-    background: var(--da-black);
-    color: var(--da-porcelain);
+    border-top: 1px solid rgb(245 242 234 / 14%);
     margin-top: var(--space-6);
   }
 
   .site-footer__splat {
-    position: absolute;
-    left: -3rem;
-    bottom: -4rem;
-    width: 18rem;
-    height: 18rem;
-    color: var(--accent-1);
-    opacity: 0.12;
-    z-index: 0;
-    pointer-events: none;
+    right: -20rem;
+    bottom: -20rem;
+    width: 34rem;
+    height: 34rem;
+    opacity: 0.85;
   }
 
   .site-footer__inner {
     position: relative;
     z-index: 1;
-    padding-block: var(--space-4);
+    padding-block: var(--space-4) var(--space-4);
     display: grid;
-    gap: var(--space-2);
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: var(--space-3);
+    align-items: end;
   }
 
   .line {
     font-family: var(--font-headline);
-    font-weight: 700;
+    font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem);
+    line-height: 1;
     text-transform: uppercase;
-    color: var(--da-chartreuse);
+    margin: 0 0 0.4rem;
     max-width: none;
+  }
+
+  .tagline {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin: 0;
   }
 
   .site-footer nav ul {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
+    gap: 0.25rem var(--space-3);
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
-  .site-footer a {
-    color: var(--da-porcelain);
-    text-decoration-color: var(--da-pink);
+  .site-footer nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.9rem;
+    color: var(--paper);
+    text-decoration: none;
+  }
+
+  .site-footer nav a:hover { color: var(--lime); }
+
+  .site-footer__contact .label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin: 0 0 0.2rem;
+  }
+
+  .site-footer__contact a {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--cyan);
+    word-break: break-word;
   }
 
   .fine-print {
-    font-size: var(--step--1);
-    opacity: 0.8;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 0;
     max-width: none;
+  }
+
+  @media (max-width: 46rem) {
+    .site-footer__inner { grid-template-columns: 1fr; }
+    .site-footer__splat { right: -26rem; bottom: -24rem; }
   }
 </style>

@@ -93,3 +93,4 @@ blocks:
       If you end up needing more than 10 pages a month, there are paid plans on the [pricing page](https://notes.deconstructingacademia.com/pricing). You don't need one to test it.
 
       **[Try PageMark free →](https://notes.deconstructingacademia.com)**
+---
