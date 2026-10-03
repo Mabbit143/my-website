@@ -13,8 +13,15 @@ const featured = allArticles[0];
 const latest = allArticles.slice(1, 3);
 const countBySeries = (slug: string) => allArticles.filter((a) => a.data.series === slug).length;
 
-// Same two kits and prices as src/pages/shop.astro — keep them in sync.
+// Same live kits and prices as src/pages/shop.astro — keep them in sync.
 const kits = [
+  {
+    no: 'No. 03',
+    title: 'First-Week College Field Notes Kit',
+    body: 'Document hidden rules, map workload collisions, prepare for office hours, and make one useful support move before everything is on fire.',
+    price: '$9',
+    href: 'https://www.etsy.com/listing/4587468925/first-week-college-field-notes-kit',
+  },
   {
     no: 'No. 01',
     title: 'The Syllabus Audit Kit + Grade Tracker',
