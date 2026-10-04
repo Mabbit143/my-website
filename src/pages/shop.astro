@@ -1,4 +1,5 @@
 ---
+import ChalkCallout from '../components/ChalkCallout.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import CharacterPanel from '../components/CharacterPanel.astro';
@@ -66,6 +67,17 @@ import CharacterPanel from '../components/CharacterPanel.astro';
     />
   </section>
 
+  <section class="wrap partner-tools" aria-labelledby="partner-tools-heading">
+    <h2 id="partner-tools-heading" class="visually-hidden">Tools I actually use</h2>
+    <ChalkCallout eyebrow="Tools I actually use" title="Kortex: NotebookLM, minus the busywork.">
+      Kortex is a Chrome extension that saves pages and text snippets straight into NotebookLM
+      and bulk-imports or exports your sources, so building a study notebook stops eating your
+      evening. Use code <strong>DECONSTRUCT</strong> for 10% off.{" "}
+      <a href="https://chromewebstore.google.com/detail/hdapplggdhndkblofffknpmnnnnbncbn" rel="sponsored noopener" target="_blank">Get Kortex →</a>
+      <br /><small>Affiliate disclosure: I earn a commission if you buy with my code. It costs you nothing extra, and I only list tools I use.</small>
+    </ChalkCallout>
+  </section>
+
   <section class="wrap shop-guide">
     <CharacterPanel
       compact
@@ -113,6 +125,7 @@ import CharacterPanel from '../components/CharacterPanel.astro';
   }
 
   .products,
+  .partner-tools,
   .shop-guide {
     padding-block: var(--space-4);
   }
