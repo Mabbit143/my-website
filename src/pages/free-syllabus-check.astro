@@ -1,0 +1,259 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Kit form for the Read the Fine Print lead magnet. Its incentive email
+// delivers the PDF after the subscriber confirms.
+const KIT_FORM_ID = '10005934';
+const action = `https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`;
+
+const inside = [
+  ['01 · 4 checks', 'Reading between the lines', 'Attendance, late work, participation, and grade appeals, in plain words.'],
+  ['02 · 1 table', 'Where your grade comes from', "Weights, targets, and the quick math, so one heavy category can't quietly sink your final grade."],
+  ['03 · 6 checks', 'Rules under the percentages', 'Dropped scores, rounding, curves, extra credit, final-exam replacement, and what tools (including AI) are allowed.'],
+  ['04 · 3 questions', 'Turn it into questions', 'The questions you still need answered, plus a boring-but-specific script that gets a real answer.'],
+  ['05 · 2 checklists', 'Office hours + receipts', "What to ask before you're in trouble, and how to keep a record so your memory isn't the only proof."],
+  ['06 · 1 planner', 'Put it on the calendar', 'Pull every date, deadline, and trigger out of the PDF and into your actual life.'],
+];
+---
+
+<BaseLayout
+  title="Read the Fine Print: Free Syllabus Check"
+  description="A free 10-minute syllabus reality check for college students. Find the attendance traps, late-work math, fog words, and hidden grading rules before they get used on your grade."
+  ogImage="/images/fine-print-preview.jpg"
+>
+  <section class="wrap fp-hero">
+    <span class="splat splat--lime fp-hero__s1" aria-hidden="true"></span>
+    <div class="fp-hero__copy">
+      <p class="eyebrow">Free for college students</p>
+      <h1 class="strip-stack">
+        <span class="strip strip--paper torn-lr">Read the</span>
+        <span class="strip strip--lime torn-lr">fine print.</span>
+      </h1>
+      <p class="fp-deck">
+        A free 10-minute syllabus reality check. Find the attendance traps, late-work math, fog
+        words, and hidden grading rules before they get used on your grade.
+      </p>
+      <ul class="fp-wins">
+        <li>Decode attendance, late work, participation, and grade-appeal rules</li>
+        <li>Spot the fog words that let someone decide the rules later</li>
+        <li>Do the grade-weight math so one category can't blindside you</li>
+        <li>Turn what you find into calm, specific questions for your professor</li>
+      </ul>
+      <div class="fp-signup">
+        <form action={action} method="post" data-fp-form>
+          <label for="fp-email-1" class="fp-label">Your email</label>
+          <div class="fp-fields">
+            <input id="fp-email-1" type="email" name="email_address" placeholder="you@school.edu" autocomplete="email" required />
+            <button type="submit" class="fp-btn">Send me the check</button>
+          </div>
+          <p class="fp-error" role="alert" data-fp-error></p>
+        </form>
+        <p class="fp-success" role="status" data-fp-success hidden>
+          <strong>Check your inbox.</strong> Click the confirm link (try spam too) and the PDF is yours.
+        </p>
+      </div>
+      <p class="fp-fine">
+        Free fillable PDF. You'll also get the occasional email from Mabbit about how college
+        actually works. Unsubscribe anytime.
+      </p>
+    </div>
+    <div class="fp-preview">
+      <img
+        src="/images/fine-print-preview.jpg"
+        width="640"
+        height="828"
+        alt="Page one of the Read the Fine Print syllabus check: course info fields, a section for attendance, late work, participation and grade appeals, fog words to circle, and a grade-weight table."
+      />
+      <div class="fp-stamp" aria-hidden="true"><span>Free</span><b>2 pages</b><span>10 min</span></div>
+    </div>
+  </section>
+
+  <section class="fp-paper">
+    <div class="wrap">
+      <p class="fp-kicker">What's inside</p>
+      <h2 class="fp-h2">Two pages. Ten minutes.</h2>
+      <p class="fp-sub">Write what the syllabus actually says, not what you hope it means.</p>
+      <div class="fp-grid">
+        {inside.map(([num, title, body]) => (
+          <div class="fp-card">
+            <span class="fp-num">{num}</span>
+            <h3>{title}</h3>
+            <p>{body}</p>
+          </div>
+        ))}
+      </div>
+      <div class="fp-who">
+        <div>
+          <p class="fp-kicker">Made for</p>
+          <ul>
+            <li>First-gen students figuring out college without a map</li>
+            <li>Returning, working, and parenting students with zero time to waste</li>
+            <li>Formerly incarcerated and justice-impacted students learning a new set of rules</li>
+            <li>Anyone who's been blindsided by a syllabus policy</li>
+          </ul>
+        </div>
+        <div class="fp-no">
+          <p class="fp-kicker">Not for</p>
+          <ul>
+            <li>People looking for a way to skip reading the syllabus</li>
+            <li>Anyone hoping to win a fight with their professor</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap fp-founder">
+    <img src="/images/mabbit-web.png" width="200" height="507" alt="Mabbit, the Deconstructing Academia rabbit, holding a notebook and pointing" />
+    <blockquote>
+      Some students show up already knowing the rules. A lot of us never got that memo.{' '}
+      <em>So I write them down.</em>
+      <cite>Mabbit · Founder, Deconstructing Academia</cite>
+    </blockquote>
+  </section>
+
+  <section class="wrap fp-last">
+    <p class="fp-kicker">Last call</p>
+    <h2 class="fp-h2">Grab the check. Keep your grade.</h2>
+    <p>One email. Your check lands in your inbox in under a minute.</p>
+    <div class="fp-signup">
+      <form action={action} method="post" data-fp-form>
+        <label for="fp-email-2" class="fp-label">Your email</label>
+        <div class="fp-fields">
+          <input id="fp-email-2" type="email" name="email_address" placeholder="you@school.edu" autocomplete="email" required />
+          <button type="submit" class="fp-btn">Send me the check</button>
+        </div>
+        <p class="fp-error" role="alert" data-fp-error></p>
+      </form>
+      <p class="fp-success" role="status" data-fp-success hidden>
+        <strong>Check your inbox.</strong> Click the confirm link (try spam too) and the PDF is yours.
+      </p>
+    </div>
+    <p class="scribble fp-tag">Learn the rules. Question who wrote them.</p>
+  </section>
+</BaseLayout>
+
+<script>
+  // Same approach as EmailSignup.astro: Kit's endpoint sends no CORS headers,
+  // so the response can't be read. Success means the request went out; Kit's
+  // double opt-in email delivers the PDF. Without JS the form posts to Kit.
+  document.querySelectorAll<HTMLFormElement>('[data-fp-form]').forEach((form) => {
+    const error = form.querySelector<HTMLElement>('[data-fp-error]');
+    const success = form.parentElement?.querySelector<HTMLElement>('[data-fp-success]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (error) error.textContent = '';
+      if (button) button.disabled = true;
+      try {
+        await fetch(form.action, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>),
+        });
+        form.hidden = true;
+        if (success) success.hidden = false;
+      } catch {
+        if (error) error.textContent = "Couldn't send that. Check your connection and try again.";
+      } finally {
+        if (button) button.disabled = false;
+      }
+    });
+  });
+</script>
+
+<style>
+  .fp-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: var(--space-5);
+    align-items: center;
+    padding-block: var(--space-5);
+  }
+  .fp-hero > :not(.splat) { position: relative; z-index: 1; }
+  .fp-hero__s1 { right: -10rem; top: -8rem; width: 30rem; height: 30rem; }
+
+  .fp-deck { max-width: 36rem; margin-top: var(--space-2); font-size: 1.15rem; line-height: 1.55; }
+
+  .fp-wins { list-style: none; padding: 0; margin: var(--space-3) 0; }
+  .fp-wins li { position: relative; padding-left: 1.8rem; margin: 0.45rem 0; }
+  .fp-wins li::before {
+    content: ''; position: absolute; left: 0; top: 0.4em;
+    width: 0.85rem; height: 0.85rem; background: var(--accent-3);
+  }
+
+  .fp-label, .fp-kicker, .fp-num, .fp-founder cite {
+    font-family: var(--font-mono); font-size: var(--step--1);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .fp-label { display: block; margin-bottom: 0.4rem; }
+  .fp-fields { display: flex; gap: var(--space-1); flex-wrap: wrap; max-width: 34rem; }
+  .fp-fields input {
+    flex: 1 1 15rem; width: auto; min-width: 0; padding: 0.85em 0.9em; font: inherit; font-family: var(--font-body);
+    color: var(--ink); background: var(--paper); border: 2px solid var(--paper); border-radius: var(--radius);
+  }
+  .fp-fields input:focus-visible { outline: 3px solid #10d9d0; outline-offset: 2px; }
+  .fp-btn {
+    padding: 0.85em 1.3em; background: var(--accent-3); color: var(--ink);
+    border: 2px solid var(--accent-3); border-radius: var(--radius); cursor: pointer;
+    font: 700 1rem var(--font-label); text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .fp-btn:hover, .fp-btn:focus-visible { background: var(--paper); border-color: var(--paper); }
+  .fp-btn:disabled { opacity: 0.6; cursor: wait; }
+  .fp-error { font-family: var(--font-typewriter); color: #ff168c; margin: 0.5rem 0 0; }
+  .fp-error:empty { display: none; }
+  .fp-success { max-width: 34rem; margin: 0; padding: var(--space-2); border: 2px solid var(--accent-3); border-radius: var(--radius); }
+  .fp-success strong { display: block; color: var(--accent-3); }
+  .fp-fine { font-size: var(--step--1); opacity: 0.8; max-width: 34rem; margin-top: var(--space-1); }
+
+  .fp-preview { position: relative; }
+  .fp-preview img {
+    display: block; width: 100%; height: auto; transform: rotate(2deg);
+    box-shadow: 8px 10px 0 rgb(0 0 0 / 0.45);
+  }
+  .fp-stamp {
+    position: absolute; left: -1.5rem; bottom: 2rem; width: 7.5rem; height: 7.5rem;
+    border: 4px solid var(--accent-3); border-radius: 50%; color: var(--accent-3);
+    background: rgb(13 11 18 / 0.88); transform: rotate(-14deg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; text-align: center;
+  }
+  .fp-stamp b { font: 400 1.6rem/1 var(--font-headline); letter-spacing: 0.02em; }
+
+  .fp-paper {
+    background: var(--paper); color: var(--ink); padding-block: var(--space-5);
+    clip-path: polygon(0 18px, 8% 4px, 22% 16px, 41% 2px, 58% 14px, 77% 0, 92% 12px, 100% 3px, 100% 100%, 0 100%);
+  }
+  .fp-h2 { font: 400 var(--step-4)/1 var(--font-headline); text-transform: uppercase; margin: 0.3rem 0 0.6rem; }
+  .fp-sub { font-family: var(--font-typewriter); margin-bottom: var(--space-4); }
+  .fp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+  .fp-card { border: 2px solid var(--ink); background: #fff; padding: 1.1rem; box-shadow: 4px 4px 0 var(--ink); }
+  .fp-num { display: inline-block; background: #10d9d0; color: var(--ink); padding: 0.1rem 0.5rem; margin-bottom: 0.6rem; }
+  .fp-card h3 { font: 700 1.2rem/1.15 var(--font-label); text-transform: uppercase; margin: 0 0 0.4rem; }
+  .fp-card p { font-size: 0.95rem; margin: 0; }
+  .fp-who { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-5); }
+  .fp-who ul { list-style: none; padding: 0; margin: 0; }
+  .fp-who li { border-top: 1px solid var(--ink); padding: 0.6rem 0; }
+  .fp-no li { text-decoration: line-through; text-decoration-color: #d6006b; text-decoration-thickness: 2px; }
+
+  .fp-founder { display: grid; grid-template-columns: 12rem 1fr; gap: var(--space-4); align-items: end; padding-top: var(--space-5); }
+  .fp-founder img { width: 100%; height: auto; display: block; }
+  .fp-founder blockquote { margin: 0; padding-bottom: var(--space-4); font: 400 var(--step-3)/1.15 var(--font-headline); text-transform: uppercase; }
+  .fp-founder em { font-style: normal; color: var(--accent-3); }
+  .fp-founder cite { display: block; margin-top: 1rem; font-style: normal; color: #9ef0ec; }
+
+  .fp-last { border-top: 2px solid var(--paper); padding-block: var(--space-5); }
+  .fp-last > p:not(.fp-kicker):not(.scribble) { margin-bottom: var(--space-3); max-width: 34rem; }
+  .fp-tag { margin-top: var(--space-4); }
+
+  @media (max-width: 52rem) {
+    .fp-hero { grid-template-columns: 1fr; gap: var(--space-4); padding-top: var(--space-4); }
+    .fp-preview { max-width: 26rem; margin-inline: auto; }
+    .fp-stamp { left: -0.5rem; width: 6rem; height: 6rem; }
+    .fp-grid, .fp-who { grid-template-columns: 1fr; }
+    .fp-founder { grid-template-columns: 7rem 1fr; gap: var(--space-2); }
+  }
+</style>
