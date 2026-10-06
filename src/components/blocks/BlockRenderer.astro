@@ -8,6 +8,7 @@ import CalloutBlock from './CalloutBlock.astro';
 import QuoteBlock from './QuoteBlock.astro';
 import DividerBlock from './DividerBlock.astro';
 import PinboardBlock from './PinboardBlock.astro';
+import TableBlock from './TableBlock.astro';
 
 interface Props {
   blocks?: Record<string, any>[];
@@ -56,6 +57,8 @@ const { blocks = [] } = Astro.props;
               notes={b.notes}
             />
           );
+        case 'table':
+          return <TableBlock table={b.table} caption={b.caption} />;
         default:
           return null;
       }

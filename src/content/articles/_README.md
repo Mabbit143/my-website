@@ -102,6 +102,27 @@ For a normal sourced block quote *inside* prose, just use Markdown `>` in a
     dividerStyle: splatter   # splatter | rule | space   (default: splatter)
 ```
 
+### `table` — a spreadsheet-style table
+
+First line `#RxC` (rows x columns), then one line per cell: column letter,
+row number, `=`, text. Unlisted cells stay empty; a line that doesn't start
+a new cell continues the one above. Row 1 is the header. Wide tables scroll
+sideways.
+
+```yaml
+  - type: table
+    caption: "Optional caption"
+    table: |
+      #3x4
+      A1= Name
+      B1= Date
+      D1= Notes
+      A2= Alfred
+      B2= 871
+      D2= king of
+          Wessex
+```
+
 ### `pinboard` — a cluster of pinned notes or source cards
 
 Use this when the argument needs a visual whiteboard: several short facts,

@@ -167,6 +167,7 @@ content:
                 - { name: quote, label: "Pull quote" }
                 - { name: divider, label: "Divider" }
                 - { name: pinboard, label: "Pinned-note board" }
+                - { name: table, label: "Table" }
 
           # --- Text block, and the body of a Callout block ---
           - name: markdown
@@ -193,7 +194,7 @@ content:
             label: "Image description — Image block (for screen readers)"
             type: text
           - name: caption
-            label: "Caption — Image block (optional)"
+            label: "Caption — Image or Table block (optional)"
             type: string
           - name: size
             label: "Image width — Image block"
@@ -255,6 +256,11 @@ content:
                 - { name: splatter, label: "Spray-paint flecks" }
                 - { name: rule, label: "Neon rule" }
                 - { name: space, label: "Blank space" }
+
+          # --- Table block (caption reuses the Image caption field) ---
+          - name: table
+            label: "Table — Table block (first line #3x4 = rows x columns, then A1= text, B1= text …)"
+            type: text
 
           # --- Pinned-note board block ---
           - name: intro
