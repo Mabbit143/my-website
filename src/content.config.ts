@@ -25,7 +25,7 @@ const SERIES_SLUGS = [
 // components already fall back to the right look when a field is empty.
 const block = z
   .object({
-    type: z.enum(['text', 'image', 'callout', 'quote', 'divider', 'pinboard']).default('text'),
+    type: z.enum(['text', 'image', 'callout', 'quote', 'divider', 'pinboard', 'table']).default('text'),
     // text
     markdown: z.string().optional(),
     // image
@@ -45,6 +45,8 @@ const block = z
     attribution: z.string().optional(),
     // divider
     dividerStyle: z.enum(['splatter', 'rule', 'space']).optional(),
+    // table — `#RxC` then `A1= ...` cells; reuses `caption`
+    table: z.string().optional(),
     // pinboard — a visual cluster of short pinned notes / links
     intro: z.string().optional(),
     notes: z

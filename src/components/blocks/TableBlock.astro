@@ -1,0 +1,83 @@
+---
+// `table` block — a spreadsheet-style table that scrolls sideways when it is
+// wider than the column. See src/lib/table.ts for the `#RxC` / `A1=` format.
+import { parseTable } from '../../lib/table';
+import { mdInline } from '../../lib/markdown';
+
+interface Props {
+  table?: string;
+  caption?: string;
+}
+
+const { table, caption } = Astro.props;
+const grid = parseTable(table);
+const [head, ...body] = grid?.rows ?? [];
+---
+
+{
+  grid && (
+    <figure class="tbl">
+      <div class="tbl__scroll" tabindex="0" role="region" aria-label={caption || 'Table'}>
+        <table>
+          <thead>
+            <tr>{head.map((c) => <th scope="col" set:html={mdInline(c)} />)}</tr>
+          </thead>
+          <tbody>
+            {body.map((row) => (
+              <tr>{row.map((c) => <td set:html={mdInline(c)} />)}</tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {caption && <figcaption class="tbl__cap">{caption}</figcaption>}
+    </figure>
+  )
+}
+
+<style>
+  .tbl {
+    margin: var(--space-4) 0;
+    max-width: var(--page-max);
+  }
+
+  .tbl__scroll {
+    overflow-x: auto;
+    border: 1px solid color-mix(in srgb, var(--accent-1) 35%, transparent);
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: max-content;
+    font-size: var(--step--1);
+    line-height: 1.4;
+  }
+
+  th,
+  td {
+    padding: 0.6rem 0.9rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-fg) 14%, transparent);
+  }
+
+  th {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent-1);
+    border-bottom: 2px solid var(--accent-1);
+    white-space: nowrap;
+  }
+
+  td {
+    min-width: 8rem;
+  }
+
+  .tbl__cap {
+    margin-top: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--color-fg) 70%, transparent);
+  }
+</style>
