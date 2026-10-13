@@ -60,6 +60,8 @@ blocks:
 
       And here's the part nobody believes: the free tier gives you 25 generative credits a month, and for my workflow they stretch. I've built an entire brand's visuals on the free plan.
 
+      Student? Adobe's student plan runs about $19.99/month for the first year and gets you unlimited standard image generation plus 4,000 premium credits a month. If you're generating daily, that's the upgrade that pays for itself.
+
       Try it: [firefly.adobe.com](https://firefly.adobe.com)
   - type: divider
   - type: text
