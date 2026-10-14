@@ -6,6 +6,7 @@ import SeriesPill from '../../components/SeriesPill.astro';
 import BlockRenderer from '../../components/blocks/BlockRenderer.astro';
 import Splatter from '../../components/Splatter.astro';
 import EmailSignup from '../../components/EmailSignup.astro';
+import CharacterVignette from '../../components/CharacterVignette.astro';
 import { getSeries } from '../../lib/series';
 
 export async function getStaticPaths() {
@@ -25,6 +26,7 @@ const blocks = entry.data.blocks ?? [];
 // Fallback for any article not yet migrated to blocks: render its Markdown body.
 const { Content } = await render(entry);
 const hasBlocks = blocks.length > 0;
+const hasComputerVignette = entry.data.series === 'use-the-damn-tool';
 
 const allArticles = await getCollection('articles', ({ data }) => !data.draft);
 const related = allArticles
@@ -46,35 +48,42 @@ const coverTransitionName = `da-cover-${entry.id.toLowerCase().replace(/[^a-z0-9
 <BaseLayout title={entry.data.title} description={entry.data.description} ogImage={entry.data.socialImage}>
   <article class="wrap article" data-palette={getSeries(entry.data.series)?.palette}>
     <span class="article-splat" aria-hidden="true"><Splatter variant="burst" /></span>
-    <header class="article-header">
-      <SeriesPill slug={entry.data.series} />
-      <h1><span>{entry.data.title}</span></h1>
-      <p class="deck typewriter">{entry.data.deck}</p>
-      <p class="byline meta-mono">
-        By {entry.data.author} · <time datetime={entry.data.pubDate.toISOString()}>{dateStr}</time>
+    <header class:list={['article-header', { 'article-header--with-vignette': hasComputerVignette }]}>
+      <div class="article-header__copy">
+        <SeriesPill slug={entry.data.series} />
+        <h1><span>{entry.data.title}</span></h1>
+        <p class="deck typewriter">{entry.data.deck}</p>
+        <p class="byline meta-mono">
+          By {entry.data.author} · <time datetime={entry.data.pubDate.toISOString()}>{dateStr}</time>
+          {
+            entry.data.updatedDate && (
+              <>
+                {' '}
+                · updated{' '}
+                <time datetime={entry.data.updatedDate.toISOString()}>
+                  {entry.data.updatedDate.toLocaleDateString('en-US', {
+                    timeZone: 'UTC',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+              </>
+            )
+          }
+        </p>
         {
-          entry.data.updatedDate && (
-            <>
-              {' '}
-              · updated{' '}
-              <time datetime={entry.data.updatedDate.toISOString()}>
-                {entry.data.updatedDate.toLocaleDateString('en-US', {
-                  timeZone: 'UTC',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </time>
-            </>
+          entry.data.placeholder && (
+            <p class="placeholder-note">
+              <strong>Sample content.</strong> This article exists to demonstrate the template — swap
+              it for a real piece before launch. See <code>src/content/articles/_README.md</code>.
+            </p>
           )
         }
-      </p>
+      </div>
       {
-        entry.data.placeholder && (
-          <p class="placeholder-note">
-            <strong>Sample content.</strong> This article exists to demonstrate the template — swap
-            it for a real piece before launch. See <code>src/content/articles/_README.md</code>.
-          </p>
+        hasComputerVignette && (
+          <CharacterVignette variant="computer" class="article-header__vignette" />
         )
       }
     </header>
@@ -186,6 +195,22 @@ const coverTransitionName = `da-cover-${entry.id.toLowerCase().replace(/[^a-z0-9
   .article-header {
     max-width: 58rem;
     margin-bottom: var(--space-5);
+  }
+
+  .article-header--with-vignette {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+    gap: clamp(1rem, 3vw, 2.5rem);
+    align-items: center;
+    max-width: var(--page-max);
+  }
+
+  .article-header__copy { min-width: 0; }
+
+  :global(.article-header__vignette) {
+    align-self: end;
+    justify-self: end;
+    width: min(100%, 24rem);
   }
 
   .article-header h1 {
@@ -322,6 +347,11 @@ const coverTransitionName = `da-cover-${entry.id.toLowerCase().replace(/[^a-z0-9
   }
 
   @media (max-width: 56rem) {
+    .article-header--with-vignette { grid-template-columns: 1fr; }
+    :global(.article-header__vignette) {
+      justify-self: start;
+      width: min(80vw, 26rem);
+    }
     .reading-desk { grid-template-columns: 1fr; }
     .reading-desk__rail { position: static; display: grid; grid-template-columns: 1fr; }
     .reading-desk__rail dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-1); }
@@ -329,6 +359,10 @@ const coverTransitionName = `da-cover-${entry.id.toLowerCase().replace(/[^a-z0-9
   }
 
   @media (max-width: 40rem) {
+    :global(.article-header__vignette) {
+      width: min(90vw, 20rem);
+      overflow: clip;
+    }
     .article-header h1 { font-size: clamp(2.25rem, 12vw, 3.15rem); }
     .article-header h1 span {
       line-height: 1.7;

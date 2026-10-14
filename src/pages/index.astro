@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import EmailSignup from '../components/EmailSignup.astro';
 import PageMarkFeature from '../components/PageMarkFeature.astro';
+import CharacterVignette from '../components/CharacterVignette.astro';
 import { SERIES } from '../lib/series';
 
 const allArticles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
@@ -76,15 +77,7 @@ const kits = [
           loading="eager"
           decoding="async"
         />
-        <img
-          class="hero__whonah"
-          src="/images/characters/Whonah-sitting-forward.png"
-          alt="Whonah, a German Shepherd in a green harness, sitting beside Mabbit"
-          width="256"
-          height="470"
-          loading="eager"
-          decoding="async"
-        />
+        <CharacterVignette variant="frisbee" class="hero__vignette" />
       </div>
     </div>
   </section>
@@ -243,12 +236,13 @@ const kits = [
     height: 42rem;
   }
 
-  .hero__whonah {
+  :global(.hero__vignette) {
     position: absolute;
-    left: 10rem;
+    left: 6.5rem;
     bottom: 0;
-    width: auto;
-    height: 23rem;
+    width: 30rem;
+    max-width: none;
+    --vignette-start-delay: 1.05s;
   }
 
   .fresh { padding-block: var(--space-5) var(--space-4); }
@@ -385,7 +379,7 @@ const kits = [
     .hero__inner { grid-template-columns: minmax(0, 1fr) 15rem; min-height: 38rem; }
     .hero__characters { height: 34rem; }
     .hero__mabbit { height: 32rem; left: 0; }
-    .hero__whonah { left: 6.5rem; height: 17rem; }
+    :global(.hero__vignette) { left: 4.5rem; width: 24rem; }
     .fresh__grid,
     .drawers,
     .manifesto__inner { grid-template-columns: 1fr; }
@@ -404,7 +398,7 @@ const kits = [
     .hero__actions .btn { justify-content: center; }
     .hero__characters { height: 27rem; }
     .hero__mabbit { height: 26rem; left: 1rem; }
-    .hero__whonah { left: 9rem; height: 14rem; }
+    :global(.hero__vignette) { left: 7.5rem; width: 22rem; }
     .kits__grid { grid-template-columns: 1fr; }
     .manifesto__splat { right: -17rem; top: -15rem; }
   }

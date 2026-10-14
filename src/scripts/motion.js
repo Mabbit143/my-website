@@ -1,4 +1,6 @@
 // ============================================================
+
+import { initCharacterVignettes } from './character-vignettes.js';
 // DECONSTRUCTING ACADEMIA — scroll reveals
 // Pairs with src/styles/motion.css.
 //
@@ -56,6 +58,8 @@ function init() {
     root.classList.remove('motion-ready');
     return;
   }
+
+  initCharacterVignettes();
 
   const targets = new Set();
 
