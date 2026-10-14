@@ -245,52 +245,15 @@ html .route-strip small {
 
 /* ------------------------------------------------------------
    5. HOMEPAGE HERO ENTRANCE (plays once on load)
-   Headline strips get slapped on, the copy fades up in order,
-   Mabbit rises into frame, Whonah hops in after, the dashed circle
-   swings into place, and the sticky note lands last.
+   Torn headline strips slap on, supporting copy fades up, Mabbit
+   rises into frame, and the paint splatters bloom behind them.
    ------------------------------------------------------------ */
-.motion-ready .hero .headline-strip--paper {
-  animation: da-slap 0.6s var(--ease-snap) 0.1s backwards;
-}
-
-.motion-ready .hero .headline-strip--pink {
-  animation: da-slap 0.6s var(--ease-snap) 0.32s backwards;
-}
-
-.motion-ready .hero__kicker {
-  animation: da-reveal-up 0.6s var(--ease-out) 0s backwards;
-}
-
 .motion-ready .hero__deck {
   animation: da-reveal-up 0.6s var(--ease-out) 0.55s backwards;
 }
 
 .motion-ready .hero__actions {
   animation: da-reveal-up 0.6s var(--ease-out) 0.7s backwards;
-}
-
-.motion-ready .hero__mabbit-frame {
-  animation: da-rise 0.8s var(--ease-out) 0.25s backwards;
-}
-
-.motion-ready .hero__whonah {
-  animation: da-hop 0.7s var(--ease-snap) 0.6s backwards;
-}
-
-.motion-ready .hero__circle {
-  animation: da-swing 1s var(--ease-out) 0.15s backwards;
-}
-
-.motion-ready .hero__note {
-  animation: da-slap 0.55s var(--ease-snap) 1s backwards;
-}
-
-.motion-ready .hero-splat {
-  animation: da-splat 0.7s var(--ease-snap) backwards;
-}
-
-.motion-ready .hero-splat--2 {
-  animation-delay: 0.45s;
 }
 
 /* V2 Cut-&-Paste hero (30 Sep 2026): torn strips slap on in order,
@@ -345,7 +308,7 @@ html .route-strip small {
 }
 
 .motion-ready .character-vignette.is-playing {
-  animation: vignette-timeline var(--vignette-duration, 3.8s) linear both;
+  animation: vignette-timeline var(--vignette-duration, 3.8s) linear var(--vignette-start-delay, 0s) both;
 }
 
 .motion-ready .character-vignette.is-paused,
@@ -355,22 +318,22 @@ html .route-strip small {
 
 .motion-ready .character-vignette--frisbee.is-playing
   .character-vignette__whonah--waiting {
-  animation: vignette-whonah-depart 3.8s var(--ease-out) both;
+  animation: vignette-whonah-depart 3.8s var(--ease-out) var(--vignette-start-delay, 0s) both;
 }
 
 .motion-ready .character-vignette--frisbee.is-playing
   .character-vignette__whonah--returning {
-  animation: vignette-whonah-return 3.8s var(--ease-snap) both;
+  animation: vignette-whonah-return 3.8s var(--ease-snap) var(--vignette-start-delay, 0s) both;
 }
 
 .motion-ready .character-vignette--frisbee.is-playing
   .character-vignette__frisbee {
-  animation: vignette-frisbee-flight 3.8s var(--ease-out) both;
+  animation: vignette-frisbee-flight 3.8s var(--ease-out) var(--vignette-start-delay, 0s) both;
 }
 
 .motion-ready .character-vignette--frisbee.is-playing
   .character-vignette__motion-lines {
-  animation: vignette-motion-lines 3.8s ease both;
+  animation: vignette-motion-lines 3.8s ease var(--vignette-start-delay, 0s) both;
 }
 
 .motion-ready .character-vignette--computer.is-playing {

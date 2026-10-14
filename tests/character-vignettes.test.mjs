@@ -222,3 +222,11 @@ test('base and reduced-motion styles preserve a static final composition', () =>
   assert.match(motion, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.character-vignette/);
   assert.match(motion, /\.character-vignette__whonah--returning,[\s\S]*opacity:\s*1 !important/);
 });
+
+test('the homepage renders one frisbee vignette instead of a standalone Whonah image', () => {
+  const homepage = readFileSync(new URL('../src/pages/index.astro', import.meta.url), 'utf8');
+
+  assert.match(homepage, /import CharacterVignette from ['"]\.\.\/components\/CharacterVignette\.astro['"]/);
+  assert.equal((homepage.match(/variant="frisbee"/g) ?? []).length, 1);
+  assert.doesNotMatch(homepage, /Whonah-sitting-forward\.png/);
+});
