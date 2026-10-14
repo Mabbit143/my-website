@@ -31,6 +31,7 @@ class FakeClassList {
 class FakeEventTarget {
   constructor() {
     this.listeners = new Map();
+    this.disabled = true;
   }
 
   addEventListener(type, listener) {
@@ -124,6 +125,7 @@ test('reduced motion leaves the final state visible without observing', () => {
 
   assert.equal(FakeObserver.instances.length, 0);
   assert.deepEqual([...fixture.vignette.classList.values], []);
+  assert.equal(fixture.vignette.replay.disabled, true);
   assert.equal(typeof cleanup, 'function');
 });
 
@@ -141,6 +143,7 @@ test('the first intersection starts one play cycle', () => {
 
   initCharacterVignettes(fixture);
   const observer = FakeObserver.instances[0];
+  assert.equal(fixture.vignette.replay.disabled, false);
   observer.emit(fixture.vignette, true);
 
   assert.equal(fixture.vignette.classList.contains('is-playing'), true);
@@ -186,6 +189,7 @@ test('replay resets a completed vignette without adding another listener', () =>
 
   cleanup();
   assert.equal(fixture.vignette.replay.listenerCount('click'), 0);
+  assert.equal(fixture.vignette.replay.disabled, true);
   assert.equal(observer.disconnected, true);
 });
 
@@ -199,6 +203,7 @@ test('the vignette component exposes both accessible scene variants', () => {
   assert.match(component, /data-character-vignette=\{variant\}/);
   assert.match(component, /data-vignette-replay/);
   assert.match(component, /type="button"/);
+  assert.match(component, /data-vignette-replay[^>]*disabled/s);
   assert.match(component, /Replay Whonah's frisbee chase/);
   assert.match(component, /Replay Mabbit typing/);
   assert.match(component, /\/images\/characters\/Whonah-sitting-forward\.png/);

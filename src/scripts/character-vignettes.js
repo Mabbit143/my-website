@@ -58,9 +58,13 @@ export function initCharacterVignettes(options = {}) {
 
     const replay = vignette.querySelector('[data-vignette-replay]');
     if (replay) {
+      replay.disabled = false;
       const onReplay = () => play(vignette);
       replay.addEventListener('click', onReplay);
-      listeners.push(() => replay.removeEventListener('click', onReplay));
+      listeners.push(() => {
+        replay.removeEventListener('click', onReplay);
+        replay.disabled = true;
+      });
     }
 
     observer.observe(vignette);

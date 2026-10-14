@@ -13,7 +13,13 @@ const replayLabel = isFrisbee ? "Replay Whonah's frisbee chase" : 'Replay Mabbit
   class:list={['character-vignette', `character-vignette--${variant}`, className]}
   data-character-vignette={variant}
 >
-  <button class="character-vignette__stage" type="button" data-vignette-replay aria-label={replayLabel}>
+  <button
+    class="character-vignette__stage"
+    type="button"
+    data-vignette-replay
+    aria-label={replayLabel}
+    disabled
+  >
     {
       isFrisbee ? (
         <>
@@ -104,6 +110,14 @@ const replayLabel = isFrisbee ? "Replay Whonah's frisbee chase" : 'Replay Mabbit
   .character-vignette__stage:focus-visible {
     outline: 4px dashed var(--lime);
     outline-offset: 0.35rem;
+  }
+
+  .character-vignette__stage:disabled {
+    cursor: default;
+  }
+
+  .character-vignette__stage:disabled .character-vignette__replay-label {
+    display: none;
   }
 
   .character-vignette__whonah,
