@@ -8,7 +8,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test:vignettes": "node --test tests/character-vignettes.test.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.0.2",
