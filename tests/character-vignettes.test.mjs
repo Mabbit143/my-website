@@ -230,3 +230,24 @@ test('the homepage renders one frisbee vignette instead of a standalone Whonah i
   assert.equal((homepage.match(/variant="frisbee"/g) ?? []).length, 1);
   assert.doesNotMatch(homepage, /Whonah-sitting-forward\.png/);
 });
+
+test('the article template maps only use-the-damn-tool to computer Mabbit', () => {
+  const article = readFileSync(
+    new URL('../src/pages/articles/[slug].astro', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(
+    article,
+    /import CharacterVignette from ['"]\.\.\/\.\.\/components\/CharacterVignette\.astro['"]/,
+  );
+  assert.match(
+    article,
+    /const hasComputerVignette = entry\.data\.series === ['"]use-the-damn-tool['"];/,
+  );
+  assert.equal((article.match(/variant="computer"/g) ?? []).length, 1);
+  assert.match(
+    article,
+    /hasComputerVignette\s*&&\s*\(\s*<CharacterVignette\s+variant="computer"/s,
+  );
+});
