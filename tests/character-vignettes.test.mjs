@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import { initCharacterVignettes } from '../src/scripts/character-vignettes.js';
@@ -186,4 +187,38 @@ test('replay resets a completed vignette without adding another listener', () =>
   cleanup();
   assert.equal(fixture.vignette.replay.listenerCount('click'), 0);
   assert.equal(observer.disconnected, true);
+});
+
+test('the vignette component exposes both accessible scene variants', () => {
+  const component = readFileSync(
+    new URL('../src/components/CharacterVignette.astro', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(component, /variant: 'frisbee' \| 'computer'/);
+  assert.match(component, /data-character-vignette=\{variant\}/);
+  assert.match(component, /data-vignette-replay/);
+  assert.match(component, /type="button"/);
+  assert.match(component, /Replay Whonah's frisbee chase/);
+  assert.match(component, /Replay Mabbit typing/);
+  assert.match(component, /\/images\/characters\/Whonah-sitting-forward\.png/);
+  assert.match(component, /\/images\/characters\/Whonah-side-view-frisbee=forward\.png/);
+  assert.match(component, /\/images\/characters\/Mabbit-at-computer\.png/);
+  assert.ok((component.match(/aria-hidden="true"/g) ?? []).length >= 4);
+});
+
+test('base and reduced-motion styles preserve a static final composition', () => {
+  const component = readFileSync(
+    new URL('../src/components/CharacterVignette.astro', import.meta.url),
+    'utf8',
+  );
+  const motion = readFileSync(new URL('../src/styles/motion.css', import.meta.url), 'utf8');
+
+  assert.match(
+    component,
+    /\.character-vignette__whonah--returning\s*\{[^}]*opacity:\s*1/s,
+  );
+  assert.match(component, /\.character-vignette__mabbit,[\s\S]*width:\s*100%/);
+  assert.match(motion, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.character-vignette/);
+  assert.match(motion, /\.character-vignette__whonah--returning,[\s\S]*opacity:\s*1 !important/);
 });

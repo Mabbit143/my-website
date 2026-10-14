@@ -327,3 +327,158 @@ html .route-strip small {
     scale: 0.85;
   }
 }
+
+/* ------------------------------------------------------------
+   6. CONTEXTUAL CHARACTER VIGNETTES
+   Base component styles show the final pose, so no-JS and reduced-motion
+   visitors always get a complete illustration. motion-ready swaps the
+   frisbee scene to its opening pose until its one-shot timeline starts.
+   ------------------------------------------------------------ */
+.motion-ready .character-vignette--frisbee:not(.is-playing):not(.is-complete)
+  .character-vignette__whonah--waiting {
+  opacity: 1;
+}
+
+.motion-ready .character-vignette--frisbee:not(.is-playing):not(.is-complete)
+  .character-vignette__whonah--returning {
+  opacity: 0;
+}
+
+.motion-ready .character-vignette.is-playing {
+  animation: vignette-timeline var(--vignette-duration, 3.8s) linear both;
+}
+
+.motion-ready .character-vignette.is-paused,
+.motion-ready .character-vignette.is-paused * {
+  animation-play-state: paused !important;
+}
+
+.motion-ready .character-vignette--frisbee.is-playing
+  .character-vignette__whonah--waiting {
+  animation: vignette-whonah-depart 3.8s var(--ease-out) both;
+}
+
+.motion-ready .character-vignette--frisbee.is-playing
+  .character-vignette__whonah--returning {
+  animation: vignette-whonah-return 3.8s var(--ease-snap) both;
+}
+
+.motion-ready .character-vignette--frisbee.is-playing
+  .character-vignette__frisbee {
+  animation: vignette-frisbee-flight 3.8s var(--ease-out) both;
+}
+
+.motion-ready .character-vignette--frisbee.is-playing
+  .character-vignette__motion-lines {
+  animation: vignette-motion-lines 3.8s ease both;
+}
+
+.motion-ready .character-vignette--computer.is-playing {
+  --vignette-duration: 3.2s;
+}
+
+.motion-ready .character-vignette--computer.is-playing
+  .character-vignette__typing-hands {
+  animation: vignette-type 0.18s steps(2, jump-none) 0.45s 10 alternate;
+}
+
+.motion-ready .character-vignette--computer.is-playing
+  .character-vignette__screen-glow {
+  animation: vignette-screen-glow 3.2s ease both;
+}
+
+.motion-ready .character-vignette--computer.is-playing
+  .character-vignette__keys {
+  animation: vignette-keys 1.8s steps(5, jump-none) 0.45s both;
+}
+
+.motion-ready .character-vignette--computer.is-playing
+  .character-vignette__thought--one {
+  animation: vignette-thought 1.4s var(--ease-out) 0.8s both;
+}
+
+.motion-ready .character-vignette--computer.is-playing
+  .character-vignette__thought--two {
+  animation: vignette-thought 1.25s var(--ease-out) 1.25s both;
+}
+
+.motion-ready .character-vignette--computer.is-playing
+  .character-vignette__thought--three {
+  animation: vignette-thought 1.1s var(--ease-out) 1.75s both;
+}
+
+@keyframes vignette-timeline {
+  from { opacity: 0.999; }
+  to { opacity: 1; }
+}
+
+@keyframes vignette-whonah-depart {
+  0%, 22% { opacity: 1; translate: 0 0; rotate: 0deg; }
+  28% { translate: -4% -3%; rotate: -3deg; }
+  46%, 100% { opacity: 0; translate: 125% -5%; rotate: 5deg; }
+}
+
+@keyframes vignette-whonah-return {
+  0%, 64% { opacity: 0; translate: 105% 4%; }
+  68% { opacity: 1; }
+  86% { translate: -3% 0; }
+  100% { opacity: 1; translate: 0 0; }
+}
+
+@keyframes vignette-frisbee-flight {
+  0%, 8% { opacity: 0; translate: -180% 85%; rotate: -25deg; }
+  12% { opacity: 1; }
+  36% { opacity: 1; translate: 125% -35%; rotate: 340deg; }
+  47%, 100% { opacity: 0; translate: 220% 15%; rotate: 540deg; }
+}
+
+@keyframes vignette-motion-lines {
+  0%, 12%, 48%, 100% { opacity: 0; }
+  18%, 38% { opacity: 0.9; translate: 8% -5%; }
+}
+
+@keyframes vignette-type {
+  from { opacity: 0.72; translate: -1px 0; }
+  to { opacity: 0.9; translate: 1px 2px; }
+}
+
+@keyframes vignette-screen-glow {
+  0%, 100% { opacity: 0; }
+  18%, 74% { opacity: 0.2; }
+  44% { opacity: 0.34; }
+}
+
+@keyframes vignette-keys {
+  0%, 100% { opacity: 0; }
+  18%, 78% { opacity: 0.9; }
+}
+
+@keyframes vignette-thought {
+  0% { opacity: 0; translate: 0 12px; scale: 0.75; rotate: -8deg; }
+  24%, 72% { opacity: 1; }
+  100% { opacity: 0; translate: 0 -24px; scale: 1.08; rotate: 4deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .character-vignette,
+  .character-vignette * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .character-vignette__whonah--waiting,
+  .character-vignette__frisbee,
+  .character-vignette__motion-lines,
+  .character-vignette__typing-hands,
+  .character-vignette__screen-glow,
+  .character-vignette__keys,
+  .character-vignette__thought {
+    opacity: 0 !important;
+  }
+
+  .character-vignette__whonah--returning,
+  .character-vignette__mabbit {
+    opacity: 1 !important;
+    translate: none !important;
+  }
+}

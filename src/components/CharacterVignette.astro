@@ -1,0 +1,259 @@
+---
+interface Props {
+  variant: 'frisbee' | 'computer';
+  class?: string;
+}
+
+const { variant, class: className } = Astro.props;
+const isFrisbee = variant === 'frisbee';
+const replayLabel = isFrisbee ? "Replay Whonah's frisbee chase" : 'Replay Mabbit typing';
+---
+
+<div
+  class:list={['character-vignette', `character-vignette--${variant}`, className]}
+  data-character-vignette={variant}
+>
+  <button class="character-vignette__stage" type="button" data-vignette-replay aria-label={replayLabel}>
+    {
+      isFrisbee ? (
+        <>
+          <img
+            class="character-vignette__whonah character-vignette__whonah--waiting"
+            src="/images/characters/Whonah-sitting-forward.png"
+            alt=""
+            aria-hidden="true"
+            width="256"
+            height="472"
+            loading="eager"
+            decoding="async"
+          />
+          <span class="character-vignette__frisbee" aria-hidden="true">
+            <svg viewBox="0 0 110 34" role="presentation">
+              <ellipse cx="55" cy="17" rx="52" ry="14" />
+              <ellipse cx="55" cy="15" rx="34" ry="7" />
+            </svg>
+          </span>
+          <img
+            class="character-vignette__whonah character-vignette__whonah--returning"
+            src="/images/characters/Whonah-side-view-frisbee=forward.png"
+            alt="Whonah, a German Shepherd, returning with a green frisbee"
+            width="1376"
+            height="768"
+            loading="eager"
+            decoding="async"
+          />
+          <span class="character-vignette__motion-lines" aria-hidden="true">〰 〰 〰</span>
+        </>
+      ) : (
+        <>
+          <img
+            class="character-vignette__mabbit"
+            src="/images/characters/Mabbit-at-computer.png"
+            alt="Mabbit, the tattooed rabbit character, working at a laptop"
+            width="500"
+            height="500"
+            loading="eager"
+            decoding="async"
+          />
+          <span class="character-vignette__screen-glow" aria-hidden="true" />
+          <img
+            class="character-vignette__typing-hands"
+            src="/images/characters/Mabbit-at-computer.png"
+            alt=""
+            aria-hidden="true"
+            width="500"
+            height="500"
+            loading="eager"
+            decoding="async"
+          />
+          <span class="character-vignette__keys" aria-hidden="true">• • • • •</span>
+          <span class="character-vignette__thought character-vignette__thought--one" aria-hidden="true">&lt;/&gt;</span>
+          <span class="character-vignette__thought character-vignette__thought--two" aria-hidden="true">?</span>
+          <span class="character-vignette__thought character-vignette__thought--three" aria-hidden="true">✓</span>
+        </>
+      )
+    }
+    <span class="character-vignette__replay-label" aria-hidden="true">
+      {isFrisbee ? 'Throw it again' : 'Watch Mabbit type'} <span>↻</span>
+    </span>
+  </button>
+</div>
+
+<style>
+  .character-vignette {
+    position: relative;
+    isolation: isolate;
+    width: min(100%, 32rem);
+  }
+
+  .character-vignette__stage {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .character-vignette__stage:focus-visible {
+    outline: 4px dashed var(--lime);
+    outline-offset: 0.35rem;
+  }
+
+  .character-vignette__whonah,
+  .character-vignette__mabbit,
+  .character-vignette__typing-hands {
+    position: absolute;
+    display: block;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .character-vignette__whonah--waiting {
+    right: 4%;
+    bottom: 0;
+    z-index: 2;
+    width: 43%;
+    opacity: 0;
+  }
+
+  .character-vignette__whonah--returning {
+    right: -10%;
+    bottom: 0;
+    z-index: 2;
+    width: 112%;
+    opacity: 1;
+  }
+
+  .character-vignette__frisbee {
+    position: absolute;
+    top: 18%;
+    left: 16%;
+    z-index: 4;
+    width: 23%;
+    color: #66793b;
+    opacity: 0;
+    filter: drop-shadow(3px 4px 0 rgb(0 0 0 / 35%));
+  }
+
+  .character-vignette__frisbee svg {
+    display: block;
+    width: 100%;
+    overflow: visible;
+    fill: currentColor;
+    stroke: var(--ink);
+    stroke-width: 3;
+  }
+
+  .character-vignette__frisbee ellipse + ellipse {
+    fill: color-mix(in srgb, currentColor 74%, var(--paper));
+    stroke-width: 2;
+  }
+
+  .character-vignette__motion-lines {
+    position: absolute;
+    top: 31%;
+    left: 1%;
+    color: var(--lime);
+    font-family: var(--font-annotation);
+    font-size: clamp(1.5rem, 4vw, 2.4rem);
+    opacity: 0;
+    rotate: -9deg;
+  }
+
+  .character-vignette__mabbit,
+  .character-vignette__typing-hands {
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+  }
+
+  .character-vignette__typing-hands {
+    z-index: 5;
+    opacity: 0;
+    clip-path: polygon(28% 39%, 63% 38%, 62% 60%, 25% 61%);
+  }
+
+  .character-vignette__screen-glow {
+    position: absolute;
+    top: 23%;
+    left: 18%;
+    z-index: 3;
+    width: 24%;
+    height: 19%;
+    border-radius: 4px;
+    background: var(--cyan);
+    opacity: 0;
+    filter: blur(10px);
+    mix-blend-mode: screen;
+    rotate: -7deg;
+  }
+
+  .character-vignette__keys {
+    position: absolute;
+    top: 47%;
+    left: 25%;
+    z-index: 6;
+    color: var(--lime);
+    font-family: var(--font-mono);
+    font-size: clamp(0.55rem, 1.8vw, 0.85rem);
+    letter-spacing: 0.22em;
+    opacity: 0;
+    rotate: -5deg;
+  }
+
+  .character-vignette__thought {
+    position: absolute;
+    z-index: 7;
+    padding: 0.05em 0.25em;
+    color: var(--paper);
+    font-family: var(--font-annotation);
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 2px 2px 0 var(--ink);
+    opacity: 0;
+  }
+
+  .character-vignette__thought--one { top: 14%; left: 6%; font-size: 2.2rem; color: var(--cyan); }
+  .character-vignette__thought--two { top: 5%; left: 37%; font-size: 2.7rem; color: var(--pink); }
+  .character-vignette__thought--three { top: 20%; right: 4%; font-size: 2.4rem; color: var(--lime); }
+
+  .character-vignette__replay-label {
+    position: absolute;
+    right: 0.25rem;
+    bottom: 0.25rem;
+    z-index: 10;
+    padding: 0.35rem 0.55rem;
+    border: 2px solid var(--paper);
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-label);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    line-height: 1;
+    text-transform: uppercase;
+    box-shadow: 3px 3px 0 var(--pink);
+    transform: rotate(-2deg);
+  }
+
+  .character-vignette__replay-label span { color: var(--lime); font-size: 1rem; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .character-vignette__stage:hover .character-vignette__replay-label {
+      translate: 0 -3px;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .character-vignette__replay-label { font-size: 0.62rem; }
+  }
+</style>
