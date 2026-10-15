@@ -39,6 +39,18 @@ export const RESOURCES: readonly Resource[] = [
     meta: '2 pages · about 10 minutes · fillable',
   },
   {
+    slug: 'log-it-keep-it',
+    title: 'Log It. Keep It.',
+    summary:
+      'A fillable paper-trail log for every call, email, and office visit about your aid, classes, and records, so you have the receipt when it matters.',
+    category: 'Academic Navigation',
+    format: 'PDF',
+    status: 'available',
+    href: '/downloads/log-it-keep-it.pdf',
+    infoHref: '/free-log/',
+    meta: 'Fillable · type into it or print it',
+  },
+  {
     slug: 'gpa-calculator',
     title: 'Grade & GPA Impact Terminal',
     summary: 'A browser tool for seeing how a grade changes your GPA before it lands.',
