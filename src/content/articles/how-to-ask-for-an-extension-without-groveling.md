@@ -128,7 +128,7 @@ blocks:
     markdown: |
       ## Want the scripts ready before the crisis hits?
 
-      The [Academic Emergency Rescue Kit](https://www.etsy.com/listing/4589458483/college-student-emergency-plan-extension) has fill-in-the-blank email scripts for requesting an extension, requesting an Incomplete, notifying your professors of an emergency, and asking your advisor to help route a crisis — plus a documentation log, a decision-maker directory, and a 30-day recovery plan. Printable and fillable, so you can set it up on a calm day and have it when you need it.
+      The Academic Emergency Rescue Kit (currently paused while the shop is redesigned) has fill-in-the-blank email scripts for requesting an extension, requesting an Incomplete, notifying your professors of an emergency, and asking your advisor to help route a crisis — plus a documentation log, a decision-maker directory, and a 30-day recovery plan. Printable and fillable, so you can set it up on a calm day and have it when you need it.
 
       Not ready to buy anything? Grab the free [Read the Fine Print syllabus check](/free-syllabus-check) and catch the late policy *before* you need an extension.
 

@@ -3,9 +3,6 @@ interface Props {
   eyebrow?: string;
   title: string;
   description: string;
-  price?: string;
-  href: string;
-  cta?: string;
   bullets?: string[];
 }
 
@@ -13,9 +10,6 @@ const {
   eyebrow = 'DA field tool',
   title,
   description,
-  price,
-  href,
-  cta = 'See the tool',
   bullets = [],
 } = Astro.props;
 ---
@@ -34,9 +28,8 @@ const {
     )}
   </div>
   <div class="product-card__action">
-    {price && <p class="product-card__price">{price}</p>}
-    <a class="btn" href={href}>{cta} →</a>
-    <p class="product-card__fine">Checkout happens on Etsy.</p>
+    <p class="product-card__price">Coming soon</p>
+    <p class="product-card__fine">Paused for a redesign. Nothing to buy right now.</p>
   </div>
 </article>
 

@@ -1,0 +1,48 @@
+---
+// Whonah's Field Notes: a practical, visual aid for performing a task or spotting a detail.
+// Whonah does not speak; the steps and the "look for" captions carry the guidance.
+interface Step {
+  readonly action: string;
+  readonly detail?: string;
+}
+interface Props {
+  title?: string;
+  steps: readonly Step[];
+  /** Short caption naming the detail to look for. */
+  lookFor?: string;
+}
+const { title = "Whonah's Field Notes", steps, lookFor } = Astro.props;
+---
+
+<aside class="field-notes paper-surface torn-b" aria-label={title}>
+  <div class="field-notes__main">
+    <p class="field-notes__label">{title}</p>
+    <div class="field-notes__body"><slot /></div>
+    <ol class="field-notes__steps">
+      {steps.map((s) => (
+        <li><strong>{s.action}</strong>{s.detail && <span> {s.detail}</span>}</li>
+      ))}
+    </ol>
+  </div>
+  <figure class="field-notes__fig">
+    <img
+      src="/images/characters/whonah-nose-down.webp"
+      width="559"
+      height="452"
+      loading="lazy"
+      alt="Whonah, a German Shepherd, with his nose to the ground, following a trail."
+    />
+    {lookFor && <figcaption>Look for: {lookFor}</figcaption>}
+  </figure>
+</aside>
+
+<style>
+  .field-notes { display: grid; grid-template-columns: 1fr 12rem; gap: var(--space-3); padding: var(--space-3); color: var(--ink); align-items: center; }
+  .field-notes__label { margin: 0 0 var(--space-1); font: 700 var(--step--1) var(--font-label); text-transform: uppercase; letter-spacing: 0.1em; color: #5b16d9; }
+  .field-notes__body :global(p) { margin: 0 0 var(--space-1); }
+  .field-notes__steps { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.5rem; }
+  .field-notes__fig { margin: 0; text-align: center; }
+  .field-notes__fig img { width: 100%; height: auto; }
+  .field-notes__fig figcaption { font-family: var(--font-typewriter); font-size: var(--step--1); margin-top: 0.4rem; }
+  @media (max-width: 40rem) { .field-notes { grid-template-columns: 1fr; } .field-notes__fig { max-width: 10rem; } }
+</style>

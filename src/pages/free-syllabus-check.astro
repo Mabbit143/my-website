@@ -1,10 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// Kit form for the Read the Fine Print lead magnet. Its incentive email
-// delivers the PDF after the subscriber confirms.
-const KIT_FORM_ID = '10005934';
-const action = `https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`;
+const PDF = '/downloads/Read_the_Fine_Print_Free_Syllabus_Quick_Check.pdf';
 
 const inside = [
   ['01 · 4 checks', 'Reading between the lines', 'Attendance, late work, participation, and grade appeals, in plain words.'],
@@ -40,21 +37,10 @@ const inside = [
         <li>Turn what you find into calm, specific questions for your professor</li>
       </ul>
       <div class="fp-signup">
-        <form action={action} method="post" data-fp-form>
-          <label for="fp-email-1" class="fp-label">Your email</label>
-          <div class="fp-fields">
-            <input id="fp-email-1" type="email" name="email_address" placeholder="you@school.edu" autocomplete="email" required />
-            <button type="submit" class="fp-btn">Send me the check</button>
-          </div>
-          <p class="fp-error" role="alert" data-fp-error></p>
-        </form>
-        <p class="fp-success" role="status" data-fp-success hidden>
-          <strong>Check your inbox.</strong> Click the confirm link (try spam too) and the PDF is yours.
-        </p>
+        <a class="fp-btn" href={PDF} download>Download the PDF (free, 2 pages)</a>
       </div>
       <p class="fp-fine">
-        Free fillable PDF. You'll also get the occasional email from Mabbit about how college
-        actually works. Unsubscribe anytime.
+        Free fillable PDF. No email, no signup, no catch.
       </p>
     </div>
     <div class="fp-preview">
@@ -115,52 +101,15 @@ const inside = [
   <section class="wrap fp-last">
     <p class="fp-kicker">Last call</p>
     <h2 class="fp-h2">Grab the check. Keep your grade.</h2>
-    <p>One email. Your check lands in your inbox in under a minute.</p>
+    <p>Direct download. No email required.</p>
     <div class="fp-signup">
-      <form action={action} method="post" data-fp-form>
-        <label for="fp-email-2" class="fp-label">Your email</label>
-        <div class="fp-fields">
-          <input id="fp-email-2" type="email" name="email_address" placeholder="you@school.edu" autocomplete="email" required />
-          <button type="submit" class="fp-btn">Send me the check</button>
-        </div>
-        <p class="fp-error" role="alert" data-fp-error></p>
-      </form>
-      <p class="fp-success" role="status" data-fp-success hidden>
-        <strong>Check your inbox.</strong> Click the confirm link (try spam too) and the PDF is yours.
-      </p>
-    </div>
+        <a class="fp-btn" href={PDF} download>Download the PDF (free, 2 pages)</a>
+      </div>
     <p class="scribble fp-tag">Learn the rules. Question who wrote them.</p>
   </section>
 </BaseLayout>
 
-<script>
-  // Same approach as EmailSignup.astro: Kit's endpoint sends no CORS headers,
-  // so the response can't be read. Success means the request went out; Kit's
-  // double opt-in email delivers the PDF. Without JS the form posts to Kit.
-  document.querySelectorAll<HTMLFormElement>('[data-fp-form]').forEach((form) => {
-    const error = form.querySelector<HTMLElement>('[data-fp-error]');
-    const success = form.parentElement?.querySelector<HTMLElement>('[data-fp-success]');
-    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      if (error) error.textContent = '';
-      if (button) button.disabled = true;
-      try {
-        await fetch(form.action, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>),
-        });
-        form.hidden = true;
-        if (success) success.hidden = false;
-      } catch {
-        if (error) error.textContent = "Couldn't send that. Check your connection and try again.";
-      } finally {
-        if (button) button.disabled = false;
-      }
-    });
-  });
-</script>
+
 
 <style>
   .fp-hero {
@@ -197,6 +146,7 @@ const inside = [
   }
   .fp-fields input:focus-visible { outline: 3px solid #10d9d0; outline-offset: 2px; }
   .fp-btn {
+    display: inline-block; text-decoration: none;
     padding: 0.85em 1.3em; background: var(--accent-3); color: var(--ink);
     border: 2px solid var(--accent-3); border-radius: var(--radius); cursor: pointer;
     font: 700 1rem var(--font-label); text-transform: uppercase; letter-spacing: 0.04em;

@@ -2,10 +2,15 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
+import CharacterPanel from '../components/CharacterPanel.astro';
 import EmailSignup from '../components/EmailSignup.astro';
 import PageMarkFeature from '../components/PageMarkFeature.astro';
 import CharacterVignette from '../components/CharacterVignette.astro';
 import { SERIES } from '../lib/series';
+import { RESOURCES } from '../data/resources';
+import { SUPPORT_URL } from '../data/site';
+
+const freeTools = RESOURCES.filter((r) => r.status === 'available');
 
 const allArticles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -14,30 +19,10 @@ const featured = allArticles[0];
 const latest = allArticles.slice(1, 3);
 const countBySeries = (slug: string) => allArticles.filter((a) => a.data.series === slug).length;
 
-// Same live kits and prices as src/pages/shop.astro — keep them in sync.
-const kits = [
-  {
-    no: 'No. 03',
-    title: 'First-Week College Field Notes Kit',
-    body: 'Document hidden rules, map workload collisions, prepare for office hours, and make one useful support move before everything is on fire.',
-    price: '$9',
-    href: 'https://www.etsy.com/listing/4587468925/first-week-college-field-notes-kit',
-  },
-  {
-    no: 'No. 01',
-    title: 'The Syllabus Audit Kit + Grade Tracker',
-    body: 'Decode the fine print, surface the unanswered questions, and calculate where your grade actually stands.',
-    price: '$7',
-    href: 'https://www.etsy.com/listing/4568126568/syllabus-audit-kit-grade-tracker',
-  },
-  {
-    no: 'No. 02',
-    title: 'The Curriculum Bias Audit Kit',
-    body: "Read a reading list the way you'd read a source: whose names show up, whose don't, and what that pattern teaches.",
-    price: '$9',
-    href: 'https://deconstructacademia.etsy.com',
-  },
-];
+// Etsy kits are paused (shop redesign), and their cards were removed from this page. Reuse data: Etsy hrefs/prices kept here for reuse:
+//  No. 03 $9 https://www.etsy.com/listing/4587468925/first-week-college-field-notes-kit
+//  No. 01 $7 https://www.etsy.com/listing/4568126568/syllabus-audit-kit-grade-tracker
+//  No. 02 $9 https://deconstructacademia.etsy.com
 ---
 
 <BaseLayout
@@ -59,12 +44,12 @@ const kits = [
         </h1>
         <p class="scribble hero__scribble">yes, all of them.</p>
         <p class="hero__deck">
-          We take apart hidden rules, trace the evidence, and build tools you can actually use.
-          Prestige does not get to grade its own homework here.
+          Academic tools, evidence-based criticism, and practical resources for people who refuse to
+          confuse institutional authority with unquestionable truth.
         </p>
         <div class="hero__actions">
-          <a href="#start-here" class="btn hero__btn">Start reading</a>
-          <a href="/shop/" class="btn btn--ghost">Grab a toolkit</a>
+          <a href="/resources/" class="btn hero__btn">Explore free resources</a>
+          <a href="/guides/" class="btn btn--ghost">Meet Mabbit &amp; Whonah</a>
         </div>
       </div>
       <div class="hero__characters">
@@ -80,6 +65,34 @@ const kits = [
         <CharacterVignette variant="frisbee" class="hero__vignette" />
       </div>
     </div>
+  </section>
+
+  <section class="wrap free-tools" aria-labelledby="free-tools-heading">
+    <header class="fresh__head">
+      <h2 id="free-tools-heading" class="section-title">Free tools. No catch.</h2>
+      <span class="scribble">no signup, either</span>
+    </header>
+    <ul class="free-tools__grid">
+      {freeTools.map((t) => (
+        <li class="free-tool paper-surface torn-b">
+          <p class="free-tool__meta">{t.format} · {t.category}</p>
+          <h3>{t.title}</h3>
+          <p>{t.summary}</p>
+          <a class="btn" href={t.infoHref ?? t.href}>{t.format === 'PDF' ? 'Get the PDF' : 'Open the tool'}<span class="visually-hidden">: {t.title}</span></a>
+        </li>
+      ))}
+    </ul>
+    <p class="free-tools__more"><a href="/resources/">See the whole library →</a></p>
+  </section>
+
+  <section class="wrap guides-intro" aria-labelledby="guides-intro-heading">
+    <CharacterPanel
+      eyebrow="Your guides"
+      title="Mabbit asks why. Whonah finds the proof."
+      body="Every tool here uses them for something specific: a question to ask, a detail to find, a step to take. No pep talks, no filler."
+      linkHref="/guides/"
+      linkLabel="Meet your guides →"
+    />
   </section>
 
   <PageMarkFeature articleHref="/articles/i-built-an-app-that-types-up-my-handwritten-notes/" />
@@ -127,23 +140,14 @@ const kits = [
     </ul>
   </section>
 
-  <section class="wrap kits" aria-labelledby="kits-heading">
-    <header class="fresh__head">
-      <h2 id="kits-heading" class="section-title">Tools you can print tonight</h2>
-      <span class="scribble">fillable, too</span>
-    </header>
-    <div class="kits__grid">
-      {kits.map((kit) => (
-        <article class="kit paper-surface torn-b">
-          <span class="tape" aria-hidden="true"></span>
-          <p class="kit__meta"><span>Toolkit {kit.no}</span><span class="kit__price">{kit.price}</span></p>
-          <h3>{kit.title}</h3>
-          <p>{kit.body}</p>
-          <a href={kit.href}>Get the kit →</a>
-        </article>
-      ))}
-    </div>
-    <p class="kits__fine">Checkout happens on Etsy. <a href="/shop/">See everything in the shop →</a></p>
+  <section class="wrap support" aria-labelledby="support-heading">
+    <h2 id="support-heading" class="section-title">Help keep knowledge harder to hoard.</h2>
+    <p>
+      DA's educational tools are free. If the work helps you, optional contributions and future
+      merchandise help keep new resources coming.
+    </p>
+    <p class="support__merch"><strong>Mabbit &amp; Whonah merch coming soon.</strong></p>
+    {SUPPORT_URL && <p><a class="btn btn--ghost" href={SUPPORT_URL} rel="noopener">Support DA (optional)</a></p>}
   </section>
 
   <section class="band-violet manifesto">
@@ -402,4 +406,34 @@ const kits = [
     .kits__grid { grid-template-columns: 1fr; }
     .manifesto__splat { right: -17rem; top: -15rem; }
   }
+
+  .free-tools,
+  .guides-intro,
+  .support {
+    padding-block: var(--space-4);
+  }
+
+  .free-tools__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  }
+
+  .free-tool {
+    padding: var(--space-3);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .free-tool h3 { margin: 0; font: 400 var(--step-2)/1.05 var(--font-headline); text-transform: uppercase; }
+  .free-tool p { margin: 0; }
+  .free-tool .btn { align-self: flex-start; margin-top: auto; }
+  .free-tool__meta { font: 700 0.72rem var(--font-label); text-transform: uppercase; letter-spacing: 0.08em; }
+  .free-tools__more { margin-top: var(--space-2); }
+  .support { max-width: 44rem; }
 </style>
