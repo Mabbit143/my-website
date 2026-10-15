@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Decode Your Assignment — Deconstructing Academia free resource 001</title>
+<meta name="description" content="A free printable guide from Deconstructing Academia: turn an assignment prompt into what is asked, what counts as evidence, and what to do first.">
+<meta name="author" content="Deconstructing Academia">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&family=Roboto+Mono:wght@400;500&family=Special+Elite&family=Caveat:wght@600&display=swap');
+:root { --void:#0D0B12; --paper:#F5F2EA; --violet:#5B16D9; --lime:#B7FF18; --pink:#FF168C; --cyan:#10D9D0;
+  --violet-ink:#5B16D9; --pink-ink:#B0105F; --cyan-ink:#0A6F6A; }
+@page { size: 8.5in 11in; margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin:0; padding:0; }
+body { font: 400 10.5pt/1.45 'Roboto', Arial, sans-serif; color: var(--void); background:#fff; }
+h1,h2,h3,p,ul,ol,figure,blockquote,table { margin:0; }
+.page { width:8.5in; height:11in; padding:0.55in 0.6in; page-break-after:always; break-after:page; position:relative; overflow:hidden; display:flex; flex-direction:column; gap:0.16in; }
+.page:last-child { page-break-after:auto; break-after:auto; }
+.folio { position:absolute; left:0.6in; right:0.6in; bottom:0.3in; display:flex; justify-content:space-between; font:500 7.5pt 'Roboto Mono', monospace; color:#3a3745; }
+.tab { font:700 8.5pt 'Roboto Condensed', sans-serif; text-transform:uppercase; letter-spacing:.12em; }
+h2 { font:400 27pt/1 'Anton', 'Arial Narrow', sans-serif; text-transform:uppercase; }
+h3 { font:700 11pt 'Roboto Condensed', sans-serif; text-transform:uppercase; letter-spacing:.06em; }
+.bar { display:flex; align-items:center; gap:.12in; background:var(--cyan); color:var(--void); padding:.06in .14in; }
+.bar .tab { color:var(--void); }
+.lead { font-size:12pt; line-height:1.4; }
+.mono { font-family:'Roboto Mono', monospace; font-size:8.5pt; }
+.typed { font-family:'Special Elite', 'Courier New', monospace; }
+.hand { font:600 14pt 'Caveat', cursive; color:var(--pink-ink); }
+
+/* cover */
+.cover { background:var(--void); color:var(--paper); padding:.6in; gap:.2in; }
+.cover .tab { color:var(--cyan); }
+.cover h1 { font:400 62pt/.95 'Anton', 'Arial Narrow', sans-serif; text-transform:uppercase; }
+.cover h1 span { display:block; }
+.cover h1 .hi { background:var(--lime); color:var(--void); display:inline-block; padding:0 .12in; margin-top:.06in; }
+.cover .deck { font-size:14pt; max-width:5.2in; }
+.cover .stamp { align-self:flex-start; border:3px solid var(--lime); color:var(--lime); padding:.05in .15in; font:700 11pt 'Roboto Condensed', sans-serif; text-transform:uppercase; letter-spacing:.14em; transform:rotate(-3deg); }
+.cover .art { position:absolute; right:.35in; bottom:.7in; width:4.6in; }
+.cover .redact { background:var(--paper); height:.16in; width:2.4in; }
+.cover .redact.s { width:1.5in; }
+.cover .foot { position:absolute; left:.6in; right:.6in; bottom:.35in; display:flex; justify-content:space-between; font:500 8pt 'Roboto Mono', monospace; color:var(--paper); }
+
+/* boxes */
+.box { border:1.5px solid var(--void); padding:.12in .15in; }
+.box.violet { border-left:8px solid var(--violet); }
+.box.pink { border-left:8px solid var(--pink); }
+.box.lime { border-left:8px solid var(--lime); }
+.box.cyan { border-left:8px solid var(--cyan); }
+.label { font:700 8.5pt 'Roboto Condensed', sans-serif; text-transform:uppercase; letter-spacing:.12em; }
+.label.v { color:var(--violet-ink); } .label.p { color:var(--pink-ink); } .label.c { color:var(--cyan-ink); }
+.row { display:flex; gap:.2in; align-items:flex-start; }
+.row > .col { flex:1; }
+.char { flex:0 0 auto; }
+.char img { display:block; height:3.1in; width:auto; }
+.char.sm img { height:2.2in; }
+.char.xs img { height:1.6in; }
+ul.tight, ol.tight { padding-left:1.1rem; display:grid; gap:.05in; }
+.checks { list-style:none; padding:0; display:grid; gap:.07in; }
+.checks li { display:flex; gap:.1in; align-items:flex-start; }
+.checks .sq { flex:0 0 .17in; height:.17in; border:1.5px solid var(--void); margin-top:.03in; }
+table { width:100%; border-collapse:collapse; font-size:9.5pt; }
+th, td { border:1.2px solid var(--void); padding:.05in .08in; text-align:left; vertical-align:top; }
+thead th { background:var(--void); color:var(--paper); font:700 8.5pt 'Roboto Condensed', sans-serif; text-transform:uppercase; letter-spacing:.08em; }
+tbody th { background:#eef9f8; font-weight:700; width:1.6in; }
+.prompt { font-family:'Special Elite','Courier New',monospace; font-size:12pt; line-height:1.7; background:var(--paper); border:1.5px solid var(--void); padding:.18in .22in; }
+.u { text-decoration:underline; text-decoration-color:var(--violet); text-decoration-thickness:3px; text-underline-offset:3px; }
+.o { border:2px solid var(--pink); border-radius:999px; padding:0 .06in; }
+.bx { border:2px solid var(--cyan-ink); padding:0 .04in; }
+.key { display:flex; gap:.2in; font-size:8.5pt; margin-top:.05in; }
+.lines { display:grid; gap:0; }
+.lines i { display:block; height:.3in; border-bottom:1.2px solid var(--void); }
+.lines.tall i { height:.34in; }
+.fill { border-bottom:1.2px solid var(--void); height:.26in; }
+.pitfall { display:grid; grid-template-columns:1.9in 1fr; gap:.08in; border-top:1.2px solid var(--void); padding-top:.07in; }
+.verdict { background:var(--void); color:var(--paper); padding:.18in .22in; }
+.verdict h3 { color:var(--lime); }
+.verdict .claim { font:400 22pt/1.05 'Anton','Arial Narrow',sans-serif; text-transform:uppercase; }
+.support { border-top:3px solid var(--void); padding-top:.1in; }
+.support strong { font:400 15pt 'Anton','Arial Narrow',sans-serif; text-transform:uppercase; display:block; }
+</style>
+</head>
+<body>
+
+<!-- 1. COVER -->
+<section class="page cover" aria-labelledby="t1">
+  <p class="tab">Case file 001 · Academic navigation · Free resource</p>
+  <h1 id="t1"><span>This assignment</span><span class="hi">is not a riddle.</span></h1>
+  <p class="deck">A practical field guide to finding out what the prompt actually asks, what counts as evidence, and what to do first.</p>
+  <p class="stamp">Free · no purchase required</p>
+  <div class="redact" aria-hidden="true"></div>
+  <div class="redact s" aria-hidden="true"></div>
+  <img class="art" src="../../../public/images/characters/mabbit-whonah-sitting.webp" alt="Mabbit, a rabbit with purple hair and tattoos, sits sketching in a notebook with a backpack beside her. Whonah, a German Shepherd, lies next to her.">
+  <p class="foot"><span>Deconstructing Academia</span><span>Learn the rules. Question who wrote them.</span></p>
+</section>
+
+<!-- 2. BRIEFING -->
+<section class="page" aria-labelledby="t2">
+  <div class="bar"><span class="tab">The briefing</span></div>
+  <h2 id="t2">What you'll do here</h2>
+  <p class="lead">By the end you will turn one real assignment prompt into a task list, a short list of rules you must meet, and a first move you can make today. Plan on about 20 minutes and one pen.</p>
+  <div class="row">
+    <div class="col box cyan">
+      <h3>You need</h3>
+      <ul class="tight"><li>The exact text of one assignment prompt, copied, not summarized</li><li>The rubric or grading section if there is one</li><li>A pen. Marking it up on paper is the point.</li></ul>
+    </div>
+    <div class="col box lime">
+      <h3>You'll leave with</h3>
+      <ul class="tight"><li>What the prompt asks you to do</li><li>What you must include, and how much</li><li>The vague words that could cost you points</li><li>One question to send before you start</li></ul>
+    </div>
+  </div>
+  <div class="row" style="align-items:flex-end">
+    <div class="char sm"><img src="../../../public/images/characters/mabbit-book-pointing.webp" alt="Mabbit holding a notebook in one hand and raising a pen in the other, ready to mark something up."></div>
+    <div class="col">
+      <p class="label v">Your guides</p>
+      <p><strong>Mabbit</strong> asks who wrote the rule and what it assumes. She is skeptical of the prompt, never of you.</p>
+      <p style="margin-top:.08in"><strong>Whonah</strong> doesn't talk. He finds the detail, shows the step, and marks the checkpoint. When he points, look there.</p>
+      <p class="typed" style="margin-top:.12in">How this guide works: Mabbit frames it. Whonah shows the move. You do it on your own prompt. Then you check your work.</p>
+    </div>
+    <div class="char sm"><img src="../../../public/images/characters/whonah-three-quarter.webp" alt="Whonah, a German Shepherd in a dark green harness, sitting and looking straight ahead."></div>
+  </div>
+  <p class="folio"><span>Decode Your Assignment · Free resource 001</span><span>2</span></p>
+</section>
+
+<!-- 3. MABBIT INVESTIGATES -->
+<section class="page" aria-labelledby="t3">
+  <div class="bar" style="background:var(--lime)"><span class="tab">Mabbit investigates</span></div>
+  <h2 id="t3">Somebody wrote the rules</h2>
+  <div class="row" style="align-items:flex-end">
+    <div class="char"><img src="../../../public/images/characters/mabbit-kneel-point.webp" alt="Mabbit crouching, pointing at a sheet of paper in her other hand."></div>
+    <div class="col">
+      <div class="box violet">
+        <p class="label v">Mabbit's second look</p>
+        <p class="typed" style="margin:.06in 0">"Critically analyze." Great. Analyze what, using whose evidence, judged by which rubric?</p>
+        <p>A prompt is a set of rules written by someone who already knows what a good answer looks like. Your job is to get that out of their head and onto your page.</p>
+      </div>
+      <ol class="tight" style="margin-top:.12in">
+        <li>Which words tell me what to <em>do</em>, and which only name the topic?</li>
+        <li>What will I be graded on that nobody wrote down?</li>
+        <li>Where is "good" defined? A rubric, an example, the syllabus? Or only in the instructor's head?</li>
+      </ol>
+    </div>
+  </div>
+  <h3 style="margin-top:.1in">What task words usually ask for</h3>
+  <p class="mono">Starting guesses, not a standard. Instructors use these loosely, so confirm yours.</p>
+  <table>
+    <caption class="mono" style="text-align:left;padding-bottom:.04in">Common assignment task words and what they usually ask the writer to do</caption>
+    <thead><tr><th scope="col">Task word</th><th scope="col">Usually asks you to</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Describe, summarize</th><td>Report accurately what is there. No verdict needed.</td></tr>
+      <tr><th scope="row">Explain</th><td>Say how or why something works, with reasons, not just facts.</td></tr>
+      <tr><th scope="row">Analyze</th><td>Break something into parts and show what each part does or how they connect.</td></tr>
+      <tr><th scope="row">Compare</th><td>Set two or more things against stated criteria, then say what the comparison shows.</td></tr>
+      <tr><th scope="row">Argue, evaluate</th><td>Take a position, defend it with evidence, and deal with the strongest objection.</td></tr>
+      <tr><th scope="row">Reflect</th><td>Connect the material to your own experience or thinking and say what changed.</td></tr>
+    </tbody>
+  </table>
+  <p class="folio"><span>Decode Your Assignment · Free resource 001</span><span>3</span></p>
+</section>
+
+<!-- 4. WHONAH'S FIELD NOTES -->
+<section class="page" aria-labelledby="t4">
+  <div class="bar"><span class="tab">Whonah's field notes</span></div>
+  <h2 id="t4">Mark it up. In this order.</h2>
+  <div class="row" style="align-items:center">
+    <div class="char"><img src="../../../public/images/characters/whonah-nose-down.webp" alt="Whonah, a German Shepherd, with his nose to the ground, following a trail."></div>
+    <div class="col">
+      <p class="lead">Whonah works the trail one scent at a time. So do you. Four passes, four marks, pen on paper.</p>
+    </div>
+  </div>
+  <ol class="tight" style="gap:.14in">
+    <li><strong>Underline every verb.</strong> <span class="u">Analyze, compare, address.</span> These are your tasks. Violet underline.</li>
+    <li><strong>Circle every number and format rule.</strong> <span class="o">1,200 words</span> <span class="o">four sources</span> <span class="o">APA</span>. Length, sources, style, file type, deadline. Pink circle.</li>
+    <li><strong>Box must, should, and may.</strong> <span class="bx">must</span> is required. <span class="bx">should</span> and <span class="bx">may</span> are where you need an answer. Cyan box.</li>
+    <li><strong>Find the grading criteria.</strong> Rubric, syllabus section, or an example. Write down where you found it. If you can't find it, that is your first question.</li>
+  </ol>
+  <div class="box lime">
+    <p class="label c">Checkpoint</p>
+    <ul class="checks" style="margin-top:.06in">
+      <li><span class="sq"></span><span>I know the <strong>action</strong> I'm being asked to do.</span></li>
+      <li><span class="sq"></span><span>I know the <strong>evidence</strong> I have to use, and how much.</span></li>
+      <li><span class="sq"></span><span>I know the <strong>format</strong> rules and the <strong>deadline</strong>.</span></li>
+      <li><span class="sq"></span><span>I know <strong>where the grading criteria</strong> live, or I know I have to ask.</span></li>
+    </ul>
+  </div>
+  <p class="typed">Whonah's rule: if a word could mean two things, mark it. A marked word is a question you can send.</p>
+  <p class="folio"><span>Decode Your Assignment · Free resource 001</span><span>4</span></p>
+</section>
+
+<!-- 5. EVIDENCE BOARD 1: ANNOTATED ARTIFACT -->
+<section class="page" aria-labelledby="t5">
+  <div class="bar" style="background:var(--lime)"><span class="tab">The evidence board · case 01</span></div>
+  <h2 id="t5">The assignment autopsy</h2>
+  <p class="mono">Sample prompt written for this guide. It is not from a real course. Your instructor's wording will differ.</p>
+  <blockquote class="prompt">
+    <span class="u">Analyze</span> how one policy affected a community you choose. Write a <span class="o">1,200-word</span> paper using <span class="o">at least four scholarly sources</span>. You <span class="bx">should</span> <span class="u">address</span> <span class="bx">multiple</span> perspectives. Cite in <span class="o">APA</span>.
+  </blockquote>
+  <div class="key" aria-label="Key to marks"><span><span class="u">underline</span> = task</span><span><span class="o">circle</span> = number or format rule</span><span><span class="bx">box</span> = vague or required word</span></div>
+  <div class="row">
+    <div class="col box violet">
+      <p class="label v">Mabbit reads it</p>
+      <ul class="tight" style="margin-top:.05in">
+        <li><strong>Task:</strong> "analyze" means take the policy apart and show its effect on the community. Naming the policy is not enough.</li>
+        <li><strong>Evidence:</strong> four sources, and "scholarly" is undefined. Do reports from agencies count? Somebody has that answer.</li>
+        <li><strong>Hidden assumption:</strong> "multiple perspectives" assumes you know whose voices are missing. That is on you to find.</li>
+      </ul>
+    </div>
+    <div class="col box cyan">
+      <p class="label c">Whonah's marks</p>
+      <ul class="tight" style="margin-top:.05in">
+        <li><strong>Hard rules:</strong> 1,200 words, 4+ sources, APA.</li>
+        <li><strong>Fog:</strong> "should" (required or advised?), "multiple" (is two enough?), "scholarly" (what counts?).</li>
+        <li><strong>Missing:</strong> deadline, rubric, who the audience is.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="row" style="align-items:flex-end">
+    <div class="char sm"><img src="../../../public/images/characters/mabbit-measure.webp" alt="Mabbit holding a measuring tape up high, checking the size of something."></div>
+    <div class="col box pink">
+      <p class="label p">First move</p>
+      <p class="typed" style="margin-top:.05in">"Do government reports count as scholarly sources, and is two perspectives enough? Is there a rubric I can see before I start?"</p>
+      <p style="margin-top:.06in">One message, two specific questions, sent before the work starts.</p>
+    </div>
+  </div>
+  <p class="folio"><span>Decode Your Assignment · Free resource 001</span><span>5</span></p>
+</section>
+
+<!-- 6. EVIDENCE BOARD 2: CLAIM VS EVIDENCE -->
+<section class="page" aria-labelledby="t6">
+  <div class="bar" style="background:var(--lime)"><span class="tab">The evidence board · case 02</span></div>
+  <h2 id="t6">What do you actually know?</h2>
+  <p class="lead">Before you decide how you'll be graded, sort what you've heard from what you can trace.</p>
+  <div class="row" style="align-items:flex-start">
+    <div class="char xs"><img src="../../../public/images/characters/mabbit-cards.webp" alt="Mabbit holding three cards, each marked with a question mark."></div>
+    <div class="col">
+      <table>
+        <caption class="mono" style="text-align:left;padding-bottom:.04in">Three claims about grading, the evidence behind each, and what is missing</caption>
+        <thead><tr><th scope="col">Claim</th><th scope="col">Evidence</th><th scope="col">Not shown</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">"The rubric says critical thinking is 30%."</th><td>A label and a percentage, on the page.</td><td>What critical thinking looks like in this course.</td></tr>
+          <tr><th scope="row">"The instructor likes a strong voice."</th><td>One classmate's impression.</td><td>Anything from the instructor or the rubric.</td></tr>
+          <tr><th scope="row">"Late work loses 10% a day."</th><td>The syllabus, quoted exactly.</td><td>Whether there is an exception process.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="box violet">
+    <p class="label v">Mabbit's second look</p>
+    <p class="typed" style="margin:.05in 0">Missing data doesn't prove someone is hiding something. It proves the page can't answer your question. So ask the person who can.</p>
+  </div>
+  <h3>Your turn: sort three things you've heard about this assignment</h3>
+  <table>
+    <caption class="visually-hidden" style="position:absolute;left:-9999px">Your claims, evidence, and gaps</caption>
+    <thead><tr><th scope="col">What I heard</th><th scope="col">Where it comes from</th><th scope="col">What I still need</th></tr></thead>
+    <tbody>
+      <tr><td style="height:.5in"></td><td></td><td></td></tr>
+      <tr><td style="height:.5in"></td><td></td><td></td></tr>
+      <tr><td style="height:.5in"></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <p class="folio"><span>Decode Your Assignment · Free resource 001</span><span>6</span></p>
+</section>
+
+<!-- 7. YOUR TURN 1 -->
+<section class="page" aria-labelledby="t7">
+  <div class="bar" style="background:var(--lime)"><span class="tab">Your turn · mark the requirements</span></div>
+  <h2 id="t7">Now do it to yours</h2>
+  <div class="row" style="align-items:center">
+    <div class="char xs"><img src="../../../public/images/characters/whonah-play-stance.webp" alt="Whonah in a play bow, front low and tail up, ready to start."></div>
+    <p class="lead col">Use the real prompt, on this page or on the original. Whonah's four passes, in order. Don't paraphrase. The fog lives in the exact wording.</p>
+  </div>
+  <h3>Paste or write your prompt exactly</h3>
+  <div class="lines tall" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="row">
+    <div class="col">
+      <h3>Pass 1 · Tasks (verbs)</h3>
+      <div class="lines" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+    <div class="col">
+      <h3>Pass 2 · Numbers and format rules</h3>
+      <div class="lines" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h3>Pass 3 · must / should / may</h3>
+      <div class="lines" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+    <div class="col">
+      <h3>Pass 4 · Where grading criteria live</h3>
+      <div class="lines" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+  </div>
+  <p class="folio"><span>Decode Your Assignment · Free resource 001</span><span>7</span></p>
+</section>
+
+<!-- 8. YOUR TURN 2 -->
+<section class="page" aria-labelledby="t8">
+  <div class="bar" style="background:var(--lime)"><span class="tab">Your turn · find the fog, pick the move</span></div>
+  <h2 id="t8">Turn marks into questions</h2>
+  <div class="row" style="align-items:flex-end">
+    <div class="char sm"><img src="../../../public/images/characters/mabbit-laptop.webp" alt="Mabbit sitting at a desk typing on a laptop."></div>
+    <div class="col">
+      <p class="lead">A vague word is a question with its coat on. Pull out the ones that could cost you, then turn each into one specific question.</p>
+      <div class="box violet" style="margin-top:.1in">
+        <p class="label v">Mabbit's second look</p>
+        <p class="typed" style="margin-top:.04in">If nobody wrote down what "good" means, who gets to decide after you've turned it in?</p>
+      </div>
+    </div>
+  </div>
+  <h3>Fog words I found</h3>
+  <table>
+    <caption class="visually-hidden" style="position:absolute;left:-9999px">Fog words and the questions they become</caption>
+    <thead><tr><th scope="col">Vague word or missing detail</th><th scope="col">What it could cost me</th><th scope="col">The specific question</th></tr></thead>
+    <tbody>
+      <tr><td style="height:.55in"></td><td></td><td></td></tr>
+      <tr><td style="height:.55in"></td><td></td><td></td></tr>
+      <tr><td style="height:.55in"></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <h3>Draft the message</h3>
+  <p class="mono">Two questions at most. Specific, boring, easy to answer. Send it before you start.</p>
+  <div class="lines tall" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="box lime">
+    <p class="label c">My first move today</p>
+    <div class="fill" aria-hidden="true"></div>
+    <p class="mono" style="margin-top:.05in">A question to send, a source to find, or a paragraph to draft. Small enough to finish today.</p>
+  </div>
+  <p class="folio"><span>Decode Your Assignment · Free resource 001</span><span>8</span></p>
+</section>
+
+<!-- 9. CHECK YOUR WORK -->
+<section class="page" aria-labelledby="t9">
+  <div class="bar"><span class="tab">Check your work</span></div>
+  <h2 id="t9">Did it work?</h2>
+  <div class="row" style="align-items:center">
+    <div class="char xs"><img src="../../../public/images/characters/whonah-head.webp" alt="Close-up of Whonah's head, ears up, looking straight at you."></div>
+    <div class="col">
+      <p class="lead">Whonah is looking at your page. Check it against these. If an answer is no, go back to that pass.</p>
+    </div>
+  </div>
+  <div class="box cyan">
+    <h3>Criteria</h3>
+    <ul class="checks" style="margin-top:.06in">
+      <li><span class="sq"></span><span>Every line of the prompt has a mark, or I can say why it's only topic.</span></li>
+      <li><span class="sq"></span><span>My task list uses the prompt's own verbs, not my paraphrase.</span></li>
+      <li><span class="sq"></span><span>I found at least one vague word, or I asked what "done" looks like.</span></li>
+      <li><span class="sq"></span><span>Each question I wrote can be answered in one or two sentences.</span></li>
+      <li><span class="sq"></span><span>Someone else could start the assignment from my list.</span></li>
+    </ul>
+  </div>
+  <h3>Common pitfalls</h3>
+  <div class="pitfall"><strong>Marking only the topic.</strong><span>"Policy" and "community" are topic words. The verbs tell you what to do with them. Go back to Pass 1.</span></div>
+  <div class="pitfall"><strong>Reading "should" as optional.</strong><span>Instructors often use "should" to mean required, and sometimes they don't. That's why it gets a question, not a guess.</span></div>
+  <div class="pitfall"><strong>Asking a huge question.</strong><span>"What do you want?" is hard to answer. "Does a government report count as scholarly?" is not.</span></div>
+  <div class="pitfall"><strong>Waiting to ask.</strong><span>A question sent before the work starts costs less than a rewrite after you've turned it in.</span></div>
+  <div class="box violet">
+    <p class="label v">Model answer for the sample prompt</p>
+    <p style="margin-top:.04in"><strong>Tasks:</strong> analyze effects; address multiple perspectives. <strong>Rules:</strong> 1,200 words, four or more scholarly sources, APA. <strong>Fog:</strong> should, multiple, scholarly. <strong>Question:</strong> "Do agency reports count as scholarly, and is two perspectives enough?" Yours won't match word for word. It should match in kind.</p>
+  </div>
+  <p class="folio"><span>Decode Your Assignment · Free resource 001</span><span>9</span></p>
+</section>
+
+<!-- 10. FINAL VERDICT -->
+<section class="page" aria-labelledby="t10">
+  <div class="bar" style="background:var(--lime)"><span class="tab">The final verdict</span></div>
+  <h2 id="t10">What you found out</h2>
+  <div class="verdict">
+    <h3>Finding</h3>
+    <p class="claim">The prompt is a rulebook. Read it like one.</p>
+    <p style="margin-top:.08in">Verbs are tasks. Numbers are rules. "Should," "multiple," and "scholarly" are questions waiting for the person who wrote them.</p>
+  </div>
+  <div class="row">
+    <div class="col box pink">
+      <p class="label p">What this can't tell you</p>
+      <ul class="tight" style="margin-top:.05in">
+        <li>How your instructor will grade. Only they, or the rubric, can say.</li>
+        <li>Whether a task word means what the table says in your course.</li>
+        <li>What a strong answer looks like. Ask for an example.</li>
+      </ul>
+    </div>
+    <div class="col box lime">
+      <p class="label c">Do next</p>
+      <ul class="checks" style="margin-top:.05in">
+        <li><span class="sq"></span><span>Send your message.</span></li>
+        <li><span class="sq"></span><span>Save the answer where you can find it.</span></li>
+        <li><span class="sq"></span><span>Check the rest of the course rules with <em>Read the Fine Print</em>.</span></li>
+      </ul>
+    </div>
+  </div>
+  <h3>Reflect</h3>
+  <div class="lines" aria-hidden="true"><i></i><i></i></div>
+  <p class="mono">Which word in my prompt was doing the most work without being defined?</p>
+  <div class="row" style="align-items:flex-end">
+    <div class="col">
+      <h3>Sources</h3>
+      <p class="mono">This guide cites no outside sources. The sample prompt and the grading claims are invented for teaching and are not from real courses. The task-word table is a general guide, not a standard.</p>
+    </div>
+    <div class="char xs"><img src="../../../public/images/characters/mabbit-whonah-sitting.webp" alt="Mabbit sketching beside Whonah, who lies at her side."></div>
+  </div>
+  <div class="support">
+    <strong>Knowledge isn't a luxury product.</strong>
+    <p>This resource is free because useful educational tools shouldn't depend on someone's ability to pay. If it helped, you can support Deconstructing Academia with an optional contribution, or by checking out Mabbit &amp; Whonah merch when it returns. No purchase required. Keep learning.</p>
+    <p class="mono" style="margin-top:.04in">deconstructingacademia.com · Free resource 001</p>
+  </div>
+  <p class="folio"><span>Decode Your Assignment · Free resource 001</span><span>10</span></p>
+</section>
+
+</body>
+</html>
