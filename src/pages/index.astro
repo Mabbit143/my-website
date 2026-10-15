@@ -13,28 +13,25 @@ const featured = allArticles[0];
 const latest = allArticles.slice(1, 3);
 const countBySeries = (slug: string) => allArticles.filter((a) => a.data.series === slug).length;
 
-// Same live kits and prices as src/pages/shop.astro — keep them in sync.
+// Kits are paused (shop redesign). Etsy hrefs/prices kept here for reuse:
+//  No. 03 $9 https://www.etsy.com/listing/4587468925/first-week-college-field-notes-kit
+//  No. 01 $7 https://www.etsy.com/listing/4568126568/syllabus-audit-kit-grade-tracker
+//  No. 02 $9 https://deconstructacademia.etsy.com
 const kits = [
   {
     no: 'No. 03',
     title: 'First-Week College Field Notes Kit',
     body: 'Document hidden rules, map workload collisions, prepare for office hours, and make one useful support move before everything is on fire.',
-    price: '$9',
-    href: 'https://www.etsy.com/listing/4587468925/first-week-college-field-notes-kit',
   },
   {
     no: 'No. 01',
     title: 'The Syllabus Audit Kit + Grade Tracker',
     body: 'Decode the fine print, surface the unanswered questions, and calculate where your grade actually stands.',
-    price: '$7',
-    href: 'https://www.etsy.com/listing/4568126568/syllabus-audit-kit-grade-tracker',
   },
   {
     no: 'No. 02',
     title: 'The Curriculum Bias Audit Kit',
     body: "Read a reading list the way you'd read a source: whose names show up, whose don't, and what that pattern teaches.",
-    price: '$9',
-    href: 'https://deconstructacademia.etsy.com',
   },
 ];
 ---
@@ -136,21 +133,20 @@ const kits = [
 
   <section class="wrap kits" aria-labelledby="kits-heading">
     <header class="fresh__head">
-      <h2 id="kits-heading" class="section-title">Tools you can print tonight</h2>
+      <h2 id="kits-heading" class="section-title">Tools coming back soon</h2>
       <span class="scribble">fillable, too</span>
     </header>
     <div class="kits__grid">
       {kits.map((kit) => (
         <article class="kit paper-surface torn-b">
           <span class="tape" aria-hidden="true"></span>
-          <p class="kit__meta"><span>Toolkit {kit.no}</span><span class="kit__price">{kit.price}</span></p>
+          <p class="kit__meta"><span>Toolkit {kit.no}</span><span class="kit__price">Coming soon</span></p>
           <h3>{kit.title}</h3>
           <p>{kit.body}</p>
-          <a href={kit.href}>Get the kit →</a>
         </article>
       ))}
     </div>
-    <p class="kits__fine">Checkout happens on Etsy. <a href="/shop/">See everything in the shop →</a></p>
+    <p class="kits__fine">Mabbit &amp; Whonah merch coming soon. <a href="/free-syllabus-check/">Grab the free syllabus check →</a></p>
   </section>
 
   <section class="band-violet manifesto">
