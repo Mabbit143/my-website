@@ -1,0 +1,211 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SecondLook from '../../components/guide/SecondLook.astro';
+import FieldNotes from '../../components/guide/FieldNotes.astro';
+import EvidenceBoard from '../../components/guide/EvidenceBoard.astro';
+import GuidedPractice from '../../components/guide/GuidedPractice.astro';
+import { SUPPORT_URL } from '../../data/site';
+
+const PDF = '/downloads/decode-your-assignment.pdf';
+
+const taskWords = [
+  ['Describe / summarize', 'Report what is there, accurately. No verdict needed.'],
+  ['Explain', 'Say how or why something works, using reasons, not just facts.'],
+  ['Analyze', 'Break it into parts and show how the parts relate or what they do.'],
+  ['Compare', 'Put two or more things side by side on stated criteria, then say what the comparison shows.'],
+  ['Argue / evaluate', 'Take a position and defend it with evidence. Name the strongest objection.'],
+  ['Reflect', 'Connect the material to your own experience or thinking, and say what changed.'],
+];
+---
+
+<BaseLayout
+  title="Decode Your Assignment"
+  description="A free worksheet for turning an assignment prompt into a task you can start: what is asked, what counts as evidence, and what to do first."
+>
+  <article class="wrap da-sheet" data-palette="field-notes">
+    <header class="da-head">
+      <p class="eyebrow">Free worksheet · Academic Writing</p>
+      <h1 class="strip-stack">
+        <span class="strip strip--paper torn-lr">Decode your</span>
+        <span class="strip strip--lime torn-lr">assignment.</span>
+      </h1>
+      <p class="da-actions no-print">
+        <a class="btn" href={PDF} download>Download the PDF</a>
+        <a class="btn btn--ghost" href="/resources/">All free resources</a>
+      </p>
+    </header>
+
+    <section aria-labelledby="goal-h">
+      <h2 id="goal-h" class="da-h2">1. Your goal</h2>
+      <p>
+        By the end of this sheet you will have turned one assignment prompt into a short list of
+        what you are being asked to do, what you must include, and what to do first. Allow about
+        20 minutes.
+      </p>
+    </section>
+
+    <section aria-labelledby="question-h">
+      <h2 id="question-h" class="da-h2">2. The question</h2>
+      <SecondLook
+        title="Mabbit's Second Look"
+        questions={[
+          'Which words in this prompt tell me what to do, and which only describe the topic?',
+          'What is being assumed that I will be graded on but nobody wrote down?',
+          'Who decides what counts as "good" here, and where could I find out?',
+        ]}
+      >
+        <p>A prompt is a set of rules written by someone who already knows the answer to "what counts."</p>
+      </SecondLook>
+    </section>
+
+    <section aria-labelledby="orient-h">
+      <h2 id="orient-h" class="da-h2">3. How to read it</h2>
+      <FieldNotes
+        title="Whonah's Field Notes"
+        lookFor="verbs, numbers, and the words must, should, and may"
+        steps={[
+          { action: 'Underline every verb.', detail: 'These are your tasks.' },
+          { action: 'Circle every number or format rule.', detail: 'Length, source count, citation style, file type, deadline.' },
+          { action: 'Box the words must, should, and may.', detail: '"Must" is required. "May" is up to you or up to them.' },
+          { action: 'Find the grading criteria.', detail: 'Rubric, syllabus section, or ask. Write down where you found it.' },
+        ]}
+      >
+        <p>Do this with a pen on the actual prompt before you write anything.</p>
+      </FieldNotes>
+    </section>
+
+    <section aria-labelledby="concept-h">
+      <h2 id="concept-h" class="da-h2">4. What the task words usually ask for</h2>
+      <p>Instructors use these loosely, so treat this as a starting guess and confirm it.</p>
+      <table class="da-table">
+        <caption class="visually-hidden">Common assignment task words and what they usually ask for</caption>
+        <thead><tr><th scope="col">Task word</th><th scope="col">Usually asks you to</th></tr></thead>
+        <tbody>
+          {taskWords.map(([word, ask]) => <tr><th scope="row">{word}</th><td>{ask}</td></tr>)}
+        </tbody>
+      </table>
+    </section>
+
+    <section aria-labelledby="example-h">
+      <h2 id="example-h" class="da-h2">5. Worked example</h2>
+      <p class="da-note">Sample prompt invented for this worksheet. It is not from a real course.</p>
+      <blockquote class="da-prompt">
+        Write a 1,200-word paper that analyzes how one policy affected a community you choose. Use at
+        least four scholarly sources. You should address multiple perspectives. Cite in APA.
+      </blockquote>
+      <ul class="da-decoded">
+        <li><strong>Tasks:</strong> "analyze" (break down how the policy worked on the community), "address multiple perspectives."</li>
+        <li><strong>Hard rules:</strong> 1,200 words, at least four scholarly sources, APA.</li>
+        <li><strong>Fog:</strong> "should" (required or just advised?), "multiple" (is two enough?), "scholarly" (do reports count?).</li>
+        <li><strong>First move:</strong> email one question: "Do government reports count as scholarly sources, and is two perspectives enough?"</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="practice-h">
+      <h2 id="practice-h" class="da-h2">6. Your turn</h2>
+      <GuidedPractice
+        title="Guided practice"
+        steps={[
+          {
+            action: 'Paste or copy your prompt.',
+            guidance: 'Use the exact words, not your summary.',
+            feedback: 'If you paraphrased, go back. The fog lives in the original wording.',
+          },
+          {
+            action: 'Mark it up.',
+            guidance: 'Underline verbs, circle numbers and format rules, box must, should and may.',
+            example: 'In the sample: "analyzes" underlined; "1,200", "four", "APA" circled; "should" boxed.',
+            feedback: 'Every line of the prompt should have at least one mark, or be pure topic.',
+          },
+          {
+            action: 'Write your task list.',
+            guidance: 'One line per task, one line per hard rule, one line per fog word.',
+            feedback: 'You should have at least one fog word. If you found none, ask what "done" looks like.',
+          },
+          {
+            action: 'Pick your first move.',
+            guidance: 'A question to send, a source to find, or a paragraph to draft. Make it doable today.',
+          },
+        ]}
+      />
+      <div class="da-lines" aria-hidden="true">
+        <p>Tasks:</p><span></span><span></span>
+        <p>Hard rules:</p><span></span><span></span>
+        <p>Fog words:</p><span></span><span></span>
+        <p>My first move:</p><span></span><span></span>
+      </div>
+    </section>
+
+    <section aria-labelledby="check-h">
+      <h2 id="check-h" class="da-h2">7. Check the evidence</h2>
+      <EvidenceBoard
+        prompt="What can you actually conclude about how this will be graded, and what would you ask to find out?"
+        items={[
+          { claim: 'The rubric says "critical thinking" is worth 30%.', evidence: 'A percentage and a label.', gap: 'What critical thinking looks like in this course.' },
+          { claim: 'A classmate says the instructor likes "strong voice."', evidence: 'One person\'s impression.', gap: 'Anything from the instructor or the rubric.' },
+        ]}
+      >
+        <p>Do not trust what you cannot trace. Match each claim to its evidence and name what is missing.</p>
+      </EvidenceBoard>
+    </section>
+
+    <section aria-labelledby="review-h">
+      <h2 id="review-h" class="da-h2">8. Review and next steps</h2>
+      <ul class="da-review">
+        <li>Could someone else start this assignment from your task list?</li>
+        <li>Which fog word could cost you the most points? Ask about that one first.</li>
+        <li>Where is the grading criteria written down? Save a copy.</li>
+        <li>Next: check the rest of the course rules with <a href="/free-syllabus-check/">Read the Fine Print</a>.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="src-h">
+      <h2 id="src-h" class="da-h2">9. Sources</h2>
+      <p>This worksheet cites no outside sources. The sample prompt is invented, and the task-word table is a general guide, not a standard.</p>
+    </section>
+
+    <footer class="da-foot">
+      <p>Deconstructing Academia · deconstructingacademia.com · Learn the rules. Question who wrote them.</p>
+      <p class="no-print">
+        This worksheet is free. Optional support and future merch help keep new ones coming.
+        {SUPPORT_URL && <a href={SUPPORT_URL} rel="noopener">Support DA</a>}
+      </p>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .da-sheet { max-width: 52rem; padding-block: var(--space-5); display: grid; gap: var(--space-4); }
+  .da-head { display: grid; gap: var(--space-2); }
+  .da-actions { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: 0; }
+  .da-h2 { margin: 0 0 var(--space-1); font: 400 var(--step-3)/1 var(--font-headline); text-transform: uppercase; }
+  .da-table { width: 100%; border-collapse: collapse; margin-top: var(--space-2); }
+  .da-table th, .da-table td { text-align: left; padding: 0.6rem 0.8rem; border: 1.5px solid currentColor; vertical-align: top; }
+  .da-table thead th { font: 700 var(--step--1) var(--font-label); text-transform: uppercase; letter-spacing: 0.06em; }
+  .da-note { font-family: var(--font-typewriter); font-size: var(--step--1); }
+  .da-prompt { margin: var(--space-1) 0 var(--space-2); padding: var(--space-2); background: var(--paper); color: var(--ink); border-left: 8px solid #10d9d0; font-family: var(--font-typewriter); }
+  .da-decoded, .da-review { display: grid; gap: 0.5rem; padding-left: 1.3rem; }
+  .da-lines { display: grid; gap: 0.2rem; margin-top: var(--space-3); }
+  .da-lines p { margin: var(--space-1) 0 0; font: 700 var(--step--1) var(--font-label); text-transform: uppercase; letter-spacing: 0.06em; }
+  .da-lines span { display: block; height: 2rem; border-bottom: 1.5px solid currentColor; }
+  .da-foot { font-family: var(--font-mono); font-size: var(--step--1); border-top: 2px solid currentColor; padding-top: var(--space-2); }
+
+  @media print {
+    :global(body) { background: #fff !important; color: #0d0b12 !important; }
+    :global(header:not(.da-head)), :global(footer:not(.da-foot)), :global(.splat), :global(nav), .no-print { display: none !important; }
+    .da-sheet { max-width: none; padding: 0; gap: 1rem; color: #0d0b12; }
+    .da-sheet :global(*) { color: #0d0b12 !important; background: transparent !important; box-shadow: none !important; }
+    .da-sheet :global(.strip), .da-sheet :global(.torn-lr), .da-sheet :global(.torn-b) { background: transparent !important; padding: 0; clip-path: none !important; }
+    .da-sheet :global(img) { max-height: 8rem; width: auto; }
+    .da-sheet :global(details) { border: 1px solid #0d0b12; }
+    .da-sheet :global(details > *) { display: block; }
+    .da-sheet section { break-inside: avoid; }
+  }
+</style>
+
+<script>
+  // Closed <details> do not print. Open them for printing and for the generated PDF (?print=1).
+  const openAll = () => document.querySelectorAll('details').forEach((d) => (d.open = true));
+  window.addEventListener('beforeprint', openAll);
+  if (new URLSearchParams(location.search).has('print')) openAll();
+</script>

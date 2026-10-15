@@ -64,9 +64,12 @@ export const RESOURCES: readonly Resource[] = [
     slug: 'decode-your-assignment',
     title: 'Decode Your Assignment',
     summary:
-      'A guided worksheet for turning an assignment prompt into what is actually being asked, what counts as evidence, and what to do first. In development; not yet available.',
+      'A guided worksheet for turning an assignment prompt into what is actually being asked, what counts as evidence, and what to do first. Includes a worked example and a fill-in section.',
     category: 'Academic Writing',
     format: 'PDF',
-    status: 'upcoming',
+    status: 'available',
+    href: '/downloads/decode-your-assignment.pdf',
+    infoHref: '/resources/decode-your-assignment/',
+    meta: '6 pages · about 20 minutes · printable',
   },
 ];
