@@ -1,0 +1,58 @@
+---
+// The Evidence Board: compare claims against evidence and name what is missing.
+interface Item {
+  readonly claim: string;
+  readonly evidence: string;
+  /** What the evidence does not show. */
+  readonly gap?: string;
+}
+interface Props {
+  title?: string;
+  /** The question the learner should answer after reading the board. */
+  prompt: string;
+  items: readonly Item[];
+}
+const { title = 'The Evidence Board', prompt, items } = Astro.props;
+---
+
+<section class="board" aria-label={title}>
+  <header class="board__head">
+    <img
+      src="/images/characters/mabbit-whonah-sitting.webp"
+      width="900"
+      height="696"
+      loading="lazy"
+      alt="Mabbit sketching in a notebook with Whonah lying beside her."
+    />
+    <div>
+      <p class="board__label">{title}</p>
+      <div class="board__intro"><slot /></div>
+    </div>
+  </header>
+  <ul class="board__items">
+    {items.map((i) => (
+      <li class="pin">
+        <p class="pin__claim"><span>Claim</span>{i.claim}</p>
+        <p class="pin__ev"><span>Evidence</span>{i.evidence}</p>
+        {i.gap && <p class="pin__gap"><span>Not shown</span>{i.gap}</p>}
+      </li>
+    ))}
+  </ul>
+  <p class="board__prompt"><strong>Your call:</strong> {prompt}</p>
+</section>
+
+<style>
+  .board { padding: var(--space-3); background: #15111d; border: 2px dashed #10d9d0; color: var(--paper); }
+  .board__head { display: grid; grid-template-columns: 10rem 1fr; gap: var(--space-3); align-items: center; }
+  .board__head img { width: 100%; height: auto; }
+  .board__label { margin: 0 0 var(--space-1); font: 700 var(--step--1) var(--font-label); text-transform: uppercase; letter-spacing: 0.1em; color: #10d9d0; }
+  .board__intro :global(p) { margin: 0; }
+  .board__items { list-style: none; padding: 0; margin: var(--space-3) 0; display: grid; gap: var(--space-2); grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+  .pin { background: var(--paper); color: var(--ink); padding: var(--space-2); display: grid; gap: 0.5rem; }
+  .pin p { margin: 0; }
+  .pin span { display: block; font: 700 0.7rem var(--font-label); text-transform: uppercase; letter-spacing: 0.1em; color: #5b16d9; }
+  .pin__gap { border-top: 2px solid #ff168c; padding-top: 0.5rem; }
+  .pin__gap span { color: #b0105f; }
+  .board__prompt { margin: 0; font-family: var(--font-typewriter); }
+  @media (max-width: 40rem) { .board__head { grid-template-columns: 1fr; } .board__head img { max-width: 9rem; } }
+</style>

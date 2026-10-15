@@ -1,0 +1,35 @@
+---
+// Mabbit's Second Look: a short questioning intervention. Content-driven.
+interface Props {
+  title?: string;
+  /** The assumptions, power structures, or missing perspectives to examine. */
+  questions: readonly string[];
+}
+const { title = "Mabbit's Second Look", questions } = Astro.props;
+---
+
+<aside class="second-look" aria-label={title}>
+  <img
+    src="/images/characters/mabbit-cards.webp"
+    width="388"
+    height="900"
+    loading="lazy"
+    alt="Mabbit holding up three cards, each marked with a question mark."
+  />
+  <div>
+    <p class="second-look__label">{title}</p>
+    <div class="second-look__body"><slot /></div>
+    <ol class="second-look__qs">
+      {questions.map((q) => <li>{q}</li>)}
+    </ol>
+  </div>
+</aside>
+
+<style>
+  .second-look { display: grid; grid-template-columns: 7rem 1fr; gap: var(--space-3); align-items: end; padding: var(--space-3); background: var(--violet); color: var(--paper); border-left: 8px solid var(--accent-1, #ff168c); }
+  .second-look img { width: 100%; height: auto; max-height: 15rem; object-fit: contain; }
+  .second-look__label { margin: 0 0 var(--space-1); font: 700 var(--step--1) var(--font-label); text-transform: uppercase; letter-spacing: 0.1em; color: #ff168c; }
+  .second-look__body :global(p) { margin: 0 0 var(--space-1); }
+  .second-look__qs { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.4rem; font-weight: 500; }
+  @media (max-width: 40rem) { .second-look { grid-template-columns: 1fr; } .second-look img { max-height: 9rem; justify-self: start; } }
+</style>

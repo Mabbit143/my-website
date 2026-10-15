@@ -1,0 +1,50 @@
+---
+// Guided Practice: each step has a learner action, guidance, an optional worked
+// example, and actionable feedback for checking your own work.
+interface Step {
+  readonly action: string;
+  readonly guidance: string;
+  readonly example?: string;
+  readonly feedback?: string;
+}
+interface Props {
+  title?: string;
+  steps: readonly Step[];
+}
+const { title = 'Guided Practice', steps } = Astro.props;
+---
+
+<section class="practice" aria-label={title}>
+  <p class="practice__label">{title}</p>
+  <ol class="practice__steps">
+    {steps.map((s) => (
+      <li>
+        <p class="practice__action">{s.action}</p>
+        <p>{s.guidance}</p>
+        {s.example && (
+          <details>
+            <summary>Worked example</summary>
+            <p>{s.example}</p>
+          </details>
+        )}
+        {s.feedback && (
+          <details>
+            <summary>Check your work</summary>
+            <p>{s.feedback}</p>
+          </details>
+        )}
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .practice { padding: var(--space-3); background: var(--paper); color: var(--ink); border-top: 8px solid #b7ff18; }
+  .practice__label { margin: 0 0 var(--space-2); font: 700 var(--step--1) var(--font-label); text-transform: uppercase; letter-spacing: 0.1em; color: #5b16d9; }
+  .practice__steps { margin: 0; padding-left: 1.5rem; display: grid; gap: var(--space-3); }
+  .practice__steps p { margin: 0 0 0.4rem; }
+  .practice__action { font: 400 var(--step-1)/1.1 var(--font-headline); text-transform: uppercase; }
+  details { margin-top: 0.4rem; padding: 0.5rem 0.8rem; border: 1.5px solid var(--ink); }
+  summary { cursor: pointer; font: 700 var(--step--1) var(--font-label); text-transform: uppercase; letter-spacing: 0.06em; }
+  summary:focus-visible { outline: 3px solid #5b16d9; outline-offset: 2px; }
+</style>

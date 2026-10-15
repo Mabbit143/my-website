@@ -1,6 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
+import SecondLook from '../components/guide/SecondLook.astro';
+import FieldNotes from '../components/guide/FieldNotes.astro';
+import EvidenceBoard from '../components/guide/EvidenceBoard.astro';
+import GuidedPractice from '../components/guide/GuidedPractice.astro';
+
 const mabbitRoles = [
   ['Introduces the hard part', 'She names the concept, then asks what the institution gets out of you not understanding it.'],
   ['Questions the rule', 'Who wrote it, who it protects, and what it quietly assumes about you.'],
@@ -89,6 +94,24 @@ const whonahRoles = [
     </div>
   </section>
 
+  <section class="wrap g-samples" aria-labelledby="samples-h">
+    <h2 id="samples-h" class="section-title">What a guide moment looks like</h2>
+    <p>Same sample, four ways in: a late-work policy from a syllabus.</p>
+    <SecondLook questions={['Who decided what counts as "late," and who pays when it is enforced?', 'What does "may be penalized" leave out, and who gets to fill that in later?']}>
+      <p>"Late work may be penalized at the instructor's discretion."</p>
+    </SecondLook>
+    <FieldNotes steps={[{ action: 'Underline the verb.', detail: '"May" is permission, not a rule.' }, { action: 'Find the number.', detail: 'Is there a percentage, a day count, or neither?' }, { action: 'Write the gap as a question.', detail: 'Send it before the deadline, not after.' }]} lookFor="words like may, discretion, appropriate">
+      <p>Vague policy language is where decisions get made later.</p>
+    </FieldNotes>
+    <EvidenceBoard
+      prompt="Does the syllabus give you enough to plan around? What would you ask?"
+      items={[{ claim: 'Late work is penalized.', evidence: 'The policy says "may be penalized."', gap: 'No amount, no cutoff, no exceptions process.' }]}
+    >
+      <p>Put the claim next to what the page actually supports.</p>
+    </EvidenceBoard>
+    <GuidedPractice steps={[{ action: 'Copy one rule from your syllabus.', guidance: 'Pick attendance, late work, or participation.', example: '"Late work may be penalized at the instructor\'s discretion."', feedback: 'You should have the exact words, not your paraphrase.' }, { action: 'Circle the fog word.', guidance: 'Mark any word that lets the rule change later.', feedback: 'If you circled nothing, read it again as if you were arguing a grade appeal.' }]} />
+  </section>
+
   <section class="wrap g-together" aria-labelledby="together-h">
     <h2 id="together-h" class="section-title">How they work together</h2>
     <p>
@@ -114,6 +137,7 @@ const whonahRoles = [
   .g-roles { list-style: none; padding: 0; margin: var(--space-2) 0 0; display: grid; gap: 0.7rem; }
   .g-roles li { padding-left: 1rem; border-left: 4px solid var(--accent-1); line-height: 1.5; }
 
+  .g-samples { display: grid; gap: var(--space-3); padding-block: var(--space-4); }
   .g-together { max-width: 44rem; padding-block: var(--space-4) var(--space-5); }
 
   @media (max-width: 48rem) {
