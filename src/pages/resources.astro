@@ -1,0 +1,159 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { RESOURCES, RESOURCE_CATEGORIES } from '../data/resources';
+
+const counts = Object.fromEntries(
+  RESOURCE_CATEGORIES.map((c) => [c, RESOURCES.filter((r) => r.category === c).length]),
+);
+---
+
+<BaseLayout
+  title="Free Resources"
+  description="Free academic tools and PDFs from Deconstructing Academia. No payment, no membership, no email required."
+>
+  <section class="wrap lib-hero" data-palette="field-notes">
+    <span class="splat splat--lime lib-hero__s1" aria-hidden="true"></span>
+    <p class="eyebrow">Free. All of it.</p>
+    <h1 class="strip-stack">
+      <span class="strip strip--paper torn-lr">Make knowledge</span>
+      <span class="strip strip--lime torn-lr">harder to hoard.</span>
+    </h1>
+    <p class="lib-hero__deck">
+      Academic tools and printable PDFs you can use today. No payment, no membership and no email
+      needed to download anything here.
+    </p>
+  </section>
+
+  <section class="wrap lib" aria-labelledby="lib-heading">
+    <h2 id="lib-heading" class="visually-hidden">Resource library</h2>
+    <form class="lib-controls" role="search" aria-label="Search and filter resources" onsubmit="return false">
+      <div class="lib-field">
+        <label for="lib-q">Search</label>
+        <input id="lib-q" type="search" placeholder="syllabus, GPA, citations…" autocomplete="off" />
+      </div>
+      <div class="lib-field">
+        <label for="lib-cat">Category</label>
+        <select id="lib-cat">
+          <option value="">All categories ({RESOURCES.length})</option>
+          {RESOURCE_CATEGORIES.map((c) => <option value={c}>{c} ({counts[c]})</option>)}
+        </select>
+      </div>
+      <div class="lib-field">
+        <label for="lib-fmt">Format</label>
+        <select id="lib-fmt">
+          <option value="">PDFs and tools</option>
+          <option value="PDF">PDF</option>
+          <option value="Web tool">Web tool</option>
+        </select>
+      </div>
+    </form>
+    <p class="lib-count" id="lib-count" role="status" aria-live="polite"></p>
+
+    <ul class="lib-grid" id="lib-grid">
+      {RESOURCES.map((r) => (
+        <li
+          class:list={['lib-card paper-surface torn-b', { 'lib-card--soon': r.status === 'upcoming' }]}
+          data-category={r.category}
+          data-format={r.format}
+          data-text={`${r.title} ${r.summary} ${r.category}`.toLowerCase()}
+        >
+          <p class="lib-card__tags">
+            <span>{r.category}</span>
+            <span>{r.format}</span>
+            {r.status === 'upcoming' && <span class="lib-card__soon">In development</span>}
+          </p>
+          <h3>{r.title}</h3>
+          <p>{r.summary}</p>
+          {r.meta && <p class="lib-card__meta">{r.meta}</p>}
+          {r.status === 'available' && r.href && (
+            <p class="lib-card__actions">
+              <a class="btn" href={r.href} {...(r.format === 'PDF' ? { download: true } : {})}>
+                {r.format === 'PDF' ? 'Download PDF' : 'Open tool'}<span class="visually-hidden">: {r.title}</span>
+              </a>
+              {r.infoHref && <a class="btn btn--ghost" href={r.infoHref}>About this one<span class="visually-hidden">: {r.title}</span></a>}
+            </p>
+          )}
+          {r.status === 'upcoming' && <p class="lib-card__fine">Not available yet. Nothing to download.</p>}
+        </li>
+      ))}
+    </ul>
+    <p class="lib-empty" id="lib-empty" hidden>
+      Nothing matches that. Clear the search or pick another category. Have a tool you need?
+      <a href="/contact/">Tell us</a>.
+    </p>
+  </section>
+
+  <section class="wrap lib-support" aria-labelledby="support-heading">
+    <h2 id="support-heading" class="section-title">Help keep knowledge harder to hoard.</h2>
+    <p>
+      DA's educational tools are free. If the work helps you, optional contributions and future
+      merchandise help keep new resources coming. Mabbit &amp; Whonah merch is coming soon.
+    </p>
+    <p><a href="/contact/">Found a broken file or want a tool built? Say so.</a></p>
+  </section>
+</BaseLayout>
+
+<script>
+  const q = document.querySelector<HTMLInputElement>('#lib-q');
+  const cat = document.querySelector<HTMLSelectElement>('#lib-cat');
+  const fmt = document.querySelector<HTMLSelectElement>('#lib-fmt');
+  const count = document.querySelector<HTMLElement>('#lib-count');
+  const empty = document.querySelector<HTMLElement>('#lib-empty');
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('#lib-grid > li'));
+
+  function apply() {
+    const term = (q?.value ?? '').trim().toLowerCase();
+    let shown = 0;
+    for (const card of cards) {
+      const match =
+        (!term || (card.dataset.text ?? '').includes(term)) &&
+        (!cat?.value || card.dataset.category === cat.value) &&
+        (!fmt?.value || card.dataset.format === fmt.value);
+      card.hidden = !match;
+      if (match) shown += 1;
+    }
+    if (count) count.textContent = `${shown} of ${cards.length} resources`;
+    if (empty) empty.hidden = shown !== 0;
+  }
+
+  [q, cat, fmt].forEach((el) => el?.addEventListener('input', apply));
+  apply();
+</script>
+
+<style>
+  .lib-hero { position: relative; isolation: isolate; overflow: hidden; padding-block: var(--space-5) var(--space-3); }
+  .lib-hero > :not(.splat) { position: relative; z-index: 1; }
+  .lib-hero__s1 { right: -12rem; top: -10rem; width: 34rem; height: 34rem; }
+  .lib-hero__deck { max-width: 38rem; margin-top: var(--space-2); font-size: 1.15rem; line-height: 1.55; }
+
+  .lib { padding-block: var(--space-3) var(--space-5); }
+  .lib-controls { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-2); }
+  .lib-field { display: grid; gap: 0.3rem; }
+  .lib-field label { font: 700 var(--step--1) var(--font-label); text-transform: uppercase; letter-spacing: 0.06em; }
+  .lib-field input, .lib-field select {
+    padding: 0.7em 0.8em; font: inherit; color: var(--ink); background: var(--paper);
+    border: 2px solid var(--paper); border-radius: var(--radius);
+  }
+  .lib-field input:focus-visible, .lib-field select:focus-visible { outline: 3px solid #10d9d0; outline-offset: 2px; }
+  .lib-count { font-family: var(--font-mono); font-size: var(--step--1); margin: var(--space-2) 0; }
+
+  .lib-grid { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); }
+  .lib-card { padding: var(--space-3); color: var(--ink); display: flex; flex-direction: column; gap: 0.6rem; }
+  .lib-card[hidden] { display: none; }
+  .lib-card h3 { margin: 0; font: 400 var(--step-2)/1.05 var(--font-headline); text-transform: uppercase; }
+  .lib-card p { margin: 0; }
+  .lib-card__tags { display: flex; flex-wrap: wrap; gap: 0.4rem; font: 700 0.72rem var(--font-label); text-transform: uppercase; letter-spacing: 0.08em; }
+  .lib-card__tags span { padding: 0.15em 0.55em; border: 1.5px solid currentColor; }
+  .lib-card__tags .lib-card__soon { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .lib-card__meta { font-family: var(--font-mono); font-size: var(--step--1); }
+  .lib-card__actions { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: auto !important; padding-top: var(--space-1); }
+  .lib-card__fine { font-family: var(--font-typewriter); font-size: var(--step--1); margin-top: auto !important; }
+  .lib-card--soon { opacity: 0.85; }
+  .lib-empty { margin-top: var(--space-3); font-family: var(--font-typewriter); }
+
+  .lib-support { padding-block: var(--space-4) var(--space-5); max-width: 44rem; }
+
+  @media (max-width: 40rem) {
+    .lib-controls { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const mabbitRoles = [
+  ['Introduces the hard part', 'She names the concept, then asks what the institution gets out of you not understanding it.'],
+  ['Questions the rule', 'Who wrote it, who it protects, and what it quietly assumes about you.'],
+  ['Finds the hidden assumption', 'The word "professional," the missing comparison, the number with no source.'],
+  ['Shows the process', 'Research and analysis done step by step, so you can copy the method.'],
+  ['Pushes back on weak claims', 'If the evidence does not carry the sentence, she says so.'],
+];
+
+const whonahRoles = [
+  ['Finds the detail', 'He puts his nose on the line in the syllabus that matters.'],
+  ['Shows the step', 'Practical moves you can see, not paragraphs about moves.'],
+  ['Points at what counts', 'Dates, weights, triggers: the information that changes what you do next.'],
+  ['Keeps the exercise moving', 'Reflection prompts and next actions when you stall.'],
+  ['Reacts', 'A tilted head, a play bow, a flat stare. Whonah does not talk; the captions and pictures do.'],
+];
+---
+
+<BaseLayout
+  title="Meet Your Guides"
+  description="Mabbit questions the rules. Whonah tracks the evidence. Meet the two guides who walk you through Deconstructing Academia's free tools."
+>
+  <section class="wrap g-hero" data-palette="electric">
+    <span class="splat splat--violet g-hero__s1" aria-hidden="true"></span>
+    <div class="g-hero__copy">
+      <p class="eyebrow">Your guides</p>
+      <h1 class="strip-stack">
+        <span class="strip strip--paper torn-lr">One asks why.</span>
+        <span class="strip strip--lime torn-lr">One finds the proof.</span>
+      </h1>
+      <p class="g-hero__deck">
+        Mabbit and Whonah are how the free tools teach. Every worksheet and guide uses them for
+        something specific: a question to ask, a detail to find, a step to take.
+      </p>
+      <p><a class="btn" href="/resources/">Explore free resources</a></p>
+    </div>
+    <img
+      class="g-hero__art"
+      src="/images/characters/mabbit-whonah-sitting.webp"
+      width="900"
+      height="696"
+      alt="Mabbit, an anthropomorphic rabbit with purple hair and tattoos, sits sketching in a notebook with a backpack beside her while Whonah, a German Shepherd, lies next to her."
+    />
+  </section>
+
+  <section class="wrap g-guide" data-palette="red-pen" aria-labelledby="mabbit-h">
+    <img
+      class="g-guide__art"
+      src="/images/characters/mabbit-book-pointing.webp"
+      width="362"
+      height="900"
+      loading="lazy"
+      alt="Mabbit standing with a pen raised in one hand and a notebook in the other."
+    />
+    <div class="g-guide__copy">
+      <p class="eyebrow">Inquiry · skepticism</p>
+      <h2 id="mabbit-h" class="section-title">Mabbit</h2>
+      <p>
+        Mabbit refuses to accept an institutional assumption without evidence. She is the one who
+        stops at the sentence everyone else skipped and asks where it came from.
+      </p>
+      <ul class="g-roles">
+        {mabbitRoles.map(([title, body]) => <li><strong>{title}.</strong> {body}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap g-guide g-guide--flip" data-palette="field-notes" aria-labelledby="whonah-h">
+    <img
+      class="g-guide__art"
+      src="/images/characters/whonah-three-quarter.webp"
+      width="525"
+      height="707"
+      loading="lazy"
+      alt="Whonah, a German Shepherd in a dark green harness, sitting and looking straight ahead."
+    />
+    <div class="g-guide__copy">
+      <p class="eyebrow">Evidence · practice</p>
+      <h2 id="whonah-h" class="section-title">Whonah</h2>
+      <p>
+        Whonah is an equal partner, not a sidekick. He works the trail: what is actually on the
+        page, what to do with it, and what to do next.
+      </p>
+      <ul class="g-roles">
+        {whonahRoles.map(([title, body]) => <li><strong>{title}.</strong> {body}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap g-together" aria-labelledby="together-h">
+    <h2 id="together-h" class="section-title">How they work together</h2>
+    <p>
+      Mabbit asks the question. Whonah shows you where to look. You do the step, check the
+      evidence, and decide what you think. If a guide moment does not help you understand
+      something, it does not belong in the tool.
+    </p>
+    <p><a href="/about/">About Mabbit and DA</a> · <a href="/resources/">Free resources</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .g-hero { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--space-4); align-items: center; padding-block: var(--space-5); }
+  .g-hero > :not(.splat) { position: relative; z-index: 1; }
+  .g-hero__s1 { right: -10rem; top: -8rem; width: 34rem; height: 34rem; }
+  .g-hero__deck { max-width: 36rem; margin: var(--space-2) 0; font-size: 1.15rem; line-height: 1.55; }
+  .g-hero__art { width: 100%; height: auto; }
+
+  .g-guide { display: grid; grid-template-columns: minmax(10rem, 0.5fr) 1.5fr; gap: var(--space-4); align-items: center; padding-block: var(--space-4); }
+  .g-guide--flip { grid-template-columns: 1.5fr minmax(10rem, 0.5fr); }
+  .g-guide--flip .g-guide__art { order: 2; }
+  .g-guide__art { width: 100%; max-height: 34rem; object-fit: contain; }
+  .g-roles { list-style: none; padding: 0; margin: var(--space-2) 0 0; display: grid; gap: 0.7rem; }
+  .g-roles li { padding-left: 1rem; border-left: 4px solid var(--accent-1); line-height: 1.5; }
+
+  .g-together { max-width: 44rem; padding-block: var(--space-4) var(--space-5); }
+
+  @media (max-width: 48rem) {
+    .g-hero, .g-guide, .g-guide--flip { grid-template-columns: 1fr; }
+    .g-guide--flip .g-guide__art { order: 0; }
+    .g-guide__art { max-height: 22rem; }
+  }
+</style>
