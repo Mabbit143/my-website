@@ -6,7 +6,7 @@ Rebuild Decode Your Assignment (needs Chrome, Python with `pypdf` and `reportlab
 
 ```bash
 mkdir -p .tmp
-"/c/Program Files/Google/Chrome/Application/chrome.exe" --headless=new --disable-gpu --no-pdf-header-footer --virtual-time-budget=10000 --print-to-pdf="$PWD/.tmp/base.pdf" "file://$PWD/da-resources/decode-your-assignment/source/index.html"
+"/c/Program Files/Google/Chrome/Application/chrome.exe" --headless=new --disable-gpu --no-pdf-header-footer --virtual-time-budget=10000 --print-to-pdf="$(pwd -W)/.tmp/base.pdf" "file:///$(pwd -W)/da-resources/decode-your-assignment/source/index.html"
 node da-resources/tools/extract-fields.cjs .tmp/fields.json
 python da-resources/tools/add_fields.py .tmp/base.pdf .tmp/fields.json public/downloads/decode-your-assignment.pdf
 ```
