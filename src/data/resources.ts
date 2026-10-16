@@ -70,6 +70,6 @@ export const RESOURCES: readonly Resource[] = [
     status: 'available',
     href: '/downloads/decode-your-assignment.pdf',
     infoHref: '/resources/decode-your-assignment/',
-    meta: '10 pages · about 20 minutes · printable',
+    meta: '10 pages · about 20 minutes · fillable or printable',
   },
 ];
