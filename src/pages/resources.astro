@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { RESOURCES, RESOURCE_CATEGORIES } from '../data/resources';
+import { SUPPORT_URL } from '../data/site';
 
 const counts = Object.fromEntries(
   RESOURCE_CATEGORIES.map((c) => [c, RESOURCES.filter((r) => r.category === c).length]),
@@ -84,12 +85,13 @@ const counts = Object.fromEntries(
   </section>
 
   <section class="wrap lib-support" aria-labelledby="support-heading">
-    <h2 id="support-heading" class="section-title">Help keep knowledge harder to hoard.</h2>
+    <h2 id="support-heading" class="section-title">Free it. Share it. Keep it free.</h2>
     <p>
-      DA's educational tools are free. If the work helps you, optional contributions and future
-      merchandise help keep new resources coming. Mabbit &amp; Whonah merch is coming soon.
+      No paywalls, no logins, no gatekeepers. If DA helped you, a few bucks keeps new tools coming.
+      Mabbit &amp; Whonah merch drops soon.
     </p>
-    <p><a href="/contact/">Found a broken file or want a tool built? Say so.</a></p>
+    {SUPPORT_URL && <p><a class="btn" href={SUPPORT_URL} target="_blank" rel="noopener">Buy me a coffee</a></p>}
+    <p><a href="/contact/">Something broken, or a tool you wish existed? Tell me.</a></p>
   </section>
 </BaseLayout>
 
